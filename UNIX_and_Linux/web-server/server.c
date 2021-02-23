@@ -1,3 +1,5 @@
+#include "server.h"
+
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <stdio.h>
@@ -5,8 +7,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-
-#define BACKLOG 10
 
 int main(int argc, char** argv)
 {
