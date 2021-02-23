@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <stdio.h>
 
 int main(int argc, char** argv)
@@ -26,5 +27,9 @@ int main(int argc, char** argv)
     }
     printf("Opened the file \"%s\"\n", argv[1]);
 
+    printf("sizeof int8_t: %i\n", sizeof(int8_t));
+
+
     return 0;
 }
+
