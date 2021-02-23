@@ -12,21 +12,8 @@ int main(int argc, char** argv)
 {
     int serverSocketFD, clientSocketFD;
     struct sockaddr_in serverAddress;
-    uint16_t serverPort;
     struct sockaddr clientAddress;
     socklen_t clientAddressLength;
-
-    // Retrieve port from command line
-    if (argc < 2)
-    {
-        printf("ERROR: Port number not specified.\n");
-        printf("Usage: ./server port\n");
-        return -1;
-    }
-    serverPort = atoi(argv[1]);
-
-    printf("Server startup\n");
-    printf("Specified port is %i\n", serverPort);
 
     // Create server socket
     printf("Creating socket\n");
@@ -39,16 +26,16 @@ int main(int argc, char** argv)
     printf("Socket created\n");
 
     // Bind server to specified port
-    printf("Binding to port %i\n", serverPort);
+    printf("Binding to port %i\n", PORT);
     serverAddress.sin_family = AF_INET;
-    serverAddress.sin_port = htons(serverPort);
+    serverAddress.sin_port = htons(PORT);
     serverAddress.sin_addr.s_addr = INADDR_ANY;
     if (bind(serverSocketFD, (struct sockaddr*) &serverAddress, sizeof(serverAddress))) // bind returns -1 on error
     {
         perror("Unable to bind to port");
         return -1;
     }
-    printf("Bound to port %i\n", serverPort);
+    printf("Bound to port %i\n", PORT);
 
     // Set server to listen to incoming connections, with a queue of BACKLOG waiting connections
     printf("Begin listening on server socket\n");
