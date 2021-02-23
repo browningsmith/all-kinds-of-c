@@ -1,4 +1,3 @@
-#include <stdint.h>
 #include <stdio.h>
 
 int main(int argc, char** argv)
@@ -27,8 +26,17 @@ int main(int argc, char** argv)
     }
     printf("Opened the file \"%s\"\n", argv[1]);
 
-    printf("sizeof int8_t: %i\n", sizeof(int8_t));
-
+    // Close file
+    printf("Attempting to close file \"%s\"...\n", argv[1]);
+    if (fclose(file) == EOF) // fclose returns EOF on error
+    {
+        perror("Unable to close file");
+        // non fatal
+    }
+    else
+    {
+        printf("Closed the file \"%s\"\n", argv[1]);
+    }
 
     return 0;
 }

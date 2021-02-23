@@ -7,6 +7,7 @@ main.o: main.c
 	gcc -std=c99 -Wall -c -o main.o main.c
 
 clean: cleanmain
+	-rm -rf *.txt
 
 cleanmain:
 	-rm -rf main main.o
