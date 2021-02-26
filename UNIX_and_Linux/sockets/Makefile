@@ -1,8 +1,13 @@
-all: main
+all: server
 
-main: main.o
-	gcc -std=c99 -Wall -o main main.o
+server: server.o
+	gcc -std=c99 -Wall -o server server.o
 
-main.o: main.c
-	gcc -std=c99 -Wall -c -o main.o main.c
+server.o: server.c
+	gcc -std=c99 -Wall -c -o server.o server.c
+
+clean: cleanserver
+
+cleanserver:
+	-rm -rf server server.o
 
