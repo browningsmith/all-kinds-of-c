@@ -1,11 +1,11 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "myitoa.h"
@@ -16,11 +16,12 @@ int main(int argc, char** argv)
 {
     
     char lineBuffer[BUFFLEN + 2]; // Additional two bytes, one for newline and one for null term
-    uint16_t messageLength;
+    size_t messageLength;
     char lengthBuffer[5];
     int serverSocketFD;
     struct sockaddr_in serverAddress;
     in_port_t serverPort;
+    ssize_t bytesSent;
     
     // Get IP and port number from command line
     if (argc < 3)
@@ -68,11 +69,22 @@ int main(int argc, char** argv)
     );
     while (fgets(lineBuffer, BUFFLEN + 2, stdin) != NULL) // fgets returns NULL on error or EOF (CTRL+D)
     {
+        // Get message length
         messageLength = strlen(lineBuffer) - 1;
         myitoa(lengthBuffer, messageLength);
-        lengthBuffer[4] = (char) 0;
-        printf("Message length: %s\n", lengthBuffer);
-        printf("Message: ");
+        
+        // Send message length to server
+        bytesSent = send(serverSocketFD, lengthBuffer, 4, 0);
+        if (bytesSent < 4)
+        {
+            printf("Not all bytes sent\n");
+            if (bytesSent < 0)
+            {
+                perror("Unable to send message length");
+            }
+        }
+
+        printf("\nMessage: ");
     }
     printf("\n");
 

@@ -1,11 +1,10 @@
 #include "myitoa.h"
 
-#include <stdint.h>
-#include <stdio.h>
+#include <stddef.h>
 
 char* myitoa(char* buffer, uint16_t i)
 {
-    uint16_t place = 1000;
+    size_t place = 1000;
     
     for (int index = 0; index < 4; index++)
     {
