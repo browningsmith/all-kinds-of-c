@@ -1,13 +1,20 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
+#define BUFFLEN 1024
+
 int main(int argc, char** argv)
 {
+    
+    char lineBuffer[BUFFLEN + 2]; // Additional two bytes, one for newline and one for null term
+    uint16_t messageLength;
     int serverSocketFD;
     struct sockaddr_in serverAddress;
     in_port_t serverPort;
@@ -49,6 +56,20 @@ int main(int argc, char** argv)
         return -1;
     }
     printf("Connection established with server!\n");
+
+    //Send lines from stdin to server
+    printf(
+        "Type a message and hit ENTER to send a message to the server.\n"
+        "Type CTRL+D to close connection\n"
+        "Message: "
+    );
+    while (fgets(lineBuffer, BUFFLEN + 1, stdin) != NULL) // fgets returns NULL on error or EOF (CTRL+D)
+    {
+        messageLength = strlen(lineBuffer) - 1;
+        printf("Message length: %i\n", messageLength);
+        printf("Message: ");
+    }
+    printf("\n");
 
     // Close socket
     printf("Attempting to close socket...\n");
