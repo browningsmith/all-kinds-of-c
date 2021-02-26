@@ -6,6 +6,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include "myitoa.h"
+
 #define MAXBACKLOG 10
 
 int main(int argc, char** argv)

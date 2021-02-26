@@ -8,6 +8,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include "myitoa.h"
+
 #define BUFFLEN 1024
 
 int main(int argc, char** argv)
@@ -15,6 +17,7 @@ int main(int argc, char** argv)
     
     char lineBuffer[BUFFLEN + 2]; // Additional two bytes, one for newline and one for null term
     uint16_t messageLength;
+    char lengthBuffer[5];
     int serverSocketFD;
     struct sockaddr_in serverAddress;
     in_port_t serverPort;
@@ -63,10 +66,12 @@ int main(int argc, char** argv)
         "Type CTRL+D to close connection\n"
         "Message: "
     );
-    while (fgets(lineBuffer, BUFFLEN + 1, stdin) != NULL) // fgets returns NULL on error or EOF (CTRL+D)
+    while (fgets(lineBuffer, BUFFLEN + 2, stdin) != NULL) // fgets returns NULL on error or EOF (CTRL+D)
     {
         messageLength = strlen(lineBuffer) - 1;
-        printf("Message length: %i\n", messageLength);
+        myitoa(lengthBuffer, messageLength);
+        lengthBuffer[4] = (char) 0;
+        printf("Message length: %s\n", lengthBuffer);
         printf("Message: ");
     }
     printf("\n");
