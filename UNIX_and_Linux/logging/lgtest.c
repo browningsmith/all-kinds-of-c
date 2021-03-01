@@ -1,10 +1,10 @@
 #include "lg.h"
 
+#include <stdio.h>
+
 int main()
 {
-    lg_init();
-
-    lg("Hello, World!\n");
+    printf("Hello, World!\n");
 
     return 0;
 }

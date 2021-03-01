@@ -3,11 +3,22 @@
 #ifndef LG_H
 #define LG_H
 
-static short lg_init_tried_ = 0;
-static short lg_init_success_ = 0;
+#include <stddef.h>
 
-int lg_init(void);
+typedef enum {
 
-void lg(const char* string);
+    NOTOPEN,
+    OPENFAILED,
+    OPEN
+
+} LgStatus;
+
+typedef struct {
+
+    LgStatus status;
+
+} LgObject;
+
+static LgObject* main_lg_object_ = NULL;
 
 #endif /* LG_H */
