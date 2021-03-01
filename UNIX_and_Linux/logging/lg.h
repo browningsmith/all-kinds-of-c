@@ -22,5 +22,6 @@ typedef struct {
 static LgObject* main_lg_object_ = NULL;
 
 LgStatus lg_open(void);
+int lg_exists(void);
 
 #endif /* LG_H */

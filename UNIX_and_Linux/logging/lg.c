@@ -5,7 +5,7 @@
 
 LgStatus lg_open(void)
 {
-    if (main_lg_object_ != NULL)
+    if (lg_exists())
     {
         printf("There is already a log open\n");
         return OPENFAILED;
@@ -23,4 +23,14 @@ LgStatus lg_open(void)
     main_lg_object_->status = NOTOPEN;
 
     return main_lg_object_->status;
+}
+
+int lg_exists(void)
+{
+    if (main_lg_object_ == NULL)
+    {
+        return 0;
+    }
+
+    return 1;
 }
