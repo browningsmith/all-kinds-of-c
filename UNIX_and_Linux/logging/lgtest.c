@@ -4,16 +4,11 @@
 
 int main()
 {
+    lgc("Hello, World!\n");
+
     lg_open();
 
-    if (lg_exists())
-    {
-        printf("Log exists!\n");
-    }
-    else
-    {
-        printf("Log does not exist\n");
-    }
+    lgc("Hello, World!\n");
 
     return 0;
 }

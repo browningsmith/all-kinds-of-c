@@ -7,6 +7,7 @@
 
 typedef enum {
 
+    NO_LGOBJECT,
     NOTOPEN,
     OPENFAILED,
     OPEN
@@ -23,5 +24,7 @@ static LgObject* main_lg_object_ = NULL;
 
 LgStatus lg_open(void);
 int lg_exists(void);
+LgStatus lg_getStatus(void);
+int lgc(const char* text);
 
 #endif /* LG_H */
