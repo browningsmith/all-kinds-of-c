@@ -1,8 +1,29 @@
-all: main
+all: server client
 
-main: main.o
-	gcc -std=c99 -Wall -o main main.o
+server: server.o myitoa.o
+	gcc -std=c99 -Wall -o server server.o myitoa.o
 
-main.o: main.c
-	gcc -std=c99 -Wall -c -o main.o main.c
+server.o: server.c
+	gcc -std=c99 -Wall -c -o server.o server.c
+
+client: client.o myitoa.o
+	gcc -std=c99 -Wall -o client client.o myitoa.o
+
+client.o: client.c
+	gcc -std=c99 -Wall -c -o client.o client.c
+
+myitoa.o: myitoa.h myitoa.c
+	gcc -std=c99 -Wall -c -o myitoa.o myitoa.c
+
+clean: cleanserver cleanclient cleanmyitoa
+
+cleanserver:
+	-rm -rf server server.o
+
+cleanclient:
+	-rm -rf client client.o
+
+cleanmyitoa:
+	-rm -rf myitoa.o
+
 
