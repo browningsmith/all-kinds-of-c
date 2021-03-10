@@ -42,6 +42,9 @@ RBTNode* newRBTNode(void* content);
  * Returns: RBT*
  * 
  * Creates a new empty RBT. head is initially set to NULL
+ * 
+ * Failure returns NULL and sets errno, success returns a pointer
+ * to a new RBT
  ***************************************************************/
 
 RBT* newRBT(void);

@@ -24,7 +24,15 @@ RBTNode* newRBTNode(void* content)
 
 RBT* newRBT(void)
 {
-    RBT* newRBT = NULL;
+    // Allocate space for the new RBT
+    RBT* newTree = malloc(sizeof(RBT));
+    if (newTree == NULL) // malloc returns NULL on error
+    {
+        return NULL;
+    }
 
-    return newRBT;
+    // Initialize head
+    newTree->head = NULL;
+
+    return newTree;
 }
