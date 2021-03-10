@@ -3,7 +3,7 @@
 
 typedef struct RBTNode_struct {
 
-    short isRed; // zero if black, non-zero if red
+    char isRed; // zero if black, non-zero if red
 
     struct RBTNode_struct* parent;
     struct RBTNode_struct* left;
