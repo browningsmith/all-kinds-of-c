@@ -65,4 +65,16 @@ int rbtIsTreeEmpty(RBT tree);
 
 RBTNode* rbtNewNode(void* content);
 
+/***************************************************************
+ * rbtIsNodeEmpty
+ * 
+ * Inputs: RBTNode node
+ * Returns: int
+ * 
+ * Returns 1 if the content of the given node is NULL, otherwise
+ * returns 0
+ ***************************************************************/
+
+int rbtIsNodeEmpty(RBTNode node);
+
 #endif /* RBT_H */

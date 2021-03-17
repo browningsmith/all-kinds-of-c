@@ -37,3 +37,13 @@ RBTNode* rbtNewNode(void* content)
 
     return newNode;
 }
+
+int rbtIsNodeEmpty(RBTNode node)
+{
+    if (node.content == NULL)
+    {
+        return 1;
+    }
+
+    return 0;
+}
