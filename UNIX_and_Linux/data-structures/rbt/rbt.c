@@ -9,6 +9,16 @@ void rbtInit(RBT* tree)
     tree->head = NULL;
 }
 
+int rbtIsTreeEmpty(RBT tree)
+{
+    if (tree.head == NULL)
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
 RBTNode* rbtNewNode(void* content)
 {
     // Allocate space for the new node

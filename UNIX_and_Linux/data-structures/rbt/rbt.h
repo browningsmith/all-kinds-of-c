@@ -38,6 +38,18 @@ typedef struct {
 void rbtInit(RBT* tree);
 
 /***************************************************************
+ * rbtIsTreeEmpty
+ * 
+ * Inputs: RBT tree
+ * Returns: int
+ * 
+ * Returns 1 if the head of the given tree is NULL, otherwise
+ * returns 0
+ ***************************************************************/
+
+int rbtIsTreeEmpty(RBT tree);
+
+/***************************************************************
  * rbtNewNode
  * 
  * Inputs: void* content
