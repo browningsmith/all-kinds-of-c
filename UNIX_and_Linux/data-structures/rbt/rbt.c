@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void rbtInit(RBT* tree)
+{
+    // Initialize values
+    tree->head = NULL;
+}
+
 RBTNode* rbtNewNode(void* content)
 {
     // Allocate space for the new node
@@ -20,19 +26,4 @@ RBTNode* rbtNewNode(void* content)
     newNode->content = content;
 
     return newNode;
-}
-
-RBT* rbtNewTree(void)
-{
-    // Allocate space for the new RBT
-    RBT* newTree = malloc(sizeof(RBT));
-    if (newTree == NULL) // malloc returns NULL on error
-    {
-        return NULL;
-    }
-
-    // Initialize head
-    newTree->head = NULL;
-
-    return newTree;
 }

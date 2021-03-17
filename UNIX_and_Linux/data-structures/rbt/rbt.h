@@ -20,6 +20,24 @@ typedef struct {
 } RBT;
 
 /***************************************************************
+ * rbtInit
+ * 
+ * Inputs: None
+ * Returns: None
+ * 
+ * Initializes the values of the given RBT as a new empty RBT
+ * 
+ * If an existing RBT is passed to this fuction that has data in
+ * it, the data will be lost to a memory leak, as this function
+ * does not clear out an already existing tree.
+ * 
+ * Passing a pointer to anything other than an RBT results in
+ * undefined behavior
+ ***************************************************************/
+
+void rbtInit(RBT* tree);
+
+/***************************************************************
  * rbtNewNode
  * 
  * Inputs: void* content
@@ -34,31 +52,5 @@ typedef struct {
  ***************************************************************/
 
 RBTNode* rbtNewNode(void* content);
-
-/***************************************************************
- * rbtNewTree
- * 
- * Inputs: None
- * Returns: RBT*
- * 
- * Creates a new empty RBT. head is initially set to NULL
- * 
- * Failure returns NULL and sets errno, success returns a pointer
- * to a new RBT
- ***************************************************************/
-
-RBT* rbtNewTree(void);
-
-/***************************************************************
- * rbtIsEmpty
- * 
- * Inputs: None
- * Returns: RBT*
- * 
- * Creates a new empty RBT. head is initially set to NULL
- * 
- * Failure returns NULL and sets errno, success returns a pointer
- * to a new RBT
- ***************************************************************/
 
 #endif /* RBT_H */
