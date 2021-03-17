@@ -20,7 +20,7 @@ typedef struct {
 } RBT;
 
 /***************************************************************
- * newRBTNode
+ * rbtNewNode
  * 
  * Inputs: void* content
  * Returns: RBTNode*
@@ -33,10 +33,10 @@ typedef struct {
  * to a new RBTNode
  ***************************************************************/
 
-RBTNode* newRBTNode(void* content);
+RBTNode* rbtNewNode(void* content);
 
 /***************************************************************
- * newRBT
+ * rbtNewTree
  * 
  * Inputs: None
  * Returns: RBT*
@@ -47,6 +47,18 @@ RBTNode* newRBTNode(void* content);
  * to a new RBT
  ***************************************************************/
 
-RBT* newRBT(void);
+RBT* rbtNewTree(void);
+
+/***************************************************************
+ * rbtIsEmpty
+ * 
+ * Inputs: None
+ * Returns: RBT*
+ * 
+ * Creates a new empty RBT. head is initially set to NULL
+ * 
+ * Failure returns NULL and sets errno, success returns a pointer
+ * to a new RBT
+ ***************************************************************/
 
 #endif /* RBT_H */

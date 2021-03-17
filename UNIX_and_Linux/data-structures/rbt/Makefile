@@ -3,7 +3,7 @@ all: rbtest
 rbtest: rbt.o rbtest.o
 	gcc -Wall -o rbtest rbt.o rbtest.o
 
-rbtest.o: rbtest.c
+rbtest.o: rbt.h rbtest.c
 	gcc -Wall -c -o rbtest.o rbtest.c
 
 rbt.o: rbt.h rbt.c

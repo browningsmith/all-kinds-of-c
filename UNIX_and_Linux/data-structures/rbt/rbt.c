@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-RBTNode* newRBTNode(void* content)
+RBTNode* rbtNewNode(void* content)
 {
     // Allocate space for the new node
     RBTNode* newNode = malloc(sizeof(RBTNode));
@@ -22,7 +22,7 @@ RBTNode* newRBTNode(void* content)
     return newNode;
 }
 
-RBT* newRBT(void)
+RBT* rbtNewTree(void)
 {
     // Allocate space for the new RBT
     RBT* newTree = malloc(sizeof(RBT));

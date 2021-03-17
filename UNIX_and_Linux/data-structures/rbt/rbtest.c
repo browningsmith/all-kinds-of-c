@@ -7,7 +7,7 @@ int main()
     printf("rbtest startup\n");
 
     printf("Creating new RBT\n");
-    RBT* tree = newRBT();
+    RBT* tree = rbtNewTree();
     if (tree == NULL)
     {
         perror("Unable to create new tree");
