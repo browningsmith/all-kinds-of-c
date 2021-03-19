@@ -74,6 +74,37 @@ RBTNode* rbtNewNode(void* content);
 int rbtIsNodeEmpty(RBTNode node);
 
 /***************************************************************
+ * rbtIsRed
+ * 
+ * Inputs: RBTNode node
+ * Returns: int
+ * 
+ * Returns 1 if the given RBTNode is red, otherwise
+ * returns 0
+ ***************************************************************/
+int rbtIsRed(RBTNode node);
+
+/***************************************************************
+ * rbtSetRed
+ * 
+ * Inputs: RBTNode* node
+ * Returns: None
+ * 
+ * Sets the given RBTNode to red
+ ***************************************************************/
+void rbtSetRed(RBTNode* node);
+
+/***************************************************************
+ * rbtSetBlack
+ * 
+ * Inputs: RBTNode* node
+ * Returns: None
+ * 
+ * Sets the given RBTNode to black
+ ***************************************************************/
+void rbtSetBlack(RBTNode* node);
+
+/***************************************************************
  * rbtCompare
  * 
  * Inputs: RBTNode a, RBTNode b, int (*compareFunction) (void*, void*)
@@ -101,5 +132,7 @@ int rbtIsNodeEmpty(RBTNode node);
  * 
  ***************************************************************/
 int rbtCompare(RBTNode a, RBTNode b, int (*compareFunction) (void*, void*));
+
+/* TODO create function to insert node into RBT */
 
 #endif /* RBT_H */

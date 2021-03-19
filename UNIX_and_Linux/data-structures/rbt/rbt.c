@@ -48,7 +48,29 @@ int rbtIsNodeEmpty(RBTNode node)
     return 0;
 }
 
+int rbtIsRed(RBTNode node)
+{
+    if (node.isRed)
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
+void rbtSetRed(RBTNode* node)
+{
+    node->isRed = 1;
+}
+
+void rbtSetBlack(RBTNode* node)
+{
+    node->isRed = 0;
+}
+
 int rbtCompare(RBTNode a, RBTNode b, int (*compareFunction) (void*, void*))
 {
     return compareFunction(a.content, b.content);
 }
+
+/* TODO implement function to insert node into RBT */
