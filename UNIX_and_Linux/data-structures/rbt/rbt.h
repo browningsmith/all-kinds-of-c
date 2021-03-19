@@ -53,7 +53,7 @@ int rbtIsTreeEmpty(RBT tree);
  * Inputs: void* content
  * Returns: RBTNode*
  * 
- * Creates a new empty RBTNode. This node is set to black (isRed = 0)
+ * Creates a new RBTNode. This node is set to black (isRed = 0)
  * and sets parent, left, and right to NULL. Set's the new node's
  * content equal to the pointer passed in content
  * 
@@ -90,12 +90,11 @@ int rbtIsNodeEmpty(RBTNode node);
  * If either node's content is empty, behavior is undefined
  * 
  * compareFunction must behave in the following way:
- *     -if the first argument is less than the second argument, a
- *      negative int must be returned
- *     -if the first argument is greater than the second argument,
- *      a positive int must be returned
- *     -if the first argument is equivalent to the second argument,
- *      a 0 must be returned
+ *     -if the object in the first argument is less than the
+ *      object in the second argument, a negative int must be returned
+ *     -if the object in the first argument is greater than the
+ *      object in the second argument, a positive int must be returned
+ *     -if the objects are equivalent, a 0 must be returned
  * 
  * If the given compareFunction does not behave this way, the operation
  * of the entire RBT will be undefined, and likely very very wrong
