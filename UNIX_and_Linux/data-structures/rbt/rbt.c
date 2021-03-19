@@ -47,3 +47,8 @@ int rbtIsNodeEmpty(RBTNode node)
 
     return 0;
 }
+
+int rbtCompare(RBTNode a, RBTNode b, int (*compareFunction) (void*, void*))
+{
+    return compareFunction(a.content, b.content);
+}

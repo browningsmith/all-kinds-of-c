@@ -54,7 +54,7 @@ int main(int argc, char** argv)
     printf("Filled nodeB with %i\n", *((int*) nodeB->content));
 
     // Test using custom compare function to compare the two integers
-    compareInt(nodeA->content, nodeB->content);
+    printf("rbtCompare result: %i\n", rbtCompare(*nodeA, *nodeB, compareInt));
 
     return 0;
 }

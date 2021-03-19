@@ -34,7 +34,6 @@ typedef struct {
  * Passing a pointer to anything other than an RBT results in
  * undefined behavior
  ***************************************************************/
-
 void rbtInit(RBT* tree);
 
 /***************************************************************
@@ -46,7 +45,6 @@ void rbtInit(RBT* tree);
  * Returns 1 if the head of the given tree is NULL, otherwise
  * returns 0
  ***************************************************************/
-
 int rbtIsTreeEmpty(RBT tree);
 
 /***************************************************************
@@ -62,7 +60,6 @@ int rbtIsTreeEmpty(RBT tree);
  * Failure returns NULL and sets errno, success returns a pointer
  * to a new RBTNode
  ***************************************************************/
-
 RBTNode* rbtNewNode(void* content);
 
 /***************************************************************
@@ -74,7 +71,36 @@ RBTNode* rbtNewNode(void* content);
  * Returns 1 if the content of the given node is NULL, otherwise
  * returns 0
  ***************************************************************/
-
 int rbtIsNodeEmpty(RBTNode node);
+
+/***************************************************************
+ * rbtCompare
+ * 
+ * Inputs: RBTNode a, RBTNode b, int (*compareFunction) (void*, void*)
+ * Returns: int
+ * 
+ * Compares the content of two nodes using given compareFunction
+ * 
+ * rbtCompare passes the content of node a to the first argument of
+ * compareFunction, and the content of node b to the second
+ * argument of compareFunction
+ * 
+ * Returns the result of executing compareFunction on these values
+ * 
+ * If either node's content is empty, behavior is undefined
+ * 
+ * compareFunction must behave in the following way:
+ *     -if the first argument is less than the second argument, a
+ *      negative int must be returned
+ *     -if the first argument is greater than the second argument,
+ *      a positive int must be returned
+ *     -if the first argument is equivalent to the second argument,
+ *      a 0 must be returned
+ * 
+ * If the given compareFunction does not behave this way, the operation
+ * of the entire RBT will be undefined, and likely very very wrong
+ * 
+ ***************************************************************/
+int rbtCompare(RBTNode a, RBTNode b, int (*compareFunction) (void*, void*));
 
 #endif /* RBT_H */
