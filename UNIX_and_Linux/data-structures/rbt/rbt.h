@@ -53,7 +53,7 @@ int rbtIsTreeEmpty(RBT tree);
  * Inputs: void* content
  * Returns: RBTNode*
  * 
- * Creates a new RBTNode. This node is set to black (isRed = 0)
+ * Creates a new RBTNode. This node is set to red (isRed = 1)
  * and sets parent, left, and right to NULL. Set's the new node's
  * content equal to the pointer passed in content
  * 

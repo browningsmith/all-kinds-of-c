@@ -29,7 +29,7 @@ RBTNode* rbtNewNode(void* content)
     }
 
     // Initialize values
-    newNode->isRed = 0; // Set new node to black
+    newNode->isRed = 1; // set new node to red
     newNode->parent = NULL;
     newNode->left = NULL;
     newNode->right = NULL;
