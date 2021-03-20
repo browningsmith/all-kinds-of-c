@@ -1,6 +1,14 @@
 #ifndef RBT_H
 #define RBT_H
 
+typedef enum {
+
+    SUCCESS,
+    INSERTED_EMPTY_NODE,
+    EMPTY_NODE_ENCOUNTERED
+
+} RBTInsertStatus;
+
 typedef struct RBTNode_struct {
 
     char isRed; // zero if black, non-zero if red
@@ -18,6 +26,13 @@ typedef struct {
     RBTNode* head;
 
 } RBT;
+
+typedef struct {
+
+    RBTInsertStatus status;
+    void* errNode;
+
+} RBTInsertStatusStruct;
 
 /***************************************************************
  * rbtInit
@@ -132,7 +147,5 @@ void rbtSetBlack(RBTNode* node);
  * 
  ***************************************************************/
 int rbtCompare(RBTNode a, RBTNode b, int (*compareFunction) (void*, void*));
-
-/* TODO create function to insert node into RBT */
 
 #endif /* RBT_H */
