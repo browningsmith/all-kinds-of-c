@@ -4,7 +4,8 @@
 typedef enum {
 
     SUCCESS,
-    INSERTED_EMPTY_NODE,
+    NO_MEMORY,
+    NULL_INSERT_ATTEMPT,
     EMPTY_NODE_ENCOUNTERED
 
 } RBTInsertStatus;
@@ -147,5 +148,7 @@ void rbtSetBlack(RBTNode* node);
  * 
  ***************************************************************/
 int rbtCompare(RBTNode a, RBTNode b, int (*compareFunction) (void*, void*));
+
+RBTInsertStatusStruct rbtInsert(RBT* tree, void* content);
 
 #endif /* RBT_H */

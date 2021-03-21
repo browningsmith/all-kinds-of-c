@@ -73,4 +73,18 @@ int rbtCompare(RBTNode a, RBTNode b, int (*compareFunction) (void*, void*))
     return compareFunction(a.content, b.content);
 }
 
-/* TODO implement function to insert node into RBT */
+RBTInsertStatusStruct rbtInsert(RBT* tree, void* content)
+{
+    RBTInsertStatusStruct result;
+    result.errNode = NULL;
+
+    // Check that content is not null pointer
+    if (content == NULL)
+    {
+        result.status = NULL_INSERT_ATTEMPT;
+	return result;
+    }
+
+    result.status = SUCCESS;
+    return result;
+}

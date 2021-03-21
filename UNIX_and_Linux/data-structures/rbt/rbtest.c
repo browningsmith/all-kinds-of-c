@@ -10,7 +10,7 @@ int main(int argc, char** argv)
     
     printf("rbtest startup\n");
 
-    /* TODO test inserting a node into an RBT */
+    void* a = malloc(sizeof(int));
 
     return 0;
 }
