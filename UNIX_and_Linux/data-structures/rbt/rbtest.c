@@ -11,6 +11,12 @@ int main(int argc, char** argv)
     printf("rbtest startup\n");
 
     void* a = malloc(sizeof(int));
+    if (a == NULL)
+    {
+        perror("unable to allocate");
+	return -1;
+    }
+    *((int*) a) = 3000;
 
     return 0;
 }
