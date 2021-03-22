@@ -10,13 +10,28 @@ int main(int argc, char** argv)
     
     printf("rbtest startup\n");
 
+    RBT tree;
+    rbtInit(&tree);
+
     void* a = malloc(sizeof(int));
     if (a == NULL)
     {
-        perror("unable to allocate");
+        perror("unable to allocate space for int");
 	return -1;
     }
     *((int*) a) = 3000;
+
+    printf("Attempting to insert NULL to tree: ");
+    RBTInsertStatusStruct status = rbtInsert(&tree, NULL);
+    if (status.status == SUCCESS)
+    {
+        printf("Error, success returned!\n");
+	return -1;
+    }
+    else if (status.status == NULL_INSERT_ATTEMPT)
+    {
+        printf("Correct error on null insert attempt\n");
+    }
 
     return 0;
 }
