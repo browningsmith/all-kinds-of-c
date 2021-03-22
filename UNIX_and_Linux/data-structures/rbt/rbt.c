@@ -85,6 +85,20 @@ RBTInsertStatusStruct rbtInsert(RBT* tree, void* content)
 	return result;
     }
 
+    // Create new node
+    RBTNode* newNode = rbtNewNode(content);
+    if (newNode == NULL) // rbtNewNode returns NULL on error
+    {
+        result.status = NO_MEMORY;
+	return result;
+    }
+
+    // If tree is empty, set this node as the head
+    if (rbtIsTreeEmpty(*tree))
+    {
+        tree->head = newNode;
+    }
+
     result.status = SUCCESS;
     return result;
 }
