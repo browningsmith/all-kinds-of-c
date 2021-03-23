@@ -32,7 +32,7 @@ typedef struct {
 typedef struct {
 
     RBTStatus status;
-    void* node;
+    RBTNode* node;
 
 } RBTStatusStruct;
 
