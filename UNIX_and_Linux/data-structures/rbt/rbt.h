@@ -5,7 +5,7 @@ typedef enum {
 
     SUCCESS,
     NO_MEMORY,
-    NULL_INSERT_ATTEMPT,
+    NULL_CONTENT,
     EMPTY_NODE_ENCOUNTERED,
     NOT_FOUND
 
@@ -32,7 +32,7 @@ typedef struct {
 typedef struct {
 
     RBTStatus status;
-    void* errNode;
+    void* node;
 
 } RBTStatusStruct;
 
@@ -122,20 +122,21 @@ void rbtSetRed(RBTNode* node);
 void rbtSetBlack(RBTNode* node);
 
 /***************************************************************
- * rbtCompare
+ * rbtGetNode
  * 
- * Inputs: RBTNode a, RBTNode b, int (*compareFunction) (void*, void*)
- * Returns: int
+ * Inputs: RBT* tree, void* content, int (*compareFunction) (void*, void*)
+ * Returns: RBTStatusStruct result
  * 
- * Compares the content of two nodes using given compareFunction
+ * Uses the given compareFunction to attempt to find a node that contains
+ * content inside tree.
  * 
- * rbtCompare passes the content of node a to the first argument of
- * compareFunction, and the content of node b to the second
- * argument of compareFunction
+ * If the tree is made of nodes that contain objects that are not
+ * of the same type as the conent being searched for, behavior will be
+ * undefined, and likely very very wrong.
  * 
- * Returns the result of executing compareFunction on these values
- * 
- * If either node's content is empty, behavior is undefined
+ * Returns a RBTStatusStruct result with result.status set to reflect
+ * success or what may have caused failure. See note about RBTStatusStruct
+ * above.
  * 
  * compareFunction must behave in the following way:
  *     -if the object in the first argument is less than the
@@ -146,15 +147,15 @@ void rbtSetBlack(RBTNode* node);
  * 
  * If the given compareFunction does not behave this way, the operation
  * of the entire RBT will be undefined, and likely very very wrong
- * 
  ***************************************************************/
-int rbtCompare(RBTNode a, RBTNode b, int (*compareFunction) (void*, void*));
+RBTStatusStruct rbtGetNode(RBT tree, void* content, int (*compareFunction) (void*, void*));
+RBTStatusStruct rbtGetNode_fromNode(RBTNode* start, void* content, int (*compareFunction) (void*, void*));
 
 /***************************************************************
  * rbtInsert
  * 
- * Inputs: RBT* tree, void* content
- * Returns: RBTInsertStatusStruct
+ * Inputs: RBT* tree, void* content, int (*compareFunction) (void*, void*)
+ * Returns: RBTStatusStruct result
  * 
  * Creates and inserts a new RBT node into the tree with the given
  * content.
@@ -165,8 +166,9 @@ int rbtCompare(RBTNode a, RBTNode b, int (*compareFunction) (void*, void*));
  * of the same type as the conent being inserted, behavior will be
  * undefined, and likely very very wrong.
  * 
- * Returns a RBTInsertStatusStruct with status set to reflect
- * success or what may have caused failure.
+ * Returns a RBTStatusStruct result with result.status set to reflect
+ * success or what may have caused failure. See note about RBTStatusStruct
+ * above.
  * 
  * compareFunction must behave in the following way:
  *     -if the object in the first argument is less than the

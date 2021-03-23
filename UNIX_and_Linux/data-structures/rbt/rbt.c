@@ -68,20 +68,115 @@ void rbtSetBlack(RBTNode* node)
     node->isRed = 0;
 }
 
-int rbtCompare(RBTNode a, RBTNode b, int (*compareFunction) (void*, void*))
+RBTStatusStruct rbtGetNode(RBT tree, void* content, int (*compareFunction) (void*, void*))
 {
-    return compareFunction(a.content, b.content);
+    RBTStatusStruct result;
+    result.node = NULL;
+
+    // Check that content is not null pointer
+    if (content == NULL)
+    {
+        result.status = NULL_CONTENT;
+        return result;
+    }
+
+    // If tree is empty, return NOT_FOUND
+    if (rbtIsTreeEmpty(tree))
+    {
+        printf("Tree is empty, returning NOT_FOUND\n");
+        result.status = NOT_FOUND;
+        return result;
+    }
+
+    // Begin search algorithm
+    return rbtGetNode_fromNode(tree.head, content, compareFunction);
+}
+
+RBTStatusStruct rbtGetNode_fromNode(RBTNode* start, void* content, int (*compareFunction) (void*, void*))
+{
+    RBTStatusStruct result;
+    result.node = NULL;
+
+    // Check that content is not null pointer
+    if (content == NULL)
+    {
+        result.status = NULL_CONTENT;
+        return result;
+    }
+
+    // Begin search algorithm
+    RBTNode* currentNode = start;
+    int compareResult;
+    
+    while (1)
+    {
+        // If currentNode is empty, return EMPTY_NODE_ENCOUNTERED and currentNode in result
+        if (rbtIsNodeEmpty(*currentNode))
+        {
+            printf("Empty node encountered during search, returning EMPTY_NODE_ENCOUNTERED\n");
+            result.status = EMPTY_NODE_ENCOUNTERED;
+            result.node = currentNode;
+            return result;
+        }
+
+        compareResult = compareFunction(content, currentNode->content);
+
+        // If content equals currentNode content, return SUCCESS and current node
+        if (compareResult == 0)
+        {
+            printf("Matching node found, returning with SUCCESS and currentNode\n");
+            result.status = SUCCESS;
+            result.node = currentNode;
+            return result;
+        }
+
+        // If content is less than currentNode content
+        if (compareResult < 0)
+        {
+            printf("Content is less than current node\n");
+            // If left child is null, return NOT_FOUND and currentNode
+            if (currentNode->left == NULL)
+            {
+                printf("Current node has no left child, returning NOT_FOUND and currentNode\n");
+                result.status = NOT_FOUND;
+                result.node = currentNode;
+                return result;
+            }
+
+            // otherwise recurse to left child
+            printf("Setting currentNode to left child\n");
+            currentNode = currentNode->left;
+            continue;
+        }
+
+        // Otherwise content is greater than currentNode content
+        {
+            printf("Content is greater than current node\n");
+            // If right child is null, return NOT_FOUND and currentNode
+            if (currentNode->right == NULL)
+            {
+                printf("Current node has no right child, returning NOT_FOUND and currentNode\n");
+                result.status = NOT_FOUND;
+                result.node = currentNode;
+                return result;
+            }
+
+            // otherwise recurse to right child
+            printf("Setting currentNode to right child\n");
+            currentNode = currentNode->right;
+        }
+    }
 }
 
 RBTStatusStruct rbtInsert(RBT* tree, void* content, int (*compareFunction) (void*, void*))
 {
     RBTStatusStruct result;
-    result.errNode = NULL;
+    result.node = NULL;
 
     // Check that content is not null pointer
     if (content == NULL)
     {
-        result.status = NULL_INSERT_ATTEMPT;
+        result.status = NULL_CONTENT;
         return result;
     }
 
