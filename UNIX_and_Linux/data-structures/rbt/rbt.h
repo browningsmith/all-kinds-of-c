@@ -6,9 +6,10 @@ typedef enum {
     SUCCESS,
     NO_MEMORY,
     NULL_INSERT_ATTEMPT,
-    EMPTY_NODE_ENCOUNTERED
+    EMPTY_NODE_ENCOUNTERED,
+    NOT_FOUND
 
-} RBTInsertStatus;
+} RBTStatus;
 
 typedef struct RBTNode_struct {
 
@@ -30,10 +31,10 @@ typedef struct {
 
 typedef struct {
 
-    RBTInsertStatus status;
+    RBTStatus status;
     void* errNode;
 
-} RBTInsertStatusStruct;
+} RBTStatusStruct;
 
 /***************************************************************
  * rbtInit
@@ -149,6 +150,34 @@ void rbtSetBlack(RBTNode* node);
  ***************************************************************/
 int rbtCompare(RBTNode a, RBTNode b, int (*compareFunction) (void*, void*));
 
-RBTInsertStatusStruct rbtInsert(RBT* tree, void* content);
+/***************************************************************
+ * rbtInsert
+ * 
+ * Inputs: RBT* tree, void* content
+ * Returns: RBTInsertStatusStruct
+ * 
+ * Creates and inserts a new RBT node into the tree with the given
+ * content.
+ * 
+ * This function uses the provided compareFunction to compare
+ * the content of the new node to other nodes in the tree. If
+ * the tree is made of nodes that contain objects that are not
+ * of the same type as the conent being inserted, behavior will be
+ * undefined, and likely very very wrong.
+ * 
+ * Returns a RBTInsertStatusStruct with status set to reflect
+ * success or what may have caused failure.
+ * 
+ * compareFunction must behave in the following way:
+ *     -if the object in the first argument is less than the
+ *      object in the second argument, a negative int must be returned
+ *     -if the object in the first argument is greater than the
+ *      object in the second argument, a positive int must be returned
+ *     -if the objects are equivalent, a 0 must be returned
+ * 
+ * If the given compareFunction does not behave this way, the operation
+ * of the entire RBT will be undefined, and likely very very wrong
+ ***************************************************************/
+RBTStatusStruct rbtInsert(RBT* tree, void* content, int (*compareFunction) (void*, void*));
 
 #endif /* RBT_H */

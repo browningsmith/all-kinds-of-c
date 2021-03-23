@@ -73,16 +73,16 @@ int rbtCompare(RBTNode a, RBTNode b, int (*compareFunction) (void*, void*))
     return compareFunction(a.content, b.content);
 }
 
-RBTInsertStatusStruct rbtInsert(RBT* tree, void* content)
+RBTStatusStruct rbtInsert(RBT* tree, void* content, int (*compareFunction) (void*, void*))
 {
-    RBTInsertStatusStruct result;
+    RBTStatusStruct result;
     result.errNode = NULL;
 
     // Check that content is not null pointer
     if (content == NULL)
     {
         result.status = NULL_INSERT_ATTEMPT;
-	return result;
+        return result;
     }
 
     // Create new node
@@ -90,7 +90,7 @@ RBTInsertStatusStruct rbtInsert(RBT* tree, void* content)
     if (newNode == NULL) // rbtNewNode returns NULL on error
     {
         result.status = NO_MEMORY;
-	return result;
+        return result;
     }
 
     // If tree is empty, set this node as the head
@@ -98,7 +98,12 @@ RBTInsertStatusStruct rbtInsert(RBT* tree, void* content)
     {
         tree->head = newNode;
     }
+    else
+    {
+        
+    }
 
+    // At this point, return success
     result.status = SUCCESS;
     return result;
 }
