@@ -12,23 +12,26 @@ int main(int argc, char** argv)
 
     // Init new tree
     RBT tree;
-    rbtInit(&tree);
+    rbtInit(&tree, compareInt);
 
-    // Test inserting the same int 3 times
-    for (int i=0; i<3; i++)
+    void* a = malloc(sizeof(int));
+    if (a == NULL)
     {
-        void* a = malloc(sizeof(int));
-        if (a == NULL) // malloc returns NULL on error
-        {
-            perror("Unable to allocate space for int");
-            return -1;
-        }
-        *((int*) a) = 7000;
-
-        // Insert a new node with a as content
-        printf("Inserting %i into the tree\n", *((int*) a));
-        RBTStatusStruct result = rbtInsert(&tree, a, compareInt);
+        perror("Could not allocate space for a");
+        return -1;
     }
+    *((int*) a) = 4000;
+
+    void* b = malloc(sizeof(int));
+    if (b == NULL)
+    {
+        perror("Could not allocate space for b");
+        return -1;
+    }
+    *((int*) b) = 6000;
+
+    int result = tree.compareFunction(a, b);
+    printf("Result: %i\n", result);
 
     return 0;
 }
