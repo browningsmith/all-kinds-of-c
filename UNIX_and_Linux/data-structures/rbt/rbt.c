@@ -95,6 +95,65 @@ void rbtSetBlack(RBTNode* node)
     node->isRed = 0;
 }
 
+RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent)
+{
+    // Initialize result
+    RBTStatusStruct result = { .node = NULL };
+
+    // Check that query is not null
+    if (query == NULL)
+    {
+        printf("Attempted search with NULL query, returning NULL_CONTENT and NULL in result\n");
+        printf("Setting returnedContent to NULL\n");
+
+        *returnedContent = NULL;
+        result.status = NULL_CONTENT;
+        return result;
+    }
+
+    // If the tree is empty, return not found
+    if (rbtIsTreeEmpty(tree))
+    {
+        printf("Tree is empty. Returning NOT_FOUND and NULL in result\n");
+        printf("Setting returnedContent to NULL\n");
+
+        *returnedContent = NULL;
+        result.status = NOT_FOUND;
+        return result;
+    }
+
+    // Perform search
+    printf("Tree is not empty\n");
+    result = rbtGetNodeFromStartingNode(tree.head, query, tree.compareFunction);
+
+    if (result.status == SUCCESS)
+    {
+        printf("Node found. Returning SUCCESS and the found node in result\n");
+        printf("Setting returnedContent to the content of result.node\n");
+
+        *returnedContent = result.node->content;
+        // result.status is SUCCESS and result.node is equal to the found node
+    }
+    if (result.status == NOT_FOUND)
+    {
+        printf("Node not found. Returning NOT_FOUND and the last node searched in result\n");
+        printf("Setting returnedContent to NULL\n");
+
+        *returnedContent = NULL;
+        // result.status is NOT_FOUND and result.node is equal to the last node searched
+    }
+    if (result.status == EMPTY_NODE_ENCOUNTERED)
+    {
+        printf("Empty node encountered. Returning EMPTY_NODE_ENCOUNTERED and the erroneous node\n");
+        printf("Setting returnedContent to NULL\n");
+
+        *returnedContent = NULL;
+        // result.status is EMPTY_NODE_ENCOUNTERED and result.node is equal to the erroneous node
+    }
+
+    return result;
+}
+
 RBTStatusStruct rbtGetNodeFromStartingNode(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))
 {
     // Initialize result

@@ -24,13 +24,34 @@ int main(int argc, char** argv)
     // Construct small tree
     makeSmallTree(&tree);
 
-    // Test query when right child is an empty node
+    // Test using rbtFind if right child is an empty node
+    printf("Testing using rbtFind\n");
+    void* foundContent = NULL;
     void* temp = tree.head->right->content;
     tree.head->right->content = NULL;
-    free(temp);
-    printf("Searching for %i\n", query);
-    RBTStatusStruct result = rbtGetNodeFromStartingNode(tree.head, (void*) &query, tree.compareFunction);
-    printf("Result returned with status %s\n", rbtStatusAsText(result.status));
+    RBTStatusStruct result = rbtFind(tree, (void*) &query, &foundContent);
+    printf("Search returned with the status %s\n", rbtStatusAsText(result.status));
+    if (result.node == NULL)
+    {
+        printf("result.node is NULL\n");
+    }
+    else if (rbtIsNodeEmpty(*result.node))
+    {
+        printf("result.node is an empty node\n");
+    }
+    else
+    {
+        printf("result.node has the content %i\n", *(int*) result.node->content);
+    }
+    
+    if (foundContent == NULL)
+    {
+        printf("returned content is NULL\n");
+    }
+    else
+    {
+        printf("Returned content is %i\n", *(int*) foundContent);
+    }
 
     return 0;
 }

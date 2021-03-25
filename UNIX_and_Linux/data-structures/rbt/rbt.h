@@ -142,6 +142,34 @@ void rbtSetRed(RBTNode* node);
  ***************************************************************/
 void rbtSetBlack(RBTNode* node);
 
+/***************************************************************
+ * rbtFind
+ * 
+ * Inputs: RBT tree, void* query, void** returnedContent
+ * Returns: RBTStatusStruct result
+ * 
+ * Searches for a node within tree based on the given query object
+ * 
+ * If the search is successful, returns RBTStatusStruct with a
+ * status of SUCCESS, and the node that the content was found in.
+ * Also sets returnedContent equal to the content of the found node
+ * 
+ * If the search fails due to the node not being found, returns
+ * result with result.status being NOT_FOUND, and result.node being
+ * equal to the last node searched, or NULL if the tree is empty
+ * Also sets returnedContent to NULL
+ * 
+ * If the search fails due to an empty node being encountered in
+ * the tree, returns result with result.status being
+ * EMPTY_NODE_ENCOUNTERED, and result.node being set to the node
+ * which caused the problem. Also sets returnedContent to NULL
+ * 
+ * If the user attempts to search using a query that is NULL, returns
+ * result with result.status being NULL_CONTENT, and result.node
+ * being set to NULL. Also sets returnedContent to NULL
+ ***************************************************************/
+RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent);
+
 // Helper functions
 RBTStatusStruct rbtGetNodeFromStartingNode(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b));
 
