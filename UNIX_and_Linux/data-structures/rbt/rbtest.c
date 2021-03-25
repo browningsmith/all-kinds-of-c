@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 int compareInt(void* a, void* b);
+void makeSmallTree(RBT* tree);
 
 int main(int argc, char** argv)
 {
@@ -14,44 +15,8 @@ int main(int argc, char** argv)
     RBT tree;
     rbtInit(&tree, compareInt);
 
-    // Test creating a node that contains an int
-    printf("Creating newInt\n");
-    void* newInt = malloc(sizeof(int));
-    if (newInt == NULL)
-    {
-        perror("Unable to allocate space for an integer");
-        return -1;
-    }
-    *(int*) newInt = 4000;
-    printf("Created newInt with value %i\n", *((int*) newInt));
-    
-    printf("Creating new node and setting it to the head of tree\n");
-    tree.head = rbtNewNode(newInt);
-    if (rbtIsTreeEmpty(tree)) // If tree is empty, that means rbtNewNode had an error
-    {
-        perror("Unable to create new node for tree");
-        return -1;
-    }
-    if (rbtIsNodeEmpty(*tree.head))
-    {
-        perror("Node created, but the node itself is empty\n");
-        return -1;
-    }
-    printf("Node created and added to tree with content %i\n", *(int*) tree.head->content);
-
-    printf("Test calling rbtGetNodeFromNode in its current state\n");
-    int query = 4000;
-    RBTStatusStruct result = rbtGetNodeFromStartingNode(tree.head, (void*) &query, tree.compareFunction);
-    if (result.node == NULL)
-    {
-        printf("Call appears to be successful\n");
-    }
-    else
-    {
-        printf("result.node is not NULL, call failed somehow\n");
-        return -1;
-    }
-    printf("result.status was apparently initialized to: %s\n", rbtStatusAsText(result.status));
+    // Construct small tree
+    makeSmallTree(&tree);
 
     return 0;
 }
@@ -78,4 +43,66 @@ int compareInt(void* a, void* b)
         printf("A is greater than B\n");
         return 1;
     }
+}
+
+void makeSmallTree(RBT* tree)
+{
+    // Construct tree with head as 200, left child as 100, and right child as 300
+    printf("Constructing a new balanced tree with three nodes, 100, 200, and 300\n");
+
+    // Add 200 as head
+    void* newInt = malloc(sizeof(int));
+    if (newInt == NULL)
+    {
+        perror("Unable to allocate space for int 200");
+        exit(-1);
+    }
+    *(int*) newInt = 200;
+    tree->head = rbtNewNode(newInt);
+    if (rbtIsTreeEmpty(*tree))
+    {
+        perror("Unable to create new node for 200");
+        exit(-1);
+    }
+    printf("Added 200 as head\n");
+
+    // Add 100 as head's left child
+    newInt = malloc(sizeof(int));
+    if (newInt == NULL)
+    {
+        perror("Unable to allocate space for int 100");
+        exit(-1);
+    }
+    *(int*) newInt = 100;
+    tree->head->left = rbtNewNode(newInt);
+    if (tree->head->left == NULL)
+    {
+        perror("Unable to create new node for 100");
+        exit(-1);
+    }
+    tree->head->left->parent = tree->head;
+    printf("Added 100 as head's left child\n");
+
+    // Add 300 as head's right child
+    newInt = malloc(sizeof(int));
+    if (newInt == NULL)
+    {
+        perror("Unable to allocate space for int 300");
+        exit(-1);
+    }
+    *(int*) newInt = 300;
+    tree->head->right = rbtNewNode(newInt);
+    if (tree->head->right == NULL)
+    {
+        perror("Unable to create new node for 300");
+        exit(-1);
+    }
+    tree->head->right->parent = tree->head;
+    printf("Added 300 as head's right child\n");
+
+    printf("Head is %i\n", *(int*) tree->head->content);
+    printf("Left child is %i\n", *(int*) tree->head->left->content);
+    printf("Left child's parent is %i\n", *(int*) tree->head->left->parent->content);
+    printf("Right child is %i\n", *(int*) tree->head->right->content);
+    printf("Right child's parent is %i\n", *(int*) tree->head->right->parent->content);
 }

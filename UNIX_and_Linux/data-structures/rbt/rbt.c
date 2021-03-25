@@ -97,7 +97,27 @@ void rbtSetBlack(RBTNode* node)
 
 RBTStatusStruct rbtGetNodeFromStartingNode(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))
 {
+    // Initialize result
     RBTStatusStruct result = { .node = NULL };
+
+    RBTNode* currentNode = start;
+    int compareResult;
+
+    // Search algorithm
+    printf("Beginning search\n");
+    while (1)
+    {
+        // Check that currentNode is not empty
+        if (rbtIsNodeEmpty(*currentNode))
+        {
+            printf("Encountered empty node, returning EMPTY_NODE_ENCOUNTERED and currentNode\n");
+            result.status = EMPTY_NODE_ENCOUNTERED;
+            result.node = currentNode;
+            break;
+        }
+
+        break;
+    }
 
     return result;
 }
