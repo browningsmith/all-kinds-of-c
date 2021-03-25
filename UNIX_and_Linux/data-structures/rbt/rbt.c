@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const char* rbtStatusText(RBTStatus status)
+const char* rbtStatusAsText(RBTStatus status)
 {
     const char* result;
     

@@ -38,14 +38,14 @@ typedef struct {
 } RBTStatusStruct;
 
 /***************************************************************
- * rbtStatusText
+ * rbtStatusAsText
  * 
  * Inputs: RBTStatus status
  * Returns: const char*
  * 
  * Returns a string representation of the given RBTStatus
  ***************************************************************/
-const char* rbtStatusText(RBTStatus status);
+const char* rbtStatusAsText(RBTStatus status);
 
 /***************************************************************
  * rbtInit
