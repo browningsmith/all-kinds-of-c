@@ -195,32 +195,85 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
     printf("Tree was not empty\n");
 
     // Search for area to insert new node
-    // while (
-    //     ( result = rbtGetNodeFromStartingNode(
-    //         tree->head,
-    //         content,
-    //         tree->compareFunction
-    //     )).status != NOT_FOUND
-    // )
-    // {
-    //     // EMPTY_NODE_ENCOUNTERED, free memory allocated for new node and return proper error
-    //     if (result.status == EMPTY_NODE_ENCOUNTERED)
-    //     {
-    //         printf("Empty node encountered on insert. Returning with EMPTY_NODE_ENCOUNTERED and the offending node\n");
+    RBTNode* currentNode = tree->head;
 
-    //         free(newNode);
-    //         // result.status is EMPTY_NODE_ENCOUNTERED and result.node is the offending node
-    //         return result;
-    //     }
+    while (
+        ( result = rbtGetNodeFromStartingNode(
+            currentNode,
+            content,
+            tree->compareFunction
+        )).status != NOT_FOUND
+    )
+    {
+        // EMPTY_NODE_ENCOUNTERED, free memory allocated for new node and return proper error
+        if (result.status == EMPTY_NODE_ENCOUNTERED)
+        {
+            printf("Empty node encountered on insert. Returning with EMPTY_NODE_ENCOUNTERED and the offending node\n");
 
-    //     // SUCCESS means an equivalent node was found, attempt to insert to the right
-    //     if (result.status == SUCCESS)
-    //     {
-    //         printf("Equivalent node found on insert\n");
+            free(newNode);
+            // result.status is EMPTY_NODE_ENCOUNTERED and result.node is the offending node
+            return result;
+        }
 
-            
-    //     }
-    // }
+        // SUCCESS means an equivalent node was found, attempt to insert to the right
+        if (result.status == SUCCESS)
+        {
+            printf("Equivalent node found on insert\n");
+
+            currentNode = result.node;
+
+            // If right child is null, insert there
+            if (currentNode->right == NULL)
+            {
+                printf("Right child is NULL, inserting to the right\n");
+
+                currentNode->right = newNode;
+                newNode->parent = currentNode;
+
+                printf("Returning SUCCESS and new node\n");
+                result.status = SUCCESS;
+                result.node = newNode;
+                return result;
+            }
+            // Otherwise, recurse search for new place to insert into right child
+            else
+            {
+                printf("Right child is not NULL, searching again in right child\n");
+                currentNode = currentNode->right;
+                continue;
+            }
+        }
+    }
+
+    // At this point, result.status is NOT_FOUND which means we can insert here
+    printf("No equivalent node found, we will insert after this node\n");
+
+    // Compare newNode's content with content of current node
+    currentNode = result.node;
+    int compareResult = tree->compareFunction(newNode->content, currentNode->content);
+
+    // If new node is less than current node, insert to the left
+    if (compareResult < 0)
+    {
+        printf("newNode is less than currentNode. Inserting to the left\n");
+        currentNode->left = newNode;
+        newNode->parent = currentNode;
+
+        printf("Returning SUCCESS and newNode\n");
+        result.status = SUCCESS;
+        result.node = newNode;
+    }
+    // If new node is greater than current node, insert to the right
+    else
+    {
+        printf("newNode is greater than currentNode. Inserting to the right\n");
+        currentNode->right = newNode;
+        newNode->parent = currentNode;
+
+        printf("Returning SUCCESS and newNode\n");
+        result.status = SUCCESS;
+        result.node = newNode;
+    }
 
     return result;
 }

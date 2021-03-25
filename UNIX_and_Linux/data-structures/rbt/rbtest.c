@@ -8,9 +8,9 @@ void makeSmallTree(RBT* tree);
 
 int main(int argc, char** argv)
 {
-    if (argc < 2)
+    if (argc < 4)
     {
-        printf("USAGE: ./rbtest <integer>\n");
+        printf("USAGE: ./rbtest <int1> <int2> <int3>\n");
         return -1;
     }
     
@@ -20,29 +20,21 @@ int main(int argc, char** argv)
     RBT tree;
     rbtInit(&tree, compareInt);
 
-    // Construct small tree
-    // makeSmallTree(&tree);
+    // Test inserting four integers into new tree
+    for (int i=1; i<argc; i++)
+    {
+        printf("Allocating space for %s\n", argv[i]);
+        void* newInt = malloc(sizeof(int));
+        if (newInt == NULL)
+        {
+            perror("Error allocating space");
+            return -1;
+        }
+        *(int*) newInt = atoi(argv[i]);
 
-    // Test inserting into an empty tree
-    void* newInt = malloc(sizeof(int));
-    if (newInt == NULL)
-    {
-        perror("Unable to allocate space for newInt");
-        return -1;
-    }
-    *(int*) newInt = atoi(argv[1]);
-    RBTStatusStruct result = rbtInsert(&tree, newInt);
-    printf("Insert returned with status %s\n", rbtStatusAsText(result.status));
-    if (result.node == NULL)
-    {
-        perror("Was unable to insert new node\n");
-        return -1;
-    }
-    printf("New node content: %i\n", *(int*) result.node->content);
-    if (rbtIsRed(*result.node))
-    {
-        printf("ERROR: node did not get set to black\n");
-        return -1;
+        printf("Inserting %i\n", *(int*) newInt);
+        RBTStatusStruct result = rbtInsert(&tree, newInt);
+        printf("Insert returned with status %s\n", rbtStatusAsText(result.status));
     }
 
     return 0;
