@@ -38,6 +38,16 @@ typedef struct {
 } RBTStatusStruct;
 
 /***************************************************************
+ * rbtStatusText
+ * 
+ * Inputs: RBTStatus status
+ * Returns: const char*
+ * 
+ * Returns a string representation of the given RBTStatus
+ ***************************************************************/
+const char* rbtStatusText(RBTStatus status);
+
+/***************************************************************
  * rbtInit
  * 
  * Inputs: RBT* tree, int (*compareFunction) (void* a, void* b)
@@ -131,5 +141,8 @@ void rbtSetRed(RBTNode* node);
  * Sets the given RBTNode to black
  ***************************************************************/
 void rbtSetBlack(RBTNode* node);
+
+// Helper functions
+RBTStatusStruct rbtGetNodeFromStartingNode(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b));
 
 #endif /* RBT_H */

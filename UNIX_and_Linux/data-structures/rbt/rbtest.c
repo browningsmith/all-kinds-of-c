@@ -14,24 +14,49 @@ int main(int argc, char** argv)
     RBT tree;
     rbtInit(&tree, compareInt);
 
-    void* a = malloc(sizeof(int));
-    if (a == NULL)
-    {
-        perror("Could not allocate space for a");
-        return -1;
-    }
-    *((int*) a) = 4000;
+    // // Test creating a node that contains an int
+    // printf("Creating newInt\n");
+    // void* newInt = malloc(sizeof(int));
+    // if (newInt == NULL)
+    // {
+    //     perror("Unable to allocate space for an integer");
+    //     return -1;
+    // }
+    // *(int*) newInt = 4000;
+    // printf("Created newInt with value %i\n", *((int*) newInt));
+    
+    // printf("Creating new node and setting it to the head of tree\n");
+    // tree.head = rbtNewNode(newInt);
+    // if (rbtIsTreeEmpty(tree)) // If tree is empty, that means rbtNewNode had an error
+    // {
+    //     perror("Unable to create new node for tree");
+    //     return -1;
+    // }
+    // if (rbtIsNodeEmpty(*tree.head))
+    // {
+    //     perror("Node created, but the node itself is empty\n");
+    //     return -1;
+    // }
+    // printf("Node created and added to tree with content %i\n", *(int*) tree.head->content);
 
-    void* b = malloc(sizeof(int));
-    if (b == NULL)
-    {
-        perror("Could not allocate space for b");
-        return -1;
-    }
-    *((int*) b) = 6000;
+    // printf("Test calling rbtGetNodeFromNode in its current state\n");
+    // int query = 4000;
+    // RBTStatusStruct result = rbtGetNodeFromStartingNode(tree.head, (void*) &query, tree.compareFunction);
+    // if (result.node == NULL)
+    // {
+    //     printf("Call appears to be successful\n");
+    // }
+    // else
+    // {
+    //     printf("result.node is not NULL, call failed somehow\n");
+    //     return -1;
+    // }
 
-    int result = tree.compareFunction(a, b);
-    printf("Result: %i\n", result);
+    // Test printing the different enums
+    for (RBTStatus status = 0; status < 5; status++)
+    {
+        printf("%s\n", rbtStatusText(status));
+    }
 
     return 0;
 }

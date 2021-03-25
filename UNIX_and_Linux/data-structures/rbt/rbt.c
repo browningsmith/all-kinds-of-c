@@ -3,6 +3,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+const char* rbtStatusText(RBTStatus status)
+{
+    const char* result;
+    
+    switch (status)
+    {
+        case SUCCESS:
+            result = "SUCCESS";
+            break;
+        case NO_MEMORY:
+            result = "NO_MEMORY";
+            break;
+        case NULL_CONTENT:
+            result = "NULL_CONTENT";
+            break;
+        case EMPTY_NODE_ENCOUNTERED:
+            result = "EMPTY_NODE_ENCOUNTERED";
+            break;
+        case NOT_FOUND:
+            result = "NOT_FOUND";
+            break;
+    }
+
+    return result;
+}
+
 void rbtInit(RBT* tree, int (*compareFunction) (void*, void*))
 {
     // Initialize values
@@ -67,4 +93,11 @@ void rbtSetRed(RBTNode* node)
 void rbtSetBlack(RBTNode* node)
 {
     node->isRed = 0;
+}
+
+RBTStatusStruct rbtGetNodeFromStartingNode(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))
+{
+    RBTStatusStruct result = { .node = NULL };
+
+    return result;
 }
