@@ -116,7 +116,58 @@ RBTStatusStruct rbtGetNodeFromStartingNode(RBTNode* start, void* query, int (*co
             break;
         }
 
-        break;
+        // Compare query with content of currentNode
+        compareResult = compareFunction(query, currentNode->content);
+
+        // If query matches currentNode's content, return SUCCESS and currentNode
+        if (compareResult == 0)
+        {
+            printf("Node found, returning SUCCESS and currentNode\n");
+            result.status = SUCCESS;
+            result.node = currentNode;
+            break;
+        }
+
+        // If query is less than currentNode's content
+        if (compareResult < 0)
+        {
+            printf("Query is less than currentNode\n");
+
+            // If currentNode's left child is NULL, search is over, return NOT_FOUND, and last node searched
+            if (currentNode->left == NULL)
+            {
+                printf("No left child. Node not found, returning NOT_FOUND and currentNode\n");
+                result.status = NOT_FOUND;
+                result.node = currentNode;
+                break;
+            }
+            else
+            {
+                printf("Recursing search into left subtree\n");
+                currentNode = currentNode->left;
+                continue;
+            }
+        }
+
+        // Here, query has to be greater than currentNode's content
+        {
+            printf("Query is greater than currentNode\n");
+
+            // If currentNode's right child is NULL, search is over, return NOT_FOUND, and last node searched
+            if (currentNode->right == NULL)
+            {
+                printf("No right child. Node not found, returning NOT_FOUND and currentNode\n");
+                result.status = NOT_FOUND;
+                result.node = currentNode;
+                break;
+            }
+            else
+            {
+                printf("Recursing search into right subtree\n");
+                currentNode = currentNode->right;
+                continue;
+            }
+        }
     }
 
     return result;

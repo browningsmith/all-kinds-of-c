@@ -8,7 +8,13 @@ void makeSmallTree(RBT* tree);
 
 int main(int argc, char** argv)
 {
-    
+    if (argc < 2)
+    {
+        printf("Usage: ./rbtest <query>\n");
+        return -1;
+    }
+    int query = atoi(argv[1]);
+
     printf("rbtest startup\n");
 
     // Init new tree
@@ -17,6 +23,14 @@ int main(int argc, char** argv)
 
     // Construct small tree
     makeSmallTree(&tree);
+
+    // Test query when right child is an empty node
+    void* temp = tree.head->right->content;
+    tree.head->right->content = NULL;
+    free(temp);
+    printf("Searching for %i\n", query);
+    RBTStatusStruct result = rbtGetNodeFromStartingNode(tree.head, (void*) &query, tree.compareFunction);
+    printf("Result returned with status %s\n", rbtStatusAsText(result.status));
 
     return 0;
 }
@@ -48,7 +62,7 @@ int compareInt(void* a, void* b)
 void makeSmallTree(RBT* tree)
 {
     // Construct tree with head as 200, left child as 100, and right child as 300
-    printf("Constructing a new balanced tree with three nodes, 100, 200, and 300\n");
+    //printf("Constructing a new balanced tree with three nodes, 100, 200, and 300\n");
 
     // Add 200 as head
     void* newInt = malloc(sizeof(int));
@@ -64,7 +78,8 @@ void makeSmallTree(RBT* tree)
         perror("Unable to create new node for 200");
         exit(-1);
     }
-    printf("Added 200 as head\n");
+    rbtSetBlack(tree->head);
+    //printf("Added 200 as head\n");
 
     // Add 100 as head's left child
     newInt = malloc(sizeof(int));
@@ -81,7 +96,7 @@ void makeSmallTree(RBT* tree)
         exit(-1);
     }
     tree->head->left->parent = tree->head;
-    printf("Added 100 as head's left child\n");
+    //printf("Added 100 as head's left child\n");
 
     // Add 300 as head's right child
     newInt = malloc(sizeof(int));
@@ -98,11 +113,11 @@ void makeSmallTree(RBT* tree)
         exit(-1);
     }
     tree->head->right->parent = tree->head;
-    printf("Added 300 as head's right child\n");
+    //printf("Added 300 as head's right child\n");
 
-    printf("Head is %i\n", *(int*) tree->head->content);
-    printf("Left child is %i\n", *(int*) tree->head->left->content);
-    printf("Left child's parent is %i\n", *(int*) tree->head->left->parent->content);
-    printf("Right child is %i\n", *(int*) tree->head->right->content);
-    printf("Right child's parent is %i\n", *(int*) tree->head->right->parent->content);
+    // printf("Head is %i\n", *(int*) tree->head->content);
+    // printf("Left child is %i\n", *(int*) tree->head->left->content);
+    // printf("Left child's parent is %i\n", *(int*) tree->head->left->parent->content);
+    // printf("Right child is %i\n", *(int*) tree->head->right->content);
+    // printf("Right child's parent is %i\n", *(int*) tree->head->right->parent->content);
 }
