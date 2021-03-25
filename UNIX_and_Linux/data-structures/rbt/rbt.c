@@ -154,6 +154,77 @@ RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent)
     return result;
 }
 
+RBTStatusStruct rbtInsert(RBT* tree, void* content)
+{
+    // Initialize result
+    RBTStatusStruct result = { .node = NULL };
+
+    // Check that content is not null
+    if (content == NULL)
+    {
+        printf("Attempted insert with NULL content, returning NULL_CONTENT and NULL in result\n");
+
+        result.status = NULL_CONTENT;
+        return result;
+    }
+
+    // Create new node
+    RBTNode* newNode = rbtNewNode(content);
+    if (newNode == NULL) // rbt returns NULL on error
+    {
+        printf("NO_MEMORY error on creating new node. Returning NO_MEMORY and NULL in result\n");
+
+        result.status = NO_MEMORY;
+        return result;
+    }
+    printf("New node created\n");
+
+    // If tree is empty, insert new node as head and color it black, return SUCCESS and the new node
+    if (rbtIsTreeEmpty(*tree))
+    {
+        printf("Tree was empty, inserting new node as head, coloring black\n");
+        tree->head = newNode;
+        rbtSetBlack(newNode);
+
+        printf("Returning SUCCESS and new node in result\n");
+        result.status = SUCCESS;
+        result.node = newNode;
+        return result;
+    }
+
+    printf("Tree was not empty\n");
+
+    // Search for area to insert new node
+    // while (
+    //     ( result = rbtGetNodeFromStartingNode(
+    //         tree->head,
+    //         content,
+    //         tree->compareFunction
+    //     )).status != NOT_FOUND
+    // )
+    // {
+    //     // EMPTY_NODE_ENCOUNTERED, free memory allocated for new node and return proper error
+    //     if (result.status == EMPTY_NODE_ENCOUNTERED)
+    //     {
+    //         printf("Empty node encountered on insert. Returning with EMPTY_NODE_ENCOUNTERED and the offending node\n");
+
+    //         free(newNode);
+    //         // result.status is EMPTY_NODE_ENCOUNTERED and result.node is the offending node
+    //         return result;
+    //     }
+
+    //     // SUCCESS means an equivalent node was found, attempt to insert to the right
+    //     if (result.status == SUCCESS)
+    //     {
+    //         printf("Equivalent node found on insert\n");
+
+            
+    //     }
+    // }
+
+    return result;
+}
+
 RBTStatusStruct rbtGetNodeFromStartingNode(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))
 {
     // Initialize result

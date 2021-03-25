@@ -170,6 +170,32 @@ void rbtSetBlack(RBTNode* node);
  ***************************************************************/
 RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent);
 
+/***************************************************************
+ * rbtInsert
+ * 
+ * Inputs: RBT* tree, void* content
+ * Returns: RBTStatusStruct result
+ * 
+ * Attempts to insert a new node with the provided content into
+ * the given RBT* tree
+ * 
+ * If the new node is successfully inserted, method returns
+ * with result.status as SUCCESS, and result.node equal to
+ * the newly created node.
+ * 
+ * If the caller attempts to provide content that is NULL, the
+ * method returns with result.status as NULL_CONTENT, and
+ * result.node as NULL
+ * 
+ * If the method is unable to create the new node before inserting
+ * returns with result.status as NO_MEMORY and result.node as NULL
+ * 
+ * If the method encounters an empty node, it does not insert a
+ * new node, instead returns result.status as EMPTY_NODE_ENCOUNTERED
+ * and result.node as NULL
+ ***************************************************************/
+RBTStatusStruct rbtInsert(RBT* tree, void* content);
+
 // Helper functions
 RBTStatusStruct rbtGetNodeFromStartingNode(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b));
 

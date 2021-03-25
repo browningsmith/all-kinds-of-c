@@ -10,11 +10,10 @@ int main(int argc, char** argv)
 {
     if (argc < 2)
     {
-        printf("Usage: ./rbtest <query>\n");
+        printf("USAGE: ./rbtest <integer>\n");
         return -1;
     }
-    int query = atoi(argv[1]);
-
+    
     printf("rbtest startup\n");
 
     // Init new tree
@@ -22,35 +21,28 @@ int main(int argc, char** argv)
     rbtInit(&tree, compareInt);
 
     // Construct small tree
-    makeSmallTree(&tree);
+    // makeSmallTree(&tree);
 
-    // Test using rbtFind if right child is an empty node
-    printf("Testing using rbtFind\n");
-    void* foundContent = NULL;
-    void* temp = tree.head->right->content;
-    tree.head->right->content = NULL;
-    RBTStatusStruct result = rbtFind(tree, (void*) &query, &foundContent);
-    printf("Search returned with the status %s\n", rbtStatusAsText(result.status));
+    // Test inserting into an empty tree
+    void* newInt = malloc(sizeof(int));
+    if (newInt == NULL)
+    {
+        perror("Unable to allocate space for newInt");
+        return -1;
+    }
+    *(int*) newInt = atoi(argv[1]);
+    RBTStatusStruct result = rbtInsert(&tree, newInt);
+    printf("Insert returned with status %s\n", rbtStatusAsText(result.status));
     if (result.node == NULL)
     {
-        printf("result.node is NULL\n");
+        perror("Was unable to insert new node\n");
+        return -1;
     }
-    else if (rbtIsNodeEmpty(*result.node))
+    printf("New node content: %i\n", *(int*) result.node->content);
+    if (rbtIsRed(*result.node))
     {
-        printf("result.node is an empty node\n");
-    }
-    else
-    {
-        printf("result.node has the content %i\n", *(int*) result.node->content);
-    }
-    
-    if (foundContent == NULL)
-    {
-        printf("returned content is NULL\n");
-    }
-    else
-    {
-        printf("Returned content is %i\n", *(int*) foundContent);
+        printf("ERROR: node did not get set to black\n");
+        return -1;
     }
 
     return 0;
