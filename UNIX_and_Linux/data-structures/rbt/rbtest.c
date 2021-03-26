@@ -3,12 +3,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "rbtprinter.h"
+
 int compareInt(void* a, void* b);
 void makeSmallTree(RBT* tree);
 
 int main(int argc, char** argv)
 {
     printf("rbtest startup\n");
+    rbtPrint("Hello Biatch!!!\n");
 
     // Test inserting user given data into tree
 
