@@ -8,34 +8,43 @@ void makeSmallTree(RBT* tree);
 
 int main(int argc, char** argv)
 {
-    if (argc < 4)
-    {
-        printf("USAGE: ./rbtest <int1> <int2> <int3>\n");
-        return -1;
-    }
-    
     printf("rbtest startup\n");
 
-    // Init new tree
+    // Test inserting user given data into tree
+
     RBT tree;
     rbtInit(&tree, compareInt);
 
-    // Test inserting four integers into new tree
-    for (int i=1; i<argc; i++)
+    char buffer[100];
+    printf("Type a number to insert: ");
+    while (fgets(buffer, 100, stdin) != NULL)
     {
-        printf("Allocating space for %s\n", argv[i]);
+        printf("Inserting %i\n", atoi(buffer));
+
+        // Allocate space for this new integer
         void* newInt = malloc(sizeof(int));
         if (newInt == NULL)
         {
-            perror("Error allocating space");
-            return -1;
+            perror("Unable to allocate space for new integer");
+            break;
         }
-        *(int*) newInt = atoi(argv[i]);
+        *(int*) newInt = atoi(buffer);
 
-        printf("Inserting %i\n", *(int*) newInt);
         RBTStatusStruct result = rbtInsert(&tree, newInt);
-        printf("Insert returned with status %s\n", rbtStatusAsText(result.status));
+        if (result.status != SUCCESS)
+        {
+            printf("Unable to insert %i. Status returned %s\n", *(int*) newInt, rbtStatusAsText(result.status));
+            perror("System error?: ");
+        }
+        else
+        {
+            printf("Inserted %i. Status returned SUCCESS\n", *(int*) result.node->content);
+        }
+
+        printf("\n\n\nType a number to insert: ");
     }
+
+    printf("\nexiting...\n");
 
     return 0;
 }
@@ -45,21 +54,21 @@ int compareInt(void* a, void* b)
     int derefA = *((int*) a);
     int derefB = *((int*) b);
 
-    printf("Comparing integers A: %i and B: %i\n", derefA, derefB);
+    //printf("Comparing integers A: %i and B: %i\n", derefA, derefB);
 
     if (derefA == derefB)
     {
-        printf("A is equal to B\n");
+        //printf("A is equal to B\n");
         return 0;
     }
     else if (derefA < derefB)
     {
-        printf("A is less than B\n");
+        //printf("A is less than B\n");
         return -1;
     }
     else
     {
-        printf("A is greater than B\n");
+       // printf("A is greater than B\n");
         return 1;
     }
 }

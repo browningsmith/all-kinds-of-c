@@ -250,7 +250,7 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
 
     // Compare newNode's content with content of current node
     currentNode = result.node;
-    int compareResult = tree->compareFunction(newNode->content, currentNode->content);
+    int compareResult = tree->compareFunction(content, currentNode->content);
 
     // If new node is less than current node, insert to the left
     if (compareResult < 0)
