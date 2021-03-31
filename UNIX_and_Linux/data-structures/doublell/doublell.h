@@ -23,8 +23,9 @@ typedef struct {
  * Inputs: DLL* list
  * Returns: None
  * 
- * Initializes the given list as a new empty doubly linked list
- *
+ * Initializes the given doubly linked list as a new
+ * empty doubly linked list
+ * 
  * If a pointer to an already existing DLL is passed, all data
  * within the list will be lost to a memory leak, as this function
  * does not clear out an already existing list
