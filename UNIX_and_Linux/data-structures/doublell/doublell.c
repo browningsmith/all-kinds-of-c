@@ -94,6 +94,40 @@ int dllGetTail(DLL list, void** returnedContent)
     return 0;
 }
 
+int dllPop(DLL* list, void** returnedContent)
+{
+    if (dllIsEmpty(*list))
+    {
+        *returnedContent = NULL;
+        return -1;
+    }
+
+    DLLNode* nodeToDelete = list->head;
+
+    // If the head and tail are the same, then this is the only node to delete
+    if (list->head == list->tail)
+    {
+        list->head = NULL;
+        list->tail = NULL;
+    }
+    // Otherwise, head needs to be set to nodeToDelete->next
+    else
+    {
+        if (list->head->next == NULL)
+        {
+            *returnedContent = NULL;
+            return -1;
+        }
+
+        list->head = nodeToDelete->next;
+        list->head->prev = NULL;
+    }
+
+    *returnedContent = nodeToDelete->content;
+    free(nodeToDelete);
+    return 0;
+}
+
 // Implementation-only definitions
 DLLNode* dllNewNode__(void* content)
 {
