@@ -2,6 +2,9 @@
 
 #include <stdlib.h>
 
+//Include implementation-only declarations
+#include "doublellimpl.h"
+
 void dllInit(DLL* list)
 {
     list->start = NULL;

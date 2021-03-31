@@ -33,7 +33,4 @@ typedef struct {
 
 void dllInit(DLL* list);
 
-// Helper functions
-DLLNode* dllNewNode__(void* content);
-
 #endif /* DOUBLELL_H */
