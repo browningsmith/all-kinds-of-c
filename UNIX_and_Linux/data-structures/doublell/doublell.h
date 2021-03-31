@@ -12,8 +12,8 @@ typedef struct DLLNode_struct {
 
 typedef struct {
 
-    DLLNode* start;
-    DLLNode* end;
+    DLLNode* head;
+    DLLNode* tail;
 
 } DLL;
 

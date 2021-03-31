@@ -8,13 +8,13 @@
 
 void dllInit(DLL* list)
 {
-    list->start = NULL;
-    list->end = NULL;
+    list->head = NULL;
+    list->tail = NULL;
 }
 
 int dllIsEmpty(DLL list)
 {
-    if (list.start == NULL)
+    if (list.head == NULL)
     {
         return 1;
     }
@@ -32,16 +32,16 @@ int dllPush(DLL* list, void* content)
 
     if (dllIsEmpty(*list))
     {
-        list->start = newNode;
-        list->end = newNode;
+        list->head = newNode;
+        list->tail = newNode;
 
         return 0;
     }
 
-    DLLNode* next = list->start;
+    DLLNode* next = list->head;
     newNode->next = next;
     next->prev = newNode;
-    list->start = newNode;
+    list->head = newNode;
 
     return 0;
 }
@@ -56,16 +56,16 @@ int dllPushBack(DLL* list, void* content)
 
     if (dllIsEmpty(*list))
     {
-        list->start = newNode;
-        list->end = newNode;
+        list->head = newNode;
+        list->tail = newNode;
 
         return 0;
     }
 
-    DLLNode* prev = list->end;
+    DLLNode* prev = list->tail;
     newNode->prev = prev;
     prev->next = newNode;
-    list->end = newNode;
+    list->tail = newNode;
 
     return 0;
 }
