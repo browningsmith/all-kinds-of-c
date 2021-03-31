@@ -46,6 +46,30 @@ int dllPush(DLL* list, void* content)
     return 0;
 }
 
+int dllPushBack(DLL* list, void* content)
+{
+    DLLNode* newNode = dllNewNode__(content);
+    if (newNode == NULL)
+    {
+        return -1;
+    }
+
+    if (dllIsEmpty(*list))
+    {
+        list->start = newNode;
+        list->end = newNode;
+
+        return 0;
+    }
+
+    DLLNode* prev = list->end;
+    newNode->prev = prev;
+    prev->next = newNode;
+    list->end = newNode;
+
+    return 0;
+}
+
 // Implementation-only definitions
 DLLNode* dllNewNode__(void* content)
 {

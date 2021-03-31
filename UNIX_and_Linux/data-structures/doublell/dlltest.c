@@ -180,6 +180,85 @@ int main(int argc, char** argv)
         free(list.start);
     }
 
+    // Test dllPushBack
+    {
+        dllInit(&list);
+
+        // Test pushing onto empty list
+        int num1 = 5;
+        if (dllPushBack(&list, (void*) &num1) < 0)
+        {
+            perror("dllPushBack: Unable to create space for node");
+            return -1;
+        }
+        if (list.start == NULL)
+        {
+            printf("dllPushBack: Error, start of list is still NULL\n");
+            return -1;
+        }
+        if (list.end == NULL)
+        {
+            printf("dllPushBack: Error, end of list is still NULL\n");
+            return -1;
+        }
+        if (list.start != list.end)
+        {
+            printf("dllPushBack: Error, start and end of list are not the same after insert to empty list\n");
+            return -1;
+        }
+        if (*(int*) list.start->content != 5)
+        {
+            printf("dllPushBack: Error, content of first inserted node is incorrect\n");
+            return -1;
+        }
+
+        // Test pushing onto non empty list
+        int num2 = 12;
+        if (dllPushBack(&list, (void*) &num2) < 0)
+        {
+            perror("dllPushBack: Unable to create space for second node");
+            return -1;
+        }
+        if (list.start == NULL)
+        {
+            printf("dllPushBack: Error, start of list is NULL after second node inserted\n");
+            return -1;
+        }
+        if (list.start->next == NULL)
+        {
+            printf("dllPushBack: Error, next node is NULL after second insert\n");
+            return -1;
+        }
+        if (list.start->next->prev == NULL)
+        {
+            printf("dllPushBack: Error, prev node of next is NULL after second insert\n");
+            return -1;
+        }
+        if (list.start != list.start->next->prev)
+        {
+            printf("dllPushBack: Error, prev and next node do not point to each other\n");
+            return -1;
+        }
+        if (list.end == NULL)
+        {
+            printf("dllPushBack: Error, end of list no longer attached after second insert\n");
+            return -1;
+        }
+        if (list.start->next != list.end)
+        {
+            printf("dllPushBack: Error, next node in a list of only two is not also the end\n");
+            return -1;
+        }
+        if (*(int*) list.end->content != 12)
+        {
+            printf("dllPushBack: Error, content is incorrect after second insert\n");
+            return -1;
+        }
+
+        free(list.start->next);
+        free(list.start);
+    }
+
     printf("Tests complete\n");
     return 0;
 }

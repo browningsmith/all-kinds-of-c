@@ -60,4 +60,18 @@ int dllIsEmpty(DLL list);
  *****************************************************************/
 int dllPush(DLL* list, void* content);
 
+/*****************************************************************
+ * dllPushBack
+ * 
+ * Inputs: DLL* list, void* content
+ * Returns: int
+ * 
+ * Creates a new DLL node and inserts it at the end of the list,
+ * containing the given content.
+ * 
+ * Returns 0 on success, -1 on error. Error is caused by an error
+ * with malloc, therefore errno will be set
+ *****************************************************************/
+int dllPushBack(DLL* list, void* content);
+
 #endif /* DOUBLELL_H */
