@@ -53,7 +53,38 @@ int main(int argc, char** argv)
         }
     }
 
-    
+    // Test dllNewNode__
+    {
+        int testInt = 12;
+
+        DLLNode* testNode = dllNewNode__((void*) &testInt);
+        if (testNode == NULL)
+        {
+            perror("dllNewNode__: error creating new node");
+            return -1;
+        }
+
+        if (testNode->prev != NULL)
+        {
+            printf("dllNewNode__: test node's prev is not NULL\n");
+            return -1;
+        }
+        if (testNode->next != NULL)
+        {
+            printf("dllNewNode__: test node's next is not NULL\n");
+            return -1;
+        }
+        if (testNode->content == NULL)
+        {
+            printf("dllNewNode__: test node's content is NULL\n");
+            return -1;
+        }
+        if (*(int*) testNode->content != 12)
+        {
+            printf("dllNewNode__: content improperly stored\n");
+            return -1;
+        }
+    }
 
     printf("Tests complete\n");
     return 0;
