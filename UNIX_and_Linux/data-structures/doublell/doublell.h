@@ -119,9 +119,25 @@ int dllGetTail(DLL list, void** returnedContent);
  * Returns 0 on success, and places the content of the popped node
  * into returnedContent
  *
- * Returns -1 on failure, meaning the list is empty, and places
- * NULL into returnedContent
+ * Returns -1 on failure, meaning the list is empty or broken, and
+ * places NULL into returnedContent
  *****************************************************************/
 int dllPop(DLL* list, void** returnedContent);
+
+/*****************************************************************
+ * dllPopTail
+ * 
+ * Inputs: DLL* list, void** returnedContent
+ * Returns: int
+ * 
+ * Removes the current tail of the list, if it exists.
+ * 
+ * Returns 0 on success, and places the content of the popped node
+ * into returnedContent
+ *
+ * Returns -1 on failure, meaning the list is empty or broken, and
+ * places NULL into returnedContent
+ *****************************************************************/
+int dllPopTail(DLL* list, void** returnedContent);
 
 #endif /* DOUBLELL_H */

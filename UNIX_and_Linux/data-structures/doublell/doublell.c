@@ -128,6 +128,40 @@ int dllPop(DLL* list, void** returnedContent)
     return 0;
 }
 
+int dllPopTail(DLL* list, void** returnedContent)
+{
+    if (list->tail == NULL)
+    {
+        *returnedContent = NULL;
+        return -1;
+    }
+
+    DLLNode* nodeToDelete = list->tail;
+
+    // If the head and tail are the same, then this is the only node to delete
+    if (list->head == list->tail)
+    {
+        list->head = NULL;
+        list->tail = NULL;
+    }
+    // Otherwise, tail needs to be set to nodeToDelete->prev
+    else
+    {
+        // If the tail has no prev (broken list), cancel the pop operation
+        if (list->tail->prev == NULL)
+        {
+            *returnedContent = NULL;
+            return -1;
+        }
+
+        list->tail = nodeToDelete->prev;
+        list->tail->next = NULL;
+    }
+
+    *returnedContent = dllDeleteNode__(nodeToDelete);
+    return 0;
+}
+
 // Implementation-only definitions
 DLLNode* dllNewNode__(void* content)
 {

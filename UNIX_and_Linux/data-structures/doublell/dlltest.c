@@ -574,6 +574,135 @@ int main(int argc, char** argv)
         dllPop(&list, &content);
     }
 
+    // Test dllPopTail
+    {
+        dllInit(&list);
+        void* content;
+        int result;
+
+        // Test dllPopTail on empty list
+        content = (void*) 17;
+        result = dllPop(&list, &content);
+        if (result == 0)
+        {
+            printf("dllPopTail: Error, incorrect result on empty list\n");
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("dllPopTail: Error, bad content returned when called on empty list\n");
+            return -1;
+        }
+
+        // Test dllPopTail on list with only one element
+        int num1 = 12;
+        if (dllPushTail(&list, (void*) &num1) < 0)
+        {
+            perror("dllPopTail: Unable to push node for second test");
+            return -1;
+        }
+        content = NULL;
+        result = dllPopTail(&list, &content);
+        if (result < 0)
+        {
+            printf("dllPopTail: Error, incorrect result when called on single element list\n");
+            return -1;
+        }
+        if (content == NULL)
+        {
+            printf("dllPopTail: Error, NULL content returned when called on single element list\n");
+            return -1;
+        }
+        if (*(int*) content != 12)
+        {
+            printf("dllPopTail: Error, incorrect content returned when called on single element list\n");
+            return -1;
+        }
+        if (!dllIsEmpty(list))
+        {
+            printf("dllPopTail: Error, list is not empty even after pop operation\n");
+            return -1;
+        }
+
+        // Test dllPopTail with a broken list
+        num1 = 12;
+        if (dllPushTail(&list, (void*) &num1) < 0)
+        {
+            perror("Unable to push on first node for third test\n");
+            return -1;
+        }
+        int num2 = 14;
+        if (dllPush(&list, (void*) &num2) < 0)
+        {
+            perror("Unable to push on second node for third test\n");
+            return -1;
+        }
+        list.tail->prev = NULL;
+        content = (void*) 50;
+        result = dllPopTail(&list, &content);
+        if (result == 0)
+        {
+            printf("dllPopTail: Error, incorrect result on list with broken head\n");
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("dllPopTail: Error, incorrect content returned on list with broken head\n");
+            return -1;
+        }
+        if (dllIsEmpty(list))
+        {
+            printf("dllPopTail: Error, list is empty even though no operation should have been performed with a broken head node\n");
+            return -1;
+        }
+        dllDeleteNode__(list.tail);
+        dllDeleteNode__(list.head);
+        dllInit(&list);
+
+        // Test dllPopTail on a list of two elements
+        num1 = 45;
+        if (dllPushTail(&list, (void*) &num1) < 0)
+        {
+            perror("dllPopTail: Unable to push first node for fourth test");
+            return -1;
+        }
+        num2 = 47;
+        if (dllPushTail(&list, (void*) &num2) < 0)
+        {
+            perror("dllPopTail: Unable to push second node for fourth test");
+            return -1;
+        }
+        content = NULL;
+        result = dllPopTail(&list, &content);
+        if (result < 0)
+        {
+            printf("dllPopTail: Error, incorrect result on list with two nodes\n");
+            return -1;
+        }
+        if (content == NULL)
+        {
+            printf("dllPopTail: Error, NULL content returned on list with two nodes\n");
+            return -1;
+        }
+        if (*(int*) content != 47)
+        {
+            printf("dllPopTail: Error, incorrect content returned on list with two nodes\n");
+            return -1;
+        }
+        if (dllIsEmpty(list))
+        {
+            printf("dllPopTail: Error, list is empty even though one node should be left\n");
+            return -1;
+        }
+        if (*(int*) list.tail->content != 45)
+        {
+            printf("dllPopTail: Error, next node did not replace tail after pop\n");
+            return -1;
+        }
+
+        dllPopTail(&list, &content);
+    }
+
     printf("Tests complete\n");
     return 0;
 }
