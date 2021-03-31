@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "doublell.h"
 #include "doublellimpl.h"
@@ -83,6 +84,19 @@ int main(int argc, char** argv)
         if (*(int*) testNode->content != 12)
         {
             printf("dllNewNode__: content improperly stored\n");
+            return -1;
+        }
+
+        free(testNode);
+    }
+
+    // Test dllIsEmpty
+    {
+        dllInit(&list);
+
+        if (!dllIsEmpty(list))
+        {
+            printf("dllIsEmpty: Error, list is not returning as empty\n");
             return -1;
         }
     }

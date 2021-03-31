@@ -11,7 +11,17 @@ void dllInit(DLL* list)
     list->end = NULL;
 }
 
-// Helper functions
+int dllIsEmpty(DLL list)
+{
+    if (list.start == NULL)
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
+// Implementation-only definitions
 DLLNode* dllNewNode__(void* content)
 {
     DLLNode* newNode = malloc(sizeof(DLLNode));
