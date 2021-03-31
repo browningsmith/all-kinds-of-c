@@ -101,6 +101,85 @@ int main(int argc, char** argv)
         }
     }
 
+    // Test dllPush
+    {
+        dllInit(&list);
+
+        // Test pushing onto empty list
+        int num1 = 5;
+        if (dllPush(&list, (void*) &num1) < 0)
+        {
+            perror("dllPush: Unable to create space for node");
+            return -1;
+        }
+        if (list.start == NULL)
+        {
+            printf("dllPush: Error, start of list is still NULL\n");
+            return -1;
+        }
+        if (list.end == NULL)
+        {
+            printf("dllPush: Error, end of list is still NULL\n");
+            return -1;
+        }
+        if (list.start != list.end)
+        {
+            printf("dllPush: Error, start and end of list are not the same after insert to empty list\n");
+            return -1;
+        }
+        if (*(int*) list.start->content != 5)
+        {
+            printf("dllPush: Error, content of first inserted node is incorrect\n");
+            return -1;
+        }
+
+        // Test pushing onto non empty list
+        int num2 = 12;
+        if (dllPush(&list, (void*) &num2) < 0)
+        {
+            perror("dllPush: Unable to create space for second node");
+            return -1;
+        }
+        if (list.start == NULL)
+        {
+            printf("dllPush: Error, start of list is NULL after second node inserted\n");
+            return -1;
+        }
+        if (list.start->next == NULL)
+        {
+            printf("dllPush: Error, next node is NULL after second insert\n");
+            return -1;
+        }
+        if (list.start->next->prev == NULL)
+        {
+            printf("dllPush: Error, prev node of next is NULL after second insert\n");
+            return -1;
+        }
+        if (list.start != list.start->next->prev)
+        {
+            printf("dllPush: Error, prev and next node do not point to each other\n");
+            return -1;
+        }
+        if (list.end == NULL)
+        {
+            printf("dllPush: Error, end of list no longer attached after second insert\n");
+            return -1;
+        }
+        if (list.start->next != list.end)
+        {
+            printf("dllPush: Error, next node in a list of only two is not also the end\n");
+            return -1;
+        }
+        if (*(int*) list.start->content != 12)
+        {
+            printf("dllPush: Error, content is incorrect after second insert\n");
+            return -1;
+        }
+
+        free(list.start->next);
+        free(list.start);
+    }
+
     printf("Tests complete\n");
     return 0;
 }

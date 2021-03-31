@@ -1,5 +1,6 @@
 #include "doublell.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 //Include implementation-only declarations
@@ -17,6 +18,30 @@ int dllIsEmpty(DLL list)
     {
         return 1;
     }
+
+    return 0;
+}
+
+int dllPush(DLL* list, void* content)
+{
+    DLLNode* newNode = dllNewNode__(content);
+    if (newNode == NULL)
+    {
+        return -1;
+    }
+
+    if (dllIsEmpty(*list))
+    {
+        list->start = newNode;
+        list->end = newNode;
+
+        return 0;
+    }
+
+    DLLNode* next = list->start;
+    newNode->next = next;
+    next->prev = newNode;
+    list->start = newNode;
 
     return 0;
 }
