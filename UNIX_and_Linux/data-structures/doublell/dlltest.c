@@ -369,6 +369,54 @@ int main(int argc, char** argv)
         dllDeleteNode__(list.head);
     }
 
+    // Test dllGetTail
+    {
+        dllInit(&list);
+        void* content = (void*) 17;
+
+        // Test calling dllGet on an empty list
+        int result = dllGetTail(list, &content);
+        if (result != -1)
+        {
+            printf("dllGetTail: Error, returned success when called on empty list\n");
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("dllGetTail: Error, did not return NULL content when called on empty list\n");
+            return -1;
+        }
+
+        // Test calling dllGetTail on a list with two nodes
+        int num1 = 54;
+        if (dllPush(&list, (void*) &num1) < 0)
+        {
+            perror("dllGetTail: Error inserting first node\n");
+            return -1;
+        }
+        int num2 = 55;
+        if (dllPush(&list, (void*) &num2) < 0)
+        {
+            perror("dllGetTail: Error inserting second node\n");
+            return -1;
+        }
+        content = NULL;
+        result = dllGetTail(list, &content);
+        if (result != 0)
+        {
+            printf("dllGetTail: Error, did not return success when called on non empty list\n");
+            return -1;
+        }
+        if (*(int*) content != 54)
+        {
+            printf("dllGetTail: Error, incorrect content returned from non empty list\n");
+            return -1;
+        }
+
+        dllDeleteNode__(list.head->next);
+        dllDeleteNode__(list.head);
+    }
+
     printf("Tests complete\n");
     return 0;
 }

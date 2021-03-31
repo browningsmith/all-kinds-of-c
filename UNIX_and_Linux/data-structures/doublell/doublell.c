@@ -82,6 +82,18 @@ int dllGet(DLL list, void** returnedContent)
     return 0;
 }
 
+int dllGetTail(DLL list, void** returnedContent)
+{
+    if (list.tail == NULL)
+    {
+        *returnedContent = NULL;
+        return -1;
+    }
+
+    *returnedContent = list.tail->content;
+    return 0;
+}
+
 // Implementation-only definitions
 DLLNode* dllNewNode__(void* content)
 {
