@@ -70,6 +70,18 @@ int dllPushTail(DLL* list, void* content)
     return 0;
 }
 
+int dllGet(DLL list, void** returnedContent)
+{
+    if (dllIsEmpty(list))
+    {
+        *returnedContent = NULL;
+        return -1;
+    }
+
+    *returnedContent = list.head->content;
+    return 0;
+}
+
 // Implementation-only definitions
 DLLNode* dllNewNode__(void* content)
 {

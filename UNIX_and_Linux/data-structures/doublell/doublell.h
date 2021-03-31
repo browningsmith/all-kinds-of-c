@@ -74,4 +74,21 @@ int dllPush(DLL* list, void* content);
  *****************************************************************/
 int dllPushTail(DLL* list, void* content);
 
+/*****************************************************************
+ * dllGet
+ * 
+ * Inputs: DLL* list, void** returnedContent
+ * Returns: int
+ * 
+ * Gets the content of the node at the head of the list, if it
+ * exists.
+ * 
+ * Returns 0 on success, and places the content of the node into
+ * returnedContent
+ *
+ * Returns -1 on failure, meaning the list is empty, and places
+ * NULL into returnedContent
+ *****************************************************************/
+int dllGet(DLL list, void** returnedContent);
+
 #endif /* DOUBLELL_H */
