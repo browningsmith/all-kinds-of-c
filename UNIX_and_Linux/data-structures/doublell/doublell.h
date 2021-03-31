@@ -17,6 +17,13 @@ typedef struct {
 
 } DLL;
 
+typedef struct {
+    
+    DLL* list;
+    DLLNode* currentNode;
+
+} DLLIterator;
+
 /*****************************************************************
  * dllInit
  * 

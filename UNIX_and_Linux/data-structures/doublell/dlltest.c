@@ -4,6 +4,8 @@
 #include "doublell.h"
 #include "doublellimpl.h"
 
+void makeList(DLL* list);
+
 int main(int argc, char** argv)
 {
     printf("Running tests on doublell\n");
@@ -705,4 +707,25 @@ int main(int argc, char** argv)
 
     printf("Tests complete\n");
     return 0;
+}
+
+void makeList(DLL* list)
+{
+    dllInit(list);
+
+    for (int i=1; i<13; i++)
+    {
+        void* content = malloc(sizeof(int));
+        if (content == NULL)
+        {
+            perror("makeList Unable to allocate space for new integer");
+            exit(-1);
+        }
+        *(int*) content = i;
+        if (dllPush(list, content) < 0)
+        {
+            perror("makeList unable to push on new node");
+            exit(-1);
+        }
+    }
 }
