@@ -96,9 +96,37 @@ int main(int argc, char** argv)
 
         if (!dllIsEmpty(list))
         {
-            printf("dllIsEmpty: Error, list is not returning as empty\n");
+            printf("dllIsEmpty: Error, list is not returning as empty after init\n");
             return -1;
         }
+
+        DLLNode node;
+
+        // Test dllIsEmpty with only head node
+        list.head = &node;
+        if (!dllIsEmpty(list))
+        {
+            printf("dllIsEmpty: Error, list is not returning as empty when tail is empty\n");
+            return -1;
+        }
+
+        // Test dllIsEmpty with only tail node
+        list.head = NULL;
+        list.tail = &node;
+        if (!dllIsEmpty(list))
+        {
+            printf("dllIsEmpty: Error, list is not returning as empty when head is empty\n");
+            return -1;
+        }
+
+        // Test dllIsEmpty with both head and tail
+        list.head = &node;
+        if (dllIsEmpty(list))
+        {
+            printf("dllIsEmpty: Error, list is returning as empty when head and tail do exist\n");
+            return -1;
+        }
+
     }
 
     // Test dllPush

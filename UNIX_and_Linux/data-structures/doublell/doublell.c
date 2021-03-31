@@ -14,7 +14,7 @@ void dllInit(DLL* list)
 
 int dllIsEmpty(DLL list)
 {
-    if (list.head == NULL)
+    if (list.head == NULL || list.tail == NULL)
     {
         return 1;
     }
