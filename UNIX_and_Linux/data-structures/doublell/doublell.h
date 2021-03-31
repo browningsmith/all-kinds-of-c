@@ -61,7 +61,7 @@ int dllIsEmpty(DLL list);
 int dllPush(DLL* list, void* content);
 
 /*****************************************************************
- * dllPushBack
+ * dllPushTail
  * 
  * Inputs: DLL* list, void* content
  * Returns: int
@@ -72,6 +72,6 @@ int dllPush(DLL* list, void* content);
  * Returns 0 on success, -1 on error. Error is caused by an error
  * with malloc, therefore errno will be set
  *****************************************************************/
-int dllPushBack(DLL* list, void* content);
+int dllPushTail(DLL* list, void* content);
 
 #endif /* DOUBLELL_H */

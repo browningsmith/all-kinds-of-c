@@ -180,78 +180,78 @@ int main(int argc, char** argv)
         free(list.head);
     }
 
-    // Test dllPushBack
+    // Test dllPushTail
     {
         dllInit(&list);
 
         // Test pushing onto empty list
         int num1 = 5;
-        if (dllPushBack(&list, (void*) &num1) < 0)
+        if (dllPushTail(&list, (void*) &num1) < 0)
         {
-            perror("dllPushBack: Unable to create space for node");
+            perror("dllPushTail: Unable to create space for node");
             return -1;
         }
         if (list.head == NULL)
         {
-            printf("dllPushBack: Error, head of list is still NULL\n");
+            printf("dllPushTail: Error, head of list is still NULL\n");
             return -1;
         }
         if (list.tail == NULL)
         {
-            printf("dllPushBack: Error, tail of list is still NULL\n");
+            printf("dllPushTail: Error, tail of list is still NULL\n");
             return -1;
         }
         if (list.head != list.tail)
         {
-            printf("dllPushBack: Error, head and tail of list are not the same after insert to empty list\n");
+            printf("dllPushTail: Error, head and tail of list are not the same after insert to empty list\n");
             return -1;
         }
         if (*(int*) list.head->content != 5)
         {
-            printf("dllPushBack: Error, content of first inserted node is incorrect\n");
+            printf("dllPushTail: Error, content of first inserted node is incorrect\n");
             return -1;
         }
 
         // Test pushing onto non empty list
         int num2 = 12;
-        if (dllPushBack(&list, (void*) &num2) < 0)
+        if (dllPushTail(&list, (void*) &num2) < 0)
         {
-            perror("dllPushBack: Unable to create space for second node");
+            perror("dllPushTail: Unable to create space for second node");
             return -1;
         }
         if (list.head == NULL)
         {
-            printf("dllPushBack: Error, head of list is NULL after second node inserted\n");
+            printf("dllPushTail: Error, head of list is NULL after second node inserted\n");
             return -1;
         }
         if (list.head->next == NULL)
         {
-            printf("dllPushBack: Error, next node is NULL after second insert\n");
+            printf("dllPushTail: Error, next node is NULL after second insert\n");
             return -1;
         }
         if (list.head->next->prev == NULL)
         {
-            printf("dllPushBack: Error, prev node of next is NULL after second insert\n");
+            printf("dllPushTail: Error, prev node of next is NULL after second insert\n");
             return -1;
         }
         if (list.head != list.head->next->prev)
         {
-            printf("dllPushBack: Error, prev and next node do not point to each other\n");
+            printf("dllPushTail: Error, prev and next node do not point to each other\n");
             return -1;
         }
         if (list.tail == NULL)
         {
-            printf("dllPushBack: Error, tail of list no longer attached after second insert\n");
+            printf("dllPushTail: Error, tail of list no longer attached after second insert\n");
             return -1;
         }
         if (list.head->next != list.tail)
         {
-            printf("dllPushBack: Error, next node in a list of only two is not also the tail\n");
+            printf("dllPushTail: Error, next node in a list of only two is not also the tail\n");
             return -1;
         }
         if (*(int*) list.tail->content != 12)
         {
-            printf("dllPushBack: Error, content is incorrect after second insert\n");
+            printf("dllPushTail: Error, content is incorrect after second insert\n");
             return -1;
         }
 

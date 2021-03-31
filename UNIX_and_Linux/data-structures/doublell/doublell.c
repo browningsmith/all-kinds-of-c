@@ -46,7 +46,7 @@ int dllPush(DLL* list, void* content)
     return 0;
 }
 
-int dllPushBack(DLL* list, void* content)
+int dllPushTail(DLL* list, void* content)
 {
     DLLNode* newNode = dllNewNode__(content);
     if (newNode == NULL)
