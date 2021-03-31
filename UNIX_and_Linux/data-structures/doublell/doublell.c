@@ -86,3 +86,26 @@ DLLNode* dllNewNode__(void* content)
 
     return newNode;
 }
+
+void* dllDeleteNode__(DLLNode* node)
+{
+    void* returnContent = node->content;
+    DLLNode* prev = node->prev;
+    DLLNode* next = node->next;
+
+    // If prev node is not null, set it's next to next
+    if (prev != NULL)
+    {
+        prev->next = next;
+    }
+
+    // If next node is not null, set it's prev to prev
+    if (next != NULL)
+    {
+        next->prev = prev;
+    }
+
+    free(node);
+
+    return returnContent;
+}

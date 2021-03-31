@@ -259,6 +259,75 @@ int main(int argc, char** argv)
         free(list.start);
     }
 
+    // Test dllDeleteNode__
+    {
+        dllInit(&list);
+
+        // Test that there are no errors on deleting one node
+        int num1 = 5;
+        if (dllPush(&list, (void*) &num1) < 0)
+        {
+            perror("dllDeleteNode__: Unable to insert single node");
+            return -1;
+        }
+        void* result = dllDeleteNode__(list.start);
+        if (*(int*) result != 5)
+        {
+            printf("dllDeleteNode__: Error, proper content was not returned on first delete\n");
+            return -1;
+        }
+
+        // Test that there are no errors on deleting a node between two other nodes
+        num1 = 3;
+        if (dllPush(&list, (void*) &num1) < 0)
+        {
+            perror("dllDeleteNode__: Unable to insert first node");
+            return -1;
+        }
+        int num2 = 2;
+        if (dllPush(&list, (void*) &num2) < 0)
+        {
+            perror("dllDeleteNode__: Unable to insert second node");
+            return -1;
+        }
+        int num3 = 3;
+        if (dllPush(&list, (void*) &num3) < 0)
+        {
+            perror("dllDeleteNode__: Unable to insert third node");
+            return -1;
+        }
+
+        result = dllDeleteNode__(list.start->next);
+        if (*(int*) result != 2)
+        {
+            printf("dllDeleteNode__: Error, proper content was not returned on second delete\n");
+            return -1;
+        }
+        if (list.start->next == NULL)
+        {
+            printf("dllDeleteNode__: Error, start of list's next is NULL\n");
+            return -1;
+        }
+        if (list.end->prev == NULL)
+        {
+            printf("dllDeleteNode__: Error, end of list's prev is NULL\n");
+            return -1;
+        }
+        if (list.start->next != list.end)
+        {
+            printf("dllDeleteNode__: Delete operation did not attach adjacent nodes together\n");
+            return -1;
+        }
+        if (list.end->prev != list.start)
+        {
+            printf("dllDeleteNode__: Delete operation did not attach adjacent nodes together\n");
+            return -1;
+        }
+
+        dllDeleteNode__(list.start);
+        dllDeleteNode__(list.end);
+    }
+
     printf("Tests complete\n");
     return 0;
 }

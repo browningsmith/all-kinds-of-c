@@ -12,5 +12,6 @@
 #include "doublell.h"
 
 DLLNode* dllNewNode__(void* content);
+void* dllDeleteNode__(DLLNode* node);
 
 #endif /* DOUBLELLIMPL_H */
