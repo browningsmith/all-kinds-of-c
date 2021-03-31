@@ -113,6 +113,7 @@ int dllPop(DLL* list, void** returnedContent)
     // Otherwise, head needs to be set to nodeToDelete->next
     else
     {
+        // If the head has no next (broken list), cancel the pop operation
         if (list->head->next == NULL)
         {
             *returnedContent = NULL;
@@ -123,8 +124,7 @@ int dllPop(DLL* list, void** returnedContent)
         list->head->prev = NULL;
     }
 
-    *returnedContent = nodeToDelete->content;
-    free(nodeToDelete);
+    *returnedContent = dllDeleteNode__(nodeToDelete);
     return 0;
 }
 
