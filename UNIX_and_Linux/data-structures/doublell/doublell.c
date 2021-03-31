@@ -30,7 +30,7 @@ int dllPush(DLL* list, void* content)
         return -1;
     }
 
-    if (dllIsEmpty(*list))
+    if (list->head == NULL)
     {
         list->head = newNode;
         list->tail = newNode;
@@ -54,7 +54,7 @@ int dllPushTail(DLL* list, void* content)
         return -1;
     }
 
-    if (dllIsEmpty(*list))
+    if (list->tail == NULL)
     {
         list->head = newNode;
         list->tail = newNode;
@@ -72,7 +72,7 @@ int dllPushTail(DLL* list, void* content)
 
 int dllGet(DLL list, void** returnedContent)
 {
-    if (dllIsEmpty(list))
+    if (list.head == NULL)
     {
         *returnedContent = NULL;
         return -1;
@@ -96,7 +96,7 @@ int dllGetTail(DLL list, void** returnedContent)
 
 int dllPop(DLL* list, void** returnedContent)
 {
-    if (dllIsEmpty(*list))
+    if (list->head == NULL)
     {
         *returnedContent = NULL;
         return -1;
