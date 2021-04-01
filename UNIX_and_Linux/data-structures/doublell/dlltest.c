@@ -835,6 +835,53 @@ int main(int argc, char** argv)
             printf("dllToHead: Error, iterator.list not set to the given list on non-empty list\n");
             return -1;
         }
+
+        dllClear(&list, clearInt);
+    }
+
+    // Test dllToTail
+    {
+        dllInit(&list);
+        int result;
+
+        // Test calling dllToTail on empty list
+        result = dllToTail(&iterator, &list);
+        if (result == 0)
+        {
+            printf("dllToTail: Error, incorrect result when called on empty list\n");
+            return -1;
+        }
+        if (iterator.currentNode != NULL)
+        {
+            printf("dllToTail: Error, currentNode not set to NULL when called on empty list\n");
+            return -1;
+        }
+        if (iterator.list != &list)
+        {
+            printf("dllToTail: Error, iterator.list not set to the given list\n");
+            return -1;
+        }
+
+        // Test calling dllToTail on small list
+        makeList(&list);
+        result = dllToTail(&iterator, &list);
+        if (result < 0)
+        {
+            printf("dllToTail: Error, incorrect result when called on non-empty list\n");
+            return -1;
+        }
+        if (iterator.currentNode != list.tail)
+        {
+            printf("dllToTail: Error, iterator not moved to tail node on non-empty list\n");
+            return -1;
+        }
+        if (iterator.list != &list)
+        {
+            printf("dllToTail: Error, iterator.list not set to the given list on non-empty list\n");
+            return -1;
+        }
+
+        dllClear(&list, clearInt);
     }
 
     printf("Tests complete\n");

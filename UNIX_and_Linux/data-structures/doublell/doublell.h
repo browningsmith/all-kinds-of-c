@@ -200,4 +200,19 @@ int dllClear(DLL* list, int (*clearingFunction) (void*));
  *****************************************************************/
 int dllToHead(DLLIterator* iterator, DLL* list);
 
+/*****************************************************************
+ * dllToTail
+ * 
+ * Inputs: DLLIterator* iterator, DLL* list
+ * Returns: int
+ * 
+ * Moves the given DLLIterator to the end of the given list, as
+ * long as the given list is not empty
+ * 
+ * Returns 0 on success
+ *
+ * Returns -1 on failure, meaning the list is empty
+ *****************************************************************/
+int dllToTail(DLLIterator* iterator, DLL* list);
+
 #endif /* DOUBLELL_H */

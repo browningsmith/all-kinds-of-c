@@ -214,6 +214,20 @@ int dllToHead(DLLIterator* iterator, DLL* list)
     return 0;
 }
 
+int dllToTail(DLLIterator* iterator, DLL* list)
+{
+    iterator->list = list;
+    
+    if (list->tail == NULL)
+    {
+        iterator->currentNode = NULL;
+        return -1;
+    }
+
+    iterator->currentNode = list->tail;
+    return 0;
+}
+
 // Implementation-only definitions
 DLLNode* dllNewNode__(void* content)
 {
