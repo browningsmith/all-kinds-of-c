@@ -5,6 +5,7 @@
 #include "doublellimpl.h"
 
 void makeList(DLL* list);
+int clearInt(void* number);
 
 int main(int argc, char** argv)
 {
@@ -706,6 +707,25 @@ int main(int argc, char** argv)
         dllPopTail(&list, &content);
     }
 
+    // Test dllClear
+    {
+        int result;
+
+        // Test clearing without clearingFunction
+        makeList(&list);
+        result = dllClear(&list, NULL);
+        if (result != 0)
+        {
+            printf("dllClear: Error clearing list with no clearing function specified\n");
+            return -1;
+        }
+        if (!dllIsEmpty(list))
+        {
+            printf("dllClear: Error, list is not empty after call with no specified clearingFunction\n");
+            return -1;
+        }
+    }
+
     // Test dllToHead
     {
         dllInit(&list);
@@ -772,4 +792,11 @@ void makeList(DLL* list)
             exit(-1);
         }
     }
+}
+
+int clearInt(void* number)
+{
+    free(number);
+
+    return 0;
 }

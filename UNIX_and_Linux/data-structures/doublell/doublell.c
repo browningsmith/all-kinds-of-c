@@ -162,6 +162,44 @@ int dllPopTail(DLL* list, void** returnedContent)
     return 0;
 }
 
+int dllClear(DLL* list, int (*clearingFunction) (void*))
+{
+    void* content;
+    
+    // If no clearingFunction specified, delete nodes without considering clearing content
+    if (clearingFunction == NULL)
+    {
+        while (list->head != NULL)
+        {
+            if (dllPop(list, &content) < 0)
+            {
+                return -1;
+            }
+        }
+    }
+    // If a clearingFunction was specified, delete nodes and clear content
+    else
+    {
+        while (list->head != NULL)
+        {
+            dllGet(*list, &content);
+
+            // Attempt to clear content
+            if (clearingFunction(content) != 0)
+            {
+                return -1;
+            }
+
+            if (dllPop(list, &content) < 0)
+            {
+                return -1;
+            }
+        }
+    }
+
+    return 0;
+}
+
 int dllToHead(DLLIterator* iterator, DLL* list)
 {
     iterator->list = list;

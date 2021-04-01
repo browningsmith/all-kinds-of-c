@@ -148,6 +148,29 @@ int dllPop(DLL* list, void** returnedContent);
 int dllPopTail(DLL* list, void** returnedContent);
 
 /*****************************************************************
+ * dllClear
+ * 
+ * Inputs: DLL* list, int (*clearingFunction) (void* content)
+ * Returns: int
+ * 
+ * Deletes all nodes in the given list, starting from the head and
+ * and clears the contents of each node using the given
+ * clearingFunction
+ *
+ * If clearingFunction is NULL, dllClear will not worry about
+ * clearing the content of each node
+ * 
+ * Returns 0 on success, meaning the clearingFunction did not run
+ * in to an error.
+ *
+ * Returns -1 on failure, meaning the clearingFunction ran in to
+ * an error on one of the nodes, or that it ran in to an other error
+ * such as the list being broken somewhere in the middle and will
+ * leave the remainder of the list intact.
+ *****************************************************************/
+int dllClear(DLL* list, int (*clearingFunction) (void*));
+
+/*****************************************************************
  * IMPORTANT
  *
  * DLLIterator methods
