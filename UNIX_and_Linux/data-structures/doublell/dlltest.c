@@ -728,6 +728,25 @@ int main(int argc, char** argv)
             printf("dllToHead: Error, iterator.list not set to the given list\n");
             return -1;
         }
+
+        // Test calling dllToHead on small list
+        makeList(&list);
+        result = dllToHead(&iterator, &list);
+        if (result < 0)
+        {
+            printf("dllToHead: Error, incorrect result when called on non-empty list\n");
+            return -1;
+        }
+        if (iterator.currentNode != list.head)
+        {
+            printf("dllToHead: Error, iterator not moved to head node on non-empty list\n");
+            return -1;
+        }
+        if (iterator.list != &list)
+        {
+            printf("dllToHead: Error, iterator.list not set to the given list on non-empty list\n");
+            return -1;
+        }
     }
 
     printf("Tests complete\n");
