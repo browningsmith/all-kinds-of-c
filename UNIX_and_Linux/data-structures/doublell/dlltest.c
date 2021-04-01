@@ -711,6 +711,15 @@ int main(int argc, char** argv)
     {
         int result;
 
+        // Test clearing empty list
+        dllInit(&list);
+        result = dllClear(&list, clearInt);
+        if (result != 0)
+        {
+            printf("dllClear: Error clearing already empty list\n");
+            return -1;
+        }
+        
         // Test clearing without clearingFunction
         makeList(&list);
         result = dllClear(&list, NULL);
@@ -722,6 +731,65 @@ int main(int argc, char** argv)
         if (!dllIsEmpty(list))
         {
             printf("dllClear: Error, list is not empty after call with no specified clearingFunction\n");
+            return -1;
+        }
+
+        // Test clearing with clearingFunction
+        makeList(&list);
+        result = dllClear(&list, clearInt);
+        if (result != 0)
+        {
+            printf("dllClear: Error clearing list with no clearing function specified\n");
+            return -1;
+        }
+        if (!dllIsEmpty(list))
+        {
+            printf("dllClear: Error, list is not empty after call with no specified clearingFunction\n");
+            return -1;
+        }
+
+        // Test attempting to clear a broken list
+        makeList(&list);
+        DLLNode* leftBehindNode = list.head->next->next->next; // Should be node 9
+        DLLNode* nextNode = leftBehindNode->next; // Should be node 8
+        list.head->next->next->next->next = NULL; // Node 9 should be left behind without content
+        result = dllClear(&list, clearInt);
+        if (result == 0)
+        {
+            printf("dllClear: Error clearing broken list\n");
+            return -1;
+        }
+        if (dllIsEmpty(list))
+        {
+            printf("dllClear: Error, list appears empty even though dllClear was called on a broken list, and shouldn't have cleared it\n");
+            return -1;
+        }
+        if (list.head != leftBehindNode)
+        {
+            printf("dllClear: Wrong node left behind in broken list\n");
+            return -1;
+        }
+
+        // Fix list (re-add content and reattach broken link)
+        leftBehindNode->content = malloc(sizeof(int));
+        if (leftBehindNode->content == NULL)
+        {
+            perror("dllClear: Unable to reallocate space for a new int to fix broken list\n");
+            return -1;
+        }
+        leftBehindNode->next = nextNode;
+
+        // Test clearing with clearingFunction
+        makeList(&list);
+        result = dllClear(&list, clearInt);
+        if (result != 0)
+        {
+            printf("dllClear: Error clearing list with no clearing function specified on fifth test\n");
+            return -1;
+        }
+        if (!dllIsEmpty(list))
+        {
+            printf("dllClear: Error, list is not empty after call with no specified clearingFunction on fifth test\n");
             return -1;
         }
     }
