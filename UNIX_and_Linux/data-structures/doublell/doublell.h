@@ -82,7 +82,7 @@ int dllPush(DLL* list, void* content);
 int dllPushTail(DLL* list, void* content);
 
 /*****************************************************************
- * dllGet
+ * dllGetHead
  * 
  * Inputs: DLL* list, void** returnedContent
  * Returns: int
@@ -96,7 +96,7 @@ int dllPushTail(DLL* list, void* content);
  * Returns -1 on failure, meaning the list is empty, and places
  * NULL into returnedContent
  *****************************************************************/
-int dllGet(DLL list, void** returnedContent);
+int dllGetHead(DLL list, void** returnedContent);
 
 /*****************************************************************
  * dllGetTail

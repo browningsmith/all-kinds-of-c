@@ -360,41 +360,41 @@ int main(int argc, char** argv)
         dllDeleteNode__(list.tail);
     }
 
-    // Test dllGet
+    // Test dllGetHead
     {
         dllInit(&list);
         void* content = (void*) 17;
 
-        // Test calling dllGet on an empty list
-        int result = dllGet(list, &content);
+        // Test calling dllGetHead on an empty list
+        int result = dllGetHead(list, &content);
         if (result != -1)
         {
-            printf("dllGet: Error, returned success when called on empty list\n");
+            printf("dllGetHead: Error, returned success when called on empty list\n");
             return -1;
         }
         if (content != NULL)
         {
-            printf("dllGet: Error, did not return NULL content when called on empty list\n");
+            printf("dllGetHead: Error, did not return NULL content when called on empty list\n");
             return -1;
         }
 
-        // Test calling dllGet on non empty list
+        // Test calling dllGetHead on non empty list
         int num1 = 17;
         if (dllPush(&list, (void*) &num1) < 0)
         {
-            perror("dllGet: Error adding node to list\n");
+            perror("dllGetHead: Error adding node to list\n");
             return -1;
         }
         content = NULL;
-        result = dllGet(list, &content);
+        result = dllGetHead(list, &content);
         if (result != 0)
         {
-            printf("dllGet: Error, did not return with success\n");
+            printf("dllGetHead: Error, did not return with success\n");
             return -1;
         }
         if (*(int*) content != 17)
         {
-            printf("dllGet: Error, did not return with proper content\n");
+            printf("dllGetHead: Error, did not return with proper content\n");
             return -1;
         }
 
@@ -406,7 +406,7 @@ int main(int argc, char** argv)
         dllInit(&list);
         void* content = (void*) 17;
 
-        // Test calling dllGet on an empty list
+        // Test calling dllGetTail on an empty list
         int result = dllGetTail(list, &content);
         if (result != -1)
         {

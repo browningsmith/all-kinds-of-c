@@ -70,7 +70,7 @@ int dllPushTail(DLL* list, void* content)
     return 0;
 }
 
-int dllGet(DLL list, void** returnedContent)
+int dllGetHead(DLL list, void** returnedContent)
 {
     if (list.head == NULL)
     {
@@ -182,7 +182,7 @@ int dllClear(DLL* list, int (*clearingFunction) (void*))
     {
         while (list->head != NULL)
         {
-            dllGet(*list, &content);
+            dllGetHead(*list, &content);
 
             // Attempt to clear content
             if (clearingFunction(content) != 0)
