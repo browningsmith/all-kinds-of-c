@@ -147,4 +147,34 @@ int dllPop(DLL* list, void** returnedContent);
  *****************************************************************/
 int dllPopTail(DLL* list, void** returnedContent);
 
+/*****************************************************************
+ * IMPORTANT
+ *
+ * DLLIterator methods
+ *
+ * All above methods affect elements on a DLL without considering
+ * that a DLLIterator may exist attached to the list. If not
+ * careful, it is possible to remove a node that the DLLiterator
+ * is currently sitting on.
+ *
+ * If an existing DLLIterator is used after one or more of the
+ * above methods are called, dllToHead or dllToTail should be called
+ * to place the iterator back on the valid start of a list
+ *****************************************************************/
+
+/*****************************************************************
+ * dllToHead
+ * 
+ * Inputs: DLLIterator* iterator, DLL* list
+ * Returns: int
+ * 
+ * Moves the given DLLIterator to the start of the given list, as
+ * long as the given list is not empty
+ * 
+ * Returns 0 on success
+ *
+ * Returns -1 on failure, meaning the list is empty
+ *****************************************************************/
+int dllToHead(DLLIterator* iterator, DLL* list);
+
 #endif /* DOUBLELL_H */

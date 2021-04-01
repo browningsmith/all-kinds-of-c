@@ -11,6 +11,7 @@ int main(int argc, char** argv)
     printf("Running tests on doublell\n");
 
     DLL list;
+    DLLIterator iterator;
 
     // Test dllInit
     {
@@ -703,6 +704,30 @@ int main(int argc, char** argv)
         }
 
         dllPopTail(&list, &content);
+    }
+
+    // Test dllToHead
+    {
+        dllInit(&list);
+        int result;
+
+        // Test calling dllToHead on empty list
+        result = dllToHead(&iterator, &list);
+        if (result == 0)
+        {
+            printf("dllToHead: Error, incorrect result when called on empty list\n");
+            return -1;
+        }
+        if (iterator.currentNode != NULL)
+        {
+            printf("dllToHead: Error, currentNode not set to NULL when called on empty list\n");
+            return -1;
+        }
+        if (iterator.list != &list)
+        {
+            printf("dllToHead: Error, iterator.list not set to the given list\n");
+            return -1;
+        }
     }
 
     printf("Tests complete\n");

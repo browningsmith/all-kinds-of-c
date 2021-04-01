@@ -162,6 +162,20 @@ int dllPopTail(DLL* list, void** returnedContent)
     return 0;
 }
 
+int dllToHead(DLLIterator* iterator, DLL* list)
+{
+    iterator->list = list;
+    
+    if (list->head == NULL)
+    {
+        iterator->currentNode = NULL;
+        return -1;
+    }
+
+    iterator->currentNode = list->head;
+    return 0;
+}
+
 // Implementation-only definitions
 DLLNode* dllNewNode__(void* content)
 {
