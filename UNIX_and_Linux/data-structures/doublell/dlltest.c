@@ -1037,6 +1037,98 @@ int main(int argc, char** argv)
         dllClear(&list, clearInt);
     }
 
+    // Test dllGetPrev
+    {
+        dllInit(&list);
+        int result;
+        void* content;
+
+        // Test on empty list
+        dllToHead(&iterator, &list);
+        content = (void*) 23;
+        result = dllGetPrev(&iterator, &content);
+        if (result == 0)
+        {
+            printf("dllGetPrev: Error, incorrect result when called on empty list iterator\n");
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("dllGetPrev: Error, content is not NULL when called on empty list iterator\n");
+            return -1;
+        }
+
+        // Test on non empty list while at the head
+        makeList(&list);
+        dllToHead(&iterator, &list);
+        content = (void*) 23;
+        result = dllGetPrev(&iterator, &content);
+        if (result == 0)
+        {
+            printf("dllGetPrev: Error, incorrect result when called on head of non empty list\n");
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("dllGetPrev: Error, content is not NULL when called on head of non empty list\n");
+            return -1;
+        }
+        if (iterator.currentNode != list.head)
+        {
+            printf("dllGetPrev: Error, iterator shifted to new node when called on head of list\n");
+            return -1;
+        }
+
+        // Test a couple times starting from the tail
+        dllToTail(&iterator, &list);
+        content = NULL;
+        result = dllGetPrev(&iterator, &content);
+        if (result != 0)
+        {
+            printf("dllGetPrev: Error, incorrect result when called on tail of non empty list\n");
+            return -1;
+        }
+        if (content == NULL)
+        {
+            printf("dllGetPrev: Error, content is NULL when called on tail of non empty list\n");
+            return -1;
+        }
+        if (*(int*) content != 2)
+        {
+            printf("dllGetPrev: Error, content is incorrect when called on tail of non empty list\n");
+            return -1;
+        }
+        if (iterator.currentNode != list.tail->prev)
+        {
+            printf("dllGetPrev: Error, iterator did not shift to correct node when called on tail of non empty list\n");
+            return -1;
+        }
+
+        result = dllGetPrev(&iterator, &content);
+        if (result != 0)
+        {
+            printf("dllGetPrev: Error, incorrect result when called again on non empty list\n");
+            return -1;
+        }
+        if (content == NULL)
+        {
+            printf("dllGetPrev: Error, content is NULL when called again on non empty list\n");
+            return -1;
+        }
+        if (*(int*) content != 3)
+        {
+            printf("dllGetPrev: Error, content is incorrect when called again on non empty list\n");
+            return -1;
+        }
+        if (iterator.currentNode != list.tail->prev->prev)
+        {
+            printf("dllGetPrev: Error, iterator did not shift to correct node when called again on non empty list\n");
+            return -1;
+        }
+
+        dllClear(&list, clearInt);
+    }
+
     printf("Tests complete\n");
     return 0;
 }

@@ -246,6 +246,24 @@ int dllGetThis(DLLIterator* iterator, void** content)
     return 0;
 }
 
+int dllGetPrev(DLLIterator* iterator, void** content)
+{
+    if (iterator->currentNode == NULL)
+    {
+        *content = NULL;
+        return -1;
+    }
+    if (iterator->currentNode->prev == NULL)
+    {
+        *content = NULL;
+        return -1;
+    }
+
+    iterator->currentNode = iterator->currentNode->prev;
+    *content = iterator->currentNode->content;
+    return 0;
+}
+
 // Implementation-only definitions
 DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next)
 {
