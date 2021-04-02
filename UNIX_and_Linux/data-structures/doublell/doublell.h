@@ -247,4 +247,20 @@ int dllGetThis(DLLIterator* iterator, void** content);
  *****************************************************************/
 int dllGetPrev(DLLIterator* iterator, void** content);
 
+/*****************************************************************
+ * dllGetNext
+ * 
+ * Inputs: DLLIterator* iterator, void** content
+ * Returns: int
+ * 
+ * Attempts to move the iterator to the next node, and then
+ * place that node's content into the given content parameter
+ * 
+ * Returns 0 on success
+ *
+ * Returns -1 on failure, meaning the list is empty, or that the
+ * node the iterator is on has no previous node
+ *****************************************************************/
+int dllGetNext(DLLIterator* iterator, void** content);
+
 #endif /* DOUBLELL_H */
