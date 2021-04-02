@@ -94,6 +94,149 @@ int main(int argc, char** argv)
         free(testNode);
     }
 
+    // Test dllInsertNode__
+    {
+        // Test creating a new node with no neighbors
+        int num2 = 2;
+        DLLNode* node2 = dllInsertNode__((void*) &num2, NULL, NULL);
+        if (node2 == NULL)
+        {
+            perror("dllInsertNode__: Unable to insert node on first test");
+            return -1;
+        }
+        if (node2->prev != NULL)
+        {
+            printf("dllInsertNode__: node->prev is not NULL, but should have no neighbors\n");
+            return -1;
+        }
+        if (node2->next != NULL)
+        {
+            printf("dllInsertNode__: node->next is not NULL, but should have no neighbors\n");
+            return -1;
+        }
+        if (node2->content == NULL)
+        {
+            printf("dllInsertNode__: node->content is NULL on first test\n");
+            return -1;
+        }
+        if (*(int*) node2->content != 2)
+        {
+            printf("dllInsertNode__: node->content is incorrect on first test\n");
+            return -1;
+        }
+
+        // Test inserting a node to the left
+        int num1 = 1;
+        DLLNode* node1 = dllInsertNode__((void*) &num1, NULL, node2);
+        if (node1 == NULL)
+        {
+            perror("dllInsertNode__: Unable to insert node on second test");
+            return -1;
+        }
+        if (node1->prev != NULL)
+        {
+            printf("dllInsertNode__: node->prev is not NULL, but should have no left neighbor on the second test\n");
+            return -1;
+        }
+        if (node1->next != node2)
+        {
+            printf("dllInsertNode__: node->next is not set to correct right neighbor on the second test\n");
+            return -1;
+        }
+        if (node1->content == NULL)
+        {
+            printf("dllInsertNode__: node->content is NULL on second test\n");
+            return -1;
+        }
+        if (*(int*) node1->content != 1)
+        {
+            printf("dllInsertNode__: node->content is incorrect on second test\n");
+            return -1;
+        }
+        if (node2->prev != node1)
+        {
+            printf("dllInsertNode__: node2->prev is not set to correct left neighbor on the second test\n");
+            return -1;
+        }
+
+        // Test inserting a node on the right
+        int num4 = 4;
+        DLLNode* node4 = dllInsertNode__((void*) &num4, node2, NULL);
+        if (node4 == NULL)
+        {
+            perror("dllInsertNode__: Unable to insert node on third test");
+            return -1;
+        }
+        if (node4->prev != node2)
+        {
+            printf("dllInsertNode__: node->prev is not set to correct left neighbor, on the third test\n");
+            return -1;
+        }
+        if (node4->next != NULL)
+        {
+            printf("dllInsertNode__: node->next is not NULL, but should have no right neighbor on the third test\n");
+            return -1;
+        }
+        if (node4->content == NULL)
+        {
+            printf("dllInsertNode__: node->content is NULL on third test\n");
+            return -1;
+        }
+        if (*(int*) node4->content != 4)
+        {
+            printf("dllInsertNode__: node->content is incorrect on third test\n");
+            return -1;
+        }
+        if (node2->next != node4)
+        {
+            printf("dllInsertNode__: node2->next is not set to correct right neighbor on the third test\n");
+            return -1;
+        }
+
+        // Test inserting a node with two neighbors
+        int num3 = 3;
+        DLLNode* node3 = dllInsertNode__((void*) &num3, node2, node4);
+        if (node3 == NULL)
+        {
+            perror("dllInsertNode__: Unable to insert node on fourth test");
+            return -1;
+        }
+        if (node3->prev != node2)
+        {
+            printf("dllInsertNode__: node->prev is not set to correct left neighbor, on the fourth test\n");
+            return -1;
+        }
+        if (node3->next != node4)
+        {
+            printf("dllInsertNode__: node->next is not set to correct right neighbor on the fourth test\n");
+            return -1;
+        }
+        if (node3->content == NULL)
+        {
+            printf("dllInsertNode__: node->content is NULL on fourth test\n");
+            return -1;
+        }
+        if (*(int*) node3->content != 3)
+        {
+            printf("dllInsertNode__: node->content is incorrect on fourth test\n");
+            return -1;
+        }
+        if (node2->next != node3)
+        {
+            printf("dllInsertNode__: node2->next is not set to correct right neighbor on the fourth test\n");
+            return -1;
+        }
+        if (node4->prev != node3)
+        {
+            printf("dllInsertNode__: node4->prev is not set to correct left neighbor on the fourth test\n");
+            return -1;
+        }
+        free(node1);
+        free(node2);
+        free(node3);
+        free(node4);
+    }
+
     // Test dllIsEmpty
     {
         dllInit(&list);

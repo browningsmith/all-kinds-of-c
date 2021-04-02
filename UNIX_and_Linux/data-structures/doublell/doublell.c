@@ -245,6 +245,32 @@ DLLNode* dllNewNode__(void* content)
     return newNode;
 }
 
+DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next)
+{
+    DLLNode* newNode = malloc(sizeof(DLLNode));
+    if (newNode == NULL)
+    {
+        return NULL;
+    }
+
+    // Initialize values
+    newNode->prev = prev;
+    newNode->next = next;
+    newNode->content = content;
+
+    // Attach outer nodes
+    if (prev != NULL)
+    {
+        prev->next = newNode;
+    }
+    if (next != NULL)
+    {
+        next->prev = newNode;
+    }
+
+    return newNode;
+}
+
 void* dllDeleteNode__(DLLNode* node)
 {
     void* returnContent = node->content;
