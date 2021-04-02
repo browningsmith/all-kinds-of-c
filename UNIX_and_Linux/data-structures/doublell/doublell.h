@@ -215,4 +215,20 @@ int dllToHead(DLLIterator* iterator, DLL* list);
  *****************************************************************/
 int dllToTail(DLLIterator* iterator, DLL* list);
 
+/*****************************************************************
+ * dllGetThis
+ * 
+ * Inputs: DLLIterator* iterator, void** content
+ * Returns: int
+ * 
+ * Attempts to place the content from the iterator's current node
+ * into the given content parameter
+ * 
+ * Returns 0 on success
+ *
+ * Returns -1 on failure, meaning the list is empty, and places
+ * NULL into content
+ *****************************************************************/
+int dllGetThis(DLLIterator* iterator, void** content);
+
 #endif /* DOUBLELL_H */

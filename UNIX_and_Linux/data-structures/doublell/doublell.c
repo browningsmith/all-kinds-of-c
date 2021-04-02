@@ -234,6 +234,18 @@ int dllToTail(DLLIterator* iterator, DLL* list)
     return 0;
 }
 
+int dllGetThis(DLLIterator* iterator, void** content)
+{
+    if (iterator->currentNode == NULL)
+    {
+        *content = NULL;
+        return -1;
+    }
+
+    *content = iterator->currentNode->content;
+    return 0;
+}
+
 // Implementation-only definitions
 DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next)
 {

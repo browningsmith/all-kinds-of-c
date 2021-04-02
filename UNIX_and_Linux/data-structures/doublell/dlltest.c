@@ -992,6 +992,51 @@ int main(int argc, char** argv)
         dllClear(&list, clearInt);
     }
 
+    // Test dllGetThis
+    {
+        dllInit(&list);
+        int result;
+        void* content;
+
+        // Test on empty list
+        dllToHead(&iterator, &list);
+        content = (void*) 17;
+        result = dllGetThis(&iterator, &content);
+        if (result == 0)
+        {
+            printf("dllGetThis: Error, incorrect result when called on empty list iterator\n");
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("dllGetThis: Error, content not NULL when called on empty list iterator\n");
+            return -1;
+        }
+
+        // Test on non empty list
+        makeList(&list);
+        dllToHead(&iterator, &list);
+        content = NULL;
+        result = dllGetThis(&iterator, &content);
+        if (result != 0)
+        {
+            printf("dllGetThis: Error, incorrect result when called on non empty list iterator\n");
+            return -1;
+        }
+        if (content == NULL)
+        {
+            printf("dllGetThis: Error, NULL content when called on non empty list iterator\n");
+            return -1;
+        }
+        if (*(int*) content != 12)
+        {
+            printf("dllGetThis: Error, incorrect content when called on non empty list iterator\n");
+            return -1;
+        }
+
+        dllClear(&list, clearInt);
+    }
+
     printf("Tests complete\n");
     return 0;
 }
