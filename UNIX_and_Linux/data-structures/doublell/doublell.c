@@ -235,22 +235,6 @@ int dllToTail(DLLIterator* iterator, DLL* list)
 }
 
 // Implementation-only definitions
-DLLNode* dllNewNode__(void* content)
-{
-    DLLNode* newNode = malloc(sizeof(DLLNode));
-    if (newNode == NULL)
-    {
-        return NULL;
-    }
-
-    // Initialize values
-    newNode->prev = NULL;
-    newNode->next = NULL;
-    newNode->content = content;
-
-    return newNode;
-}
-
 DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next)
 {
     DLLNode* newNode = malloc(sizeof(DLLNode));

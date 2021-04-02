@@ -11,7 +11,6 @@
 
 #include "doublell.h"
 
-DLLNode* dllNewNode__(void* content);
 DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next);
 void* dllDeleteNode__(DLLNode* node);
 
