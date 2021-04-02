@@ -282,4 +282,23 @@ int dllGetNext(DLLIterator* iterator, void** content);
  *****************************************************************/
 int dllInsertPrev(DLLIterator* iterator, void* content);
 
+/*****************************************************************
+ * dllInsertNext
+ * 
+ * Inputs: DLLIterator* iterator, void* content
+ * Returns: int
+ * 
+ * Attempts to insert a new node as the next node of the node
+ * that the iterator is currently on.
+ * 
+ * Returns 0 on success
+ *
+ * Returns -1 on failure. Failure can be caused by:
+ *  - If the list is empty, no node will be inserted. User should
+ *    instead call dllPush or dllPushTail on an empty list
+ *  - If the node could not be created due to not being able to
+ *    allocate memory, errno will be set
+ *****************************************************************/
+int dllInsertNext(DLLIterator* iterator, void* content);
+
 #endif /* DOUBLELL_H */

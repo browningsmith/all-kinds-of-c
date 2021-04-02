@@ -322,6 +322,40 @@ int dllInsertPrev(DLLIterator* iterator, void* content)
     return 0;
 }
 
+int dllInsertNext(DLLIterator* iterator, void* content)
+{
+    DLLNode* currentNode = iterator->currentNode;
+
+    if (currentNode == NULL)
+    {
+        return -1;
+    }
+
+    DLLNode* newNode;
+
+    // If currentNode is tail, similar to dllPushTail, make sure list->tail is updated
+    if (currentNode == iterator->list->tail)
+    {
+        newNode = dllInsertNode__(content, currentNode, NULL);
+        if (newNode == NULL)
+        {
+            return -1;
+        }
+        iterator->list->tail = newNode;
+
+        return 0;
+    }
+
+    // Otherwise just perform normal insert
+    newNode = dllInsertNode__(content, currentNode, currentNode->next);
+    if (newNode == NULL)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
 // Implementation-only definitions
 DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next)
 {
