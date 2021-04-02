@@ -24,23 +24,27 @@ int dllIsEmpty(DLL list)
 
 int dllPush(DLL* list, void* content)
 {
-    DLLNode* newNode = dllNewNode__(content);
-    if (newNode == NULL)
-    {
-        return -1;
-    }
+    DLLNode* newNode;
 
     if (list->head == NULL)
     {
+        newNode = dllInsertNode__(content, NULL, NULL);
+        if (newNode == NULL)
+        {
+            return -1;
+        }
+        
         list->head = newNode;
         list->tail = newNode;
 
         return 0;
     }
 
-    DLLNode* next = list->head;
-    newNode->next = next;
-    next->prev = newNode;
+    newNode = dllInsertNode__(content, NULL, list->head);
+    if (newNode == NULL)
+    {
+        return -1;
+    }
     list->head = newNode;
 
     return 0;
@@ -48,23 +52,27 @@ int dllPush(DLL* list, void* content)
 
 int dllPushTail(DLL* list, void* content)
 {
-    DLLNode* newNode = dllNewNode__(content);
-    if (newNode == NULL)
-    {
-        return -1;
-    }
+    DLLNode* newNode;
 
     if (list->tail == NULL)
     {
+        newNode = dllInsertNode__(content, NULL, NULL);
+        if (newNode == NULL)
+        {
+            return -1;
+        }
+        
         list->head = newNode;
         list->tail = newNode;
 
         return 0;
     }
 
-    DLLNode* prev = list->tail;
-    newNode->prev = prev;
-    prev->next = newNode;
+    newNode = dllInsertNode__(content, list->tail, NULL);
+    if (newNode == NULL)
+    {
+        return -1;
+    }
     list->tail = newNode;
 
     return 0;
@@ -105,7 +113,7 @@ int dllPop(DLL* list, void** returnedContent)
     DLLNode* nodeToDelete = list->head;
 
     // If the head and tail are the same, then this is the only node to delete
-    if (list->head == list->tail)
+    if (nodeToDelete == list->tail)
     {
         list->head = NULL;
         list->tail = NULL;
@@ -114,14 +122,13 @@ int dllPop(DLL* list, void** returnedContent)
     else
     {
         // If the head has no next (broken list), cancel the pop operation
-        if (list->head->next == NULL)
+        if (nodeToDelete->next == NULL)
         {
             *returnedContent = NULL;
             return -1;
         }
 
         list->head = nodeToDelete->next;
-        list->head->prev = NULL;
     }
 
     *returnedContent = dllDeleteNode__(nodeToDelete);
@@ -139,7 +146,7 @@ int dllPopTail(DLL* list, void** returnedContent)
     DLLNode* nodeToDelete = list->tail;
 
     // If the head and tail are the same, then this is the only node to delete
-    if (list->head == list->tail)
+    if (list->head == nodeToDelete)
     {
         list->head = NULL;
         list->tail = NULL;
@@ -148,14 +155,13 @@ int dllPopTail(DLL* list, void** returnedContent)
     else
     {
         // If the tail has no prev (broken list), cancel the pop operation
-        if (list->tail->prev == NULL)
+        if (nodeToDelete->prev == NULL)
         {
             *returnedContent = NULL;
             return -1;
         }
 
         list->tail = nodeToDelete->prev;
-        list->tail->next = NULL;
     }
 
     *returnedContent = dllDeleteNode__(nodeToDelete);
