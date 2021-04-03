@@ -8,8 +8,11 @@ void makeList(DLL* list);
 int clearInt(void* number);
 
 int main(int argc, char** argv)
-{
+{   
     printf("Running tests on doublell\n");
+    printf("Sizeof DLLNode: %lu\n", sizeof(DLLNode));
+    printf("Sizeof int: %lu\n", sizeof(int));
+    printf("Sizeof DLLNode containing int: %lu\n", sizeof(DLLNode) + sizeof(int));
 
     DLL list;
     DLLIterator iterator;
@@ -852,8 +855,7 @@ int main(int argc, char** argv)
         dllPopTail(&list, &content);
     }
     printf("Completed dllPopTail\n");
-
-    
+  
     printf("Testing dllClear\n");
     // Test dllClear
     {
@@ -869,7 +871,24 @@ int main(int argc, char** argv)
         }
         
         // Test clearing without clearingFunction
-        makeList(&list);
+        int num1 = 1;
+        if (dllPush(&list, (void*) &num1))
+        {
+            perror("dllClear: Unable to push on first node for second test\n");
+            return -1;
+        }
+        int num2 = 2;
+        if (dllPush(&list, (void*) &num2))
+        {
+            perror("dllClear: Unable to push on first node for second test\n");
+            return -1;
+        }
+        int num3 = 3;
+        if (dllPush(&list, (void*) &num3))
+        {
+            perror("dllClear: Unable to push on first node for second test\n");
+            return -1;
+        }
         result = dllClear(&list, NULL);
         if (result != 0)
         {
@@ -887,24 +906,24 @@ int main(int argc, char** argv)
         result = dllClear(&list, clearInt);
         if (result != 0)
         {
-            printf("dllClear: Error clearing list with no clearing function specified\n");
+            printf("dllClear: Error clearing list with clearing function specified\n");
             return -1;
         }
         if (!dllIsEmpty(list))
         {
-            printf("dllClear: Error, list is not empty after call with no specified clearingFunction\n");
+            printf("dllClear: Error, list is not empty after call with specified clearingFunction\n");
             return -1;
         }
 
         // Test attempting to clear a broken list
         makeList(&list);
-        DLLNode* leftBehindNode = list.head->next->next->next; // Should be node 9
-        DLLNode* nextNode = leftBehindNode->next; // Should be node 8
-        list.head->next->next->next->next = NULL; // Node 9 should be left behind without content
+        DLLNode* leftBehindNode = list.head; // Should be node 12
+        DLLNode* nextNode = leftBehindNode->next; // Should be node 11
+        leftBehindNode->next = NULL; // Node 12 should be left behind without content
         result = dllClear(&list, clearInt);
         if (result == 0)
         {
-            printf("dllClear: Error clearing broken list\n");
+            printf("dllClear: Error, incorrect result on clearing broken list\n");
             return -1;
         }
         if (dllIsEmpty(list))
@@ -928,16 +947,15 @@ int main(int argc, char** argv)
         leftBehindNode->next = nextNode;
 
         // Test clearing with clearingFunction
-        makeList(&list);
         result = dllClear(&list, clearInt);
         if (result != 0)
         {
-            printf("dllClear: Error clearing list with no clearing function specified on fifth test\n");
+            printf("dllClear: Error clearing list on fifth test\n");
             return -1;
         }
         if (!dllIsEmpty(list))
         {
-            printf("dllClear: Error, list is not empty after call with no specified clearingFunction on fifth test\n");
+            printf("dllClear: Error, list is not empty after call fifth test\n");
             return -1;
         }
     }

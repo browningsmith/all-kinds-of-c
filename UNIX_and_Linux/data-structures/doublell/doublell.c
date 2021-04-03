@@ -195,6 +195,7 @@ int dllClear(DLL* list, int (*clearingFunction) (void*))
             {
                 return -1;
             }
+            list->head->content = NULL;
 
             if (dllPop(list, &content) < 0)
             {
