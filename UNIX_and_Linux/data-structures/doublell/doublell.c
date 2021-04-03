@@ -359,33 +359,56 @@ int dllInsertNext(DLLIterator* iterator, void* content)
 // Implementation-only definitions
 DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next)
 {
+    printf("INSERTING NODE\n");
+    printf("Allocating space for a new node, and placing inside newNode\n");
     DLLNode* newNode = malloc(sizeof(DLLNode));
+    printf("Address of allocated space placed in newNode: %x\n", newNode);
     if (newNode == NULL)
     {
+        printf("Unable to allocate space, NULL was returned by call to malloc\n");
         return NULL;
     }
 
     // Initialize values
+    printf("Setting newNode->prev equal to prev argument, which is %x\n", prev);
     newNode->prev = prev;
+    printf("newNode->prev is now %x\n", newNode->prev);
+    printf("Setting newNode->next equal to next argument, which is %x\n", next);
     newNode->next = next;
+    printf("newNode->next is now %x\n", newNode->next);
+    printf("Setting newNode->content equal to content argument, which is %x\n", content);
     newNode->content = content;
+    printf("newNode->content is now %x\n", newNode->content);
 
     // Attach outer nodes
     if (prev != NULL)
     {
+        printf("prev is not NULL, setting prev->next to newNode, which is %x\n", newNode);
         prev->next = newNode;
+        printf("prev->next is now %x\n", prev->next);
+    }
+    else
+    {
+        printf("prev is NULL, can't attach anything to it\n");
     }
     if (next != NULL)
     {
+        printf("next is not NULL, setting next->prev to newNode, which is %x\n", newNode);
         next->prev = newNode;
+        printf("next->prev is now %x\n", next->prev);
+    }
+    else
+    {
+        printf("next is NULL, can't attach anything to it\n");
     }
 
+    printf("Returning %x\n", newNode);
     return newNode;
 }
 
 void* dllDeleteNode__(DLLNode* node)
 {
-    printf("Deleting node");
+    printf("DELETING NODE\n");
     printf("Address of node being deleted: %x\n", node);
     void* returnContent = node->content;
     printf("Address of previous node: %x\n", node->prev);
@@ -398,16 +421,30 @@ void* dllDeleteNode__(DLLNode* node)
     // If prev node is not null, set it's next to next
     if (prev != NULL)
     {
+        printf("Prev is not NULL, setting prev->next to next, which should be %x\n", next);
         prev->next = next;
+        printf("prev->next is now %x\n", prev->next);
+    }
+    else
+    {
+        printf("Prev is NULL, so can't attach anything to it\n");
     }
 
     // If next node is not null, set it's prev to prev
     if (next != NULL)
     {
+        printf("Next is not NULL, setting next->prev to prev, which should be %x\n", prev);
         next->prev = prev;
+        printf("next->prev is now %x\n", next->prev);
+    }
+    else
+    {
+        printf("Next is NULL, so can't attach anything to it\n");
     }
 
+    printf("Freeing node at address: %x\n", node);
     free(node);
+    printf("Freed node at address: %x\n", node);
 
     return returnContent;
 }

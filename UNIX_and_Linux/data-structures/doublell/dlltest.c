@@ -198,9 +198,13 @@ int main(int argc, char** argv)
             printf("dllInsertNode__: node4->prev is not set to correct left neighbor on the fourth test\n");
             return -1;
         }
+        //printf("Freeing %x\n", node1);
         free(node1);
+        //printf("Freeing %x\n", node2);
         free(node2);
+        //printf("Freeing %x\n", node3);
         free(node3);
+        //printf("Freeing %x\n", node4);
         free(node4);
     }
     printf("Completed dllInsertNode__\n");
@@ -322,7 +326,9 @@ int main(int argc, char** argv)
             return -1;
         }
 
+        //printf("Freeing %x\n", list.head->next);
         free(list.head->next);
+        //printf("Freeing %x\n", list.head);
         free(list.head);
     }
     printf("Completed dllPush\n");
@@ -403,7 +409,9 @@ int main(int argc, char** argv)
             return -1;
         }
 
+        //printf("Freeing %x\n", list.head->next);
         free(list.head->next);
+        //printf("Freeing %x\n", list.head);
         free(list.head);
     }
     printf("Completed dllPushTail\n");
@@ -411,59 +419,43 @@ int main(int argc, char** argv)
     printf("Testing dllDeleteNode__\n");
     // Test dllDeleteNode__
     {
-        printf("Initializing list\n");
         dllInit(&list);
-        printf("Initialized list\n");
 
         // Test that there are no errors on deleting one node
         int num1 = 5;
-        printf("Created int num1 on the stack, with value 5\n");
-        printf("Pushing on new node, content is address of num1\n");
         if (dllPush(&list, (void*) &num1) < 0)
         {
             perror("dllDeleteNode__: Unable to insert single node");
             return -1;
         }
-        printf("Pushed on new node\n");
-        printf("Deleting node, and passing value of content into result\n");
         void* result = dllDeleteNode__(list.head);
         if (*(int*) result != 5)
         {
             printf("dllDeleteNode__: Error, proper content was not returned on first delete\n");
             return -1;
         }
-        printf("Node deleted, result now points to num1\n");
 
         // Test that there are no errors on deleting a node between two other nodes
-        printf("Setting value of num1 to 3\n");
+        dllInit(&list);
         num1 = 3;
-        printf("Pushing on new node, content is address of num1\n");
         if (dllPush(&list, (void*) &num1) < 0)
         {
             perror("dllDeleteNode__: Unable to insert first node");
             return -1;
         }
-        printf("Pushed on new node\n");
-        printf("Created int num2 on the stack, with value of 2\n");
         int num2 = 2;
-        printf("Pushing on new node, content is address of num2\n");
         if (dllPush(&list, (void*) &num2) < 0)
         {
             perror("dllDeleteNode__: Unable to insert second node");
             return -1;
         }
-        printf("Pushed on new node\n");
-        printf("Created num3 on the stack, value of 3\n");
         int num3 = 3;
-        printf("Pushing on new node, content is address of num3\n");
         if (dllPush(&list, (void*) &num3) < 0)
         {
             perror("dllDeleteNode__: Unable to insert third node");
             return -1;
         }
-        printf("Pushed on new node\n");
 
-        printf("Deleting the second node that was pushed on. Setting result to be the address of num2\n");
         result = dllDeleteNode__(list.head->next);
         if (*(int*) result != 2)
         {
@@ -490,7 +482,6 @@ int main(int argc, char** argv)
             printf("dllDeleteNode__: Delete operation did not attach adjacent nodes together\n");
             return -1;
         }
-        printf("Deleted the second node. Value of result is %i\n", *(int*) result);
 
         dllDeleteNode__(list.head);
         dllDeleteNode__(list.tail);
