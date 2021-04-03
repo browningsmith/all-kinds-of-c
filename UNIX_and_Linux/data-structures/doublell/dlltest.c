@@ -13,7 +13,7 @@ int main(int argc, char** argv)
 
     DLL list;
     DLLIterator iterator;
-
+    printf("Testing dllInit\n");
     // Test dllInit
     {
         int testInt = 5;
@@ -58,7 +58,9 @@ int main(int argc, char** argv)
             return -1;
         }
     }
+    printf("Completed dllInit\n");
 
+    printf("Testing dllInsertNode__\n");
     // Test dllInsertNode__
     {
         // Test creating a new node with no neighbors
@@ -201,7 +203,9 @@ int main(int argc, char** argv)
         free(node3);
         free(node4);
     }
+    printf("Completed dllInsertNode__\n");
 
+    printf("Testing dllIsEmpty\n");
     // Test dllIsEmpty
     {
         dllInit(&list);
@@ -240,7 +244,9 @@ int main(int argc, char** argv)
         }
 
     }
+    printf("Completed dllIsEmpty\n");
 
+    printf("Testing dllPush\n");
     // Test dllPush
     {
         dllInit(&list);
@@ -319,7 +325,9 @@ int main(int argc, char** argv)
         free(list.head->next);
         free(list.head);
     }
+    printf("Completed dllPush\n");
 
+    printf("Testing dllPushTail\n");
     // Test dllPushTail
     {
         dllInit(&list);
@@ -398,7 +406,9 @@ int main(int argc, char** argv)
         free(list.head->next);
         free(list.head);
     }
+    printf("Completed dllPushTail\n");
 
+    printf("Testing dllDeleteNode__\n");
     // Test dllDeleteNode__
     {
         dllInit(&list);
@@ -467,7 +477,9 @@ int main(int argc, char** argv)
         dllDeleteNode__(list.head);
         dllDeleteNode__(list.tail);
     }
+    printf("Completed dllDeleteNode__\n");
 
+    printf("Testing dllGetHead\n");
     // Test dllGetHead
     {
         dllInit(&list);
@@ -508,7 +520,9 @@ int main(int argc, char** argv)
 
         dllDeleteNode__(list.head);
     }
+    printf("Completed dllGetHead\n");
 
+    printf("Testing dllGetTail\n");
     // Test dllGetTail
     {
         dllInit(&list);
@@ -556,7 +570,9 @@ int main(int argc, char** argv)
         dllDeleteNode__(list.head->next);
         dllDeleteNode__(list.head);
     }
+    printf("Completed dllGetTail\n");
 
+    printf("Testing dllPop\n");
     // Test dllPop
     {
         dllInit(&list);
@@ -685,7 +701,9 @@ int main(int argc, char** argv)
 
         dllPop(&list, &content);
     }
+    printf("Completed dllPop\n");
 
+    printf("Testing dllPopTail\n");
     // Test dllPopTail
     {
         dllInit(&list);
@@ -814,7 +832,9 @@ int main(int argc, char** argv)
 
         dllPopTail(&list, &content);
     }
+    printf("Completed dllPopTail\n");
 
+    printf("Testing dllClear\n");
     // Test dllClear
     {
         int result;
@@ -901,7 +921,9 @@ int main(int argc, char** argv)
             return -1;
         }
     }
+    printf("Completed dllClear\n");
 
+    printf("Testing dllToHead\n");
     // Test dllToHead
     {
         dllInit(&list);
@@ -946,7 +968,9 @@ int main(int argc, char** argv)
 
         dllClear(&list, clearInt);
     }
+    printf("Completed dllToHead\n");
 
+    printf("Testing dllToTail\n");
     // Test dllToTail
     {
         dllInit(&list);
@@ -991,7 +1015,9 @@ int main(int argc, char** argv)
 
         dllClear(&list, clearInt);
     }
+    printf("Completed dllToTail\n");
 
+    printf("Testing dllGetThis\n");
     // Test dllGetThis
     {
         dllInit(&list);
@@ -1036,7 +1062,9 @@ int main(int argc, char** argv)
 
         dllClear(&list, clearInt);
     }
+    printf("Completed dllGetThis\n");
 
+    printf("Testing dllGetPrev\n");
     // Test dllGetPrev
     {
         dllInit(&list);
@@ -1128,7 +1156,9 @@ int main(int argc, char** argv)
 
         dllClear(&list, clearInt);
     }
+    printf("Completed dllGetPrev\n");
 
+    printf("Testing dllGetNext\n");
     // Test dllGetNext
     {
         dllInit(&list);
@@ -1220,7 +1250,9 @@ int main(int argc, char** argv)
 
         dllClear(&list, clearInt);
     }
+    printf("Completed dllGetNext\n");
 
+    printf("Testing dllInsertPrev\n");
     // Test dllInsertPrev
     {
         dllInit(&list);
@@ -1313,6 +1345,7 @@ int main(int argc, char** argv)
 
         dllClear(&list, clearInt);
     }
+    printf("Completed dllInsertPrev\n");
 
     printf("Tests complete\n");
     return 0;
