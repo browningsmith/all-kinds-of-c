@@ -385,9 +385,15 @@ DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next)
 
 void* dllDeleteNode__(DLLNode* node)
 {
+    printf("Deleting node");
+    printf("Address of node being deleted: %x\n", node);
     void* returnContent = node->content;
+    printf("Address of previous node: %x\n", node->prev);
     DLLNode* prev = node->prev;
+    printf("Address of local variable prev: %x\n", node->prev);
+    printf("Address of next node: %x\n", node->next);
     DLLNode* next = node->next;
+    printf("Address of local variable next: %x\n", node->next);
 
     // If prev node is not null, set it's next to next
     if (prev != NULL)
