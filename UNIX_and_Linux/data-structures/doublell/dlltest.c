@@ -13,6 +13,7 @@ int main(int argc, char** argv)
 
     DLL list;
     DLLIterator iterator;
+    /*
     printf("Testing dllInit\n");
     // Test dllInit
     {
@@ -580,15 +581,20 @@ int main(int argc, char** argv)
         dllDeleteNode__(list.head);
     }
     printf("Completed dllGetTail\n");
-
+    */
     printf("Testing dllPop\n");
     // Test dllPop
     {
+        printf("Initializing list\n");
         dllInit(&list);
+        printf("Initialized list\n");
         void* content;
         int result;
 
         // Test dllPop on empty list
+        printf("List should be empty\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
         content = (void*) 17;
         result = dllPop(&list, &content);
         if (result == 0)
@@ -601,14 +607,28 @@ int main(int argc, char** argv)
             printf("dllPop: Error, bad content returned when called on empty list\n");
             return -1;
         }
+        if (!dllIsEmpty(list))
+        {
+            printf("dllPop: Error, list not empty after calling on already empty list\n");
+        }
+        printf("List should be empty\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
 
         // Test dllPop on list with only one element
+        printf("Created int num1 on the stack with value 12\n");
         int num1 = 12;
+        printf("Pushing on new node\n");
         if (dllPush(&list, (void*) &num1) < 0)
         {
             perror("dllPop: Unable to push node for second test");
             return -1;
         }
+        printf("Pushed on new node to empty list\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
+        printf("Address of prev %x\n", list.head->prev);
+        printf("Address of next %x\n", list.head->next);
         content = NULL;
         result = dllPop(&list, &content);
         if (result < 0)
@@ -631,22 +651,42 @@ int main(int argc, char** argv)
             printf("dllPop: Error, list is not empty even after pop operation\n");
             return -1;
         }
+        printf("List should be empty\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
 
         // Test dllPop with a broken list
+        printf("Changed value of num1 to 12\n");
         num1 = 12;
+        printf("Pushing on new node\n");
         if (dllPush(&list, (void*) &num1) < 0)
         {
             perror("Unable to push on first node for third test\n");
             return -1;
         }
+        printf("Pushed on new node\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
+        printf("Prev is %x\n", list.head->prev);
+        printf("Next is %x\n", list.head->next);
+        printf("Created int num2 on the stack with value 14\n");
         int num2 = 14;
+        printf("Pushing on new node to tail\n");
         if (dllPushTail(&list, (void*) &num2) < 0)
         {
             perror("Unable to push on second node for third test\n");
             return -1;
         }
+        printf("Pushed on new node to tail\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
+        printf("Prev is %x\n", list.tail->prev);
+        printf("Next is %x\n", list.tail->next);
+        printf("Breaking list by setting list.head-next to NULL\n");
         list.head->next = NULL;
+        printf("list.head->next is now %x\n", list.head->next);
         content = (void*) 50;
+        printf("Attempting to pop node\n");
         result = dllPop(&list, &content);
         if (result == 0)
         {
@@ -663,24 +703,54 @@ int main(int argc, char** argv)
             printf("dllPop: Error, list is empty even though no operation should have been performed with a broken head node\n");
             return -1;
         }
+        printf("Node should not have been successfully popped\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
+        printf("list.head->next is %x\n", list.head->next);
+        printf("list.tail->prev is %x\n", list.tail->prev);
+        // Fix list before deleting
+        list.head->next = list.tail;
+        printf("Fixed list\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
+        printf("list.head->next is %x\n", list.head->next);
+        printf("list.tail->prev is %x\n", list.tail->prev);
         dllDeleteNode__(list.tail);
         dllDeleteNode__(list.head);
+        printf("Initializing list\n");
         dllInit(&list);
+        printf("Initialized list\n");
 
         // Test dllPop on a list of two elements
+        printf("List should be empty\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
+        printf("Set value of num1 to 45\n");
         num1 = 45;
+        printf("Pushing on new node\n");
         if (dllPush(&list, (void*) &num1) < 0)
         {
             perror("dllPop: Unable to push first node for fourth test");
             return -1;
         }
+        printf("Pushed on new node\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
+        printf("Set value of num2 to 47\n");
         num2 = 47;
+        printf("Pushing on new node\n");
         if (dllPush(&list, (void*) &num2) < 0)
         {
             perror("dllPop: Unable to push second node for fourth test");
             return -1;
         }
+        printf("Pushed on new node\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
+        printf("list.head->next is %x\n", list.head->next);
+        printf("list.tail->prev is %x\n", list.tail->prev);
         content = NULL;
+        printf("Popping off head node\n");
         result = dllPop(&list, &content);
         if (result < 0)
         {
@@ -707,8 +777,17 @@ int main(int argc, char** argv)
             printf("dllPop: Error, next node did not replace head after pop\n");
             return -1;
         }
+        printf("List should have one element\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
+        printf("list.head->prev is %x\n", list.head->prev);
+        printf("list.head->next is %x\n", list.head->next);
 
+        printf("Popping off last node\n");
         dllPop(&list, &content);
+        printf("List should be empty\n");
+        printf("list.head is %x\n", list.head);
+        printf("list.tail is %x\n", list.tail);
     }
     printf("Completed dllPop\n");
 
