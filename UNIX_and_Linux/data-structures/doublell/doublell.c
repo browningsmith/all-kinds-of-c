@@ -357,6 +357,40 @@ int dllInsertNext(DLLIterator* iterator, void* content)
     return 0;
 }
 
+int dllDeletePrev(DLLIterator* iterator, void** content)
+{
+    if (iterator->currentNode == NULL)
+    {
+        *content = NULL;
+        return -1;
+    }
+
+    if (iterator->currentNode->prev == NULL)
+    {
+        *content = NULL;
+        return -1;
+    }
+
+    DLLNode* nodeToDelete = iterator->currentNode->prev;
+
+    // If nodeToDelete is the head, this is same as dllPop operation
+    if (nodeToDelete == iterator->list->head)
+    {
+        // If list->head->next is NULL, we have broken list
+        if (nodeToDelete->next == NULL)
+        {
+            *content = NULL;
+            return -1;
+        }
+
+        // Set list->head to currentNode
+        iterator->list->head = iterator->currentNode;
+    }
+
+    *content = dllDeleteNode__(nodeToDelete);
+    return 0;
+}
+
 // Implementation-only definitions
 DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next)
 {
@@ -366,7 +400,7 @@ DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next)
     //printf("Address of allocated space placed in newNode: %x\n", newNode);
     if (newNode == NULL)
     {
-        printf("Unable to allocate space, NULL was returned by call to malloc\n");
+        //printf("Unable to allocate space, NULL was returned by call to malloc\n");
         return NULL;
     }
 
