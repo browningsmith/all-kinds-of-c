@@ -391,6 +391,40 @@ int dllDeletePrev(DLLIterator* iterator, void** content)
     return 0;
 }
 
+int dllDeleteNext(DLLIterator* iterator, void** content)
+{
+    if (iterator->currentNode == NULL)
+    {
+        *content = NULL;
+        return -1;
+    }
+
+    if (iterator->currentNode->next == NULL)
+    {
+        *content = NULL;
+        return -1;
+    }
+
+    DLLNode* nodeToDelete = iterator->currentNode->next;
+
+    // If nodeToDelete is the tail, this is same as dllPopTail operation
+    if (nodeToDelete == iterator->list->tail)
+    {
+        // If list->tail->prev is NULL, we have broken list
+        if (nodeToDelete->prev == NULL)
+        {
+            *content = NULL;
+            return -1;
+        }
+
+        // Set list->tail to currentNode
+        iterator->list->tail = iterator->currentNode;
+    }
+
+    *content = dllDeleteNode__(nodeToDelete);
+    return 0;
+}
+
 // Implementation-only definitions
 DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next)
 {

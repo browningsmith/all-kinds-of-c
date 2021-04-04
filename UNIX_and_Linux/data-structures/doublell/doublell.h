@@ -316,12 +316,35 @@ int dllInsertNext(DLLIterator* iterator, void* content);
  * 
  * Returns -1 on failure, with NULL being placed into the given
  * content argument
- * Failure can be cased by:
+ * Failure can be caused by:
  *  - If the list is empty, and no node can be deleted
  *  - If the iterator's node has no prev node to delete
  *  - If the node to delete is the head, but the head's pointer
  *    to next is NULL, meaning the list is broken
  *****************************************************************/
 int dllDeletePrev(DLLIterator* iterator, void** content);
+
+/*****************************************************************
+ * dllDeleteNext
+ * 
+ * Inputs: DLLIterator* iterator, void** content
+ * Returns: int
+ * 
+ * Deletes the node that is next to the node that the given
+ * iterator is currently on, and places the content of that node
+ * into the given content parameter
+ * 
+ * Returns 0 on success, with the content of the deleted node being
+ * placed into the given content argument
+ * 
+ * Returns -1 on failure, with NULL being placed into the given
+ * content argument
+ * Failure can be caused by:
+ *  - If the list is empty, and no node can be deleted
+ *  - If the iterator's node has no next node to delete
+ *  - If the node to delete is the tail, but the tail's pointer
+ *    to prev is NULL, meaning the list is broken
+ *****************************************************************/
+int dllDeleteNext(DLLIterator* iterator, void** content);
 
 #endif /* DOUBLELL_H */
