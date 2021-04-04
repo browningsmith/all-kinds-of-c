@@ -6,7 +6,7 @@ dlltest: doublell.o dlltest.o
 dlltest.o: dlltest.c
 	gcc -Wall -c -o dlltest.o dlltest.c
 
-doublell.o: doublell.h doublell.c
+doublell.o: doublell.h doublellimpl.h doublell.c
 	gcc -Wall -c -o doublell.o doublell.c
 
 clean: cleandlltest cleandoublell
