@@ -292,13 +292,13 @@ int dllGetNext(DLLIterator* iterator, void** content)
 
 int dllInsertPrev(DLLIterator* iterator, void* content)
 {
-    DLLNode* currentNode = iterator->currentNode;
 
-    if (currentNode == NULL)
+    if (iterator->currentNode == NULL)
     {
         return -1;
     }
 
+    DLLNode* currentNode = iterator->currentNode;
     DLLNode* newNode;
 
     // If currentNode is head, similar to dllPush, make sure list->head is updated
@@ -326,13 +326,12 @@ int dllInsertPrev(DLLIterator* iterator, void* content)
 
 int dllInsertNext(DLLIterator* iterator, void* content)
 {
-    DLLNode* currentNode = iterator->currentNode;
-
-    if (currentNode == NULL)
+    if (iterator->currentNode == NULL)
     {
         return -1;
     }
 
+    DLLNode* currentNode = iterator->currentNode;
     DLLNode* newNode;
 
     // If currentNode is tail, similar to dllPushTail, make sure list->tail is updated

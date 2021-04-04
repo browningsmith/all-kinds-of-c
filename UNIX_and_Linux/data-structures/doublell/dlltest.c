@@ -1385,6 +1385,101 @@ int main(int argc, char** argv)
     }
     printf("Completed dllInsertPrev\n");
 
+    printf("Testing dllInsertNext\n");
+    // Test dllInsertNext
+    {
+        dllInit(&list);
+        void* newInt;
+        int result;
+
+        // Test on an empty list
+        dllToTail(&iterator, &list);
+        newInt = malloc(sizeof(int));
+        if (newInt == NULL)
+        {
+            perror("dllInsertNext: Unable to allocate space for int on first test");
+            return -1;
+        }
+        *(int*) newInt = 35;
+        result = dllInsertNext(&iterator, &newInt);
+        if (result == 0)
+        {
+            printf("dllInsertNext: Error, incorrect result when called on empty list\n");
+            return -1;
+        }
+        if (list.head != NULL || list.tail != NULL)
+        {
+            printf("dllInsertNext: Error, head and tail of empty list were changed\n");
+            return -1;
+        }
+        free(newInt);
+
+        // Test inserting while iterator is on the tail
+        makeList(&list);
+        dllToTail(&iterator, &list);
+        newInt = malloc(sizeof(int));
+        if (newInt == NULL)
+        {
+            perror("dllInsertNext: Unable to allocate space for int on second test");
+            return -1;
+        }
+        *(int*) newInt = 35;
+        result = dllInsertNext(&iterator, newInt);
+        if (result != 0)
+        {
+            perror("dllInsertNext: Error, did not insert to right of tail");
+            return -1;
+        }
+        if (iterator.currentNode->next != list.tail)
+        {
+            printf("dllInsertNext: Error, new node did not get set as new tail of list\n");
+            return -1;
+        }
+        if (list.tail->prev != iterator.currentNode)
+        {
+            printf("dllInsertNext: Error, new node did not properly connected to the current node\n");
+            return -1;
+        }
+
+        // Test inserting between two nodes
+        newInt = malloc(sizeof(int));
+        if (newInt == NULL)
+        {
+            perror("dllInsertNext: Unable to allocate space for int on third test");
+            return -1;
+        }
+        *(int*) newInt = 37;
+        result = dllInsertNext(&iterator, newInt);
+        if (result != 0)
+        {
+            perror("dllInsertNext: Error, did not insert to right of currentNode on third test");
+            return -1;
+        }
+        if (iterator.currentNode->next != list.tail->prev)
+        {
+            printf("dllInsertNext: Error, new node did not inserted into the correct spot (1)\n");
+            return -1;
+        }
+        if (list.tail->prev->prev != iterator.currentNode)
+        {
+            printf("dllInsertNext: Error, new node did not properly connected to the current node (2)\n");
+            return -1;
+        }
+        if (*(int*) list.tail->content != 35)
+        {
+            printf("dllInsertNext: Error, content of tail node is incorrect\n");
+            return -1;
+        }
+        if (*(int*) list.tail->prev->content != 37)
+        {
+            printf("dllInsertNext: Error, content of prev node is incorrect\n");
+            return -1;
+        }
+
+        dllClear(&list, clearInt);
+    }
+    printf("Completed dllInsertNext\n");
+
     printf("Tests complete\n");
     return 0;
 }
