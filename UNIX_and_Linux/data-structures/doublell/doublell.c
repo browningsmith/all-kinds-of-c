@@ -195,10 +195,11 @@ int dllClear(DLL* list, int (*clearingFunction) (void*))
             {
                 return -1;
             }
-            list->head->content = NULL;
 
             if (dllPop(list, &content) < 0)
             {
+                list->head->content = NULL; // If node does not get deleted, don't want to
+                                            // keep a pointer to deleted content
                 return -1;
             }
         }
