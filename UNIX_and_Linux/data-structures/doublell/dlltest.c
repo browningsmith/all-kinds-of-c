@@ -1480,6 +1480,138 @@ int main(int argc, char** argv)
     }
     printf("Completed dllInsertNext\n");
 
+    printf("Testing dllDeletePrev\n");
+    // Test dllDeletePrev
+    {
+        dllInit(&list);
+        void* content;
+        int result;
+
+        // Test dllDeletePrev on an empty list
+        dllToHead(&iterator, &list);
+        content = (void*) 17;
+        result = dllDeletePrev(&iterator, &content);
+        if (result == 0)
+        {
+            printf("dllDeletePrev: Error, incorrect result when called on empty list\n");
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("dllDeletePrev: Error, non null content returned when called on empty list\n");
+            return -1;
+        }
+        if (!dllIsEmpty(list))
+        {
+            printf("dllDeletePrev: Error, list is not showing as empty after calling on empty list\n");
+            return -1;
+        }
+
+        // Test dllDeletePrev when called on head of list
+        makeList(&list);
+        dllToHead(&iterator, &list);
+        content = (void*) 23;
+        result = dllDeletePrev(&iterator, &content);
+        if (result == 0)
+        {
+            printf("dllDeletePrev: Error, incorrect result when called as head of list\n");
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("dllDeletePrev: Error, non null content returned when called on head of list\n");
+            return -1;
+        }
+        if (iterator.currentNode != list.head)
+        {
+            printf("dllDeletePrev: Error, iterator is no longer on the head of the list after call while on head of list\n");
+            return -1;
+        }
+
+        // Test dllDeletePrev when head of list is broken
+        dllGetNext(&iterator, &content);
+        list.head->next = NULL;
+        content = (void*) 45;
+        result = dllDeletePrev(&iterator, &content);
+        if (result == 0)
+        {
+            printf("dllDeletePrev: Error, incorrect result when called with a broken head\n");
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("dllDeletePrev: Error, non null content returned when with a broken head\n");
+            return -1;
+        }
+        if (dllIsEmpty(list))
+        {
+            printf("dllDeletePrev: Error, list is showing as empty after calling with a broken head\n");
+            return -1;
+        }
+
+        // Fix list
+        list.head->next = iterator.currentNode;
+
+        // Test dllDeletePrev when iterator is on head->next
+        content = NULL;
+        result = dllDeletePrev(&iterator, &content);
+        if (result != 0)
+        {
+            printf("dllDeletePrev: Error, incorrect result when called with iterator to the right of head\n");
+            return -1;
+        }
+        if (content == NULL)
+        {
+            printf("dllDeletePrev: Error, content returned NULL when called with iterator to the right of head\n");
+            return -1;
+        }
+        if (*(int*) content != 12)
+        {
+            printf("dllDeletePrev: Error, incorrect content returned when called with iterator to the right of head\n");
+            return -1;
+        }
+        if (list.head != iterator.currentNode)
+        {
+            printf("dllDeletePrev: Error, head was not updated to be the same as iterator->currentNode\n");
+            return -1;
+        }
+        free(content);
+
+        // Test when iterator is on head->next->next
+        dllGetNext(&iterator, &content);
+        dllGetNext(&iterator, &content);
+        result = dllDeletePrev(&iterator, &content);
+        if (result != 0)
+        {
+            printf("dllDeletePrev: Error, incorrect result when called with iterator on head->next->next\n");
+            return -1;
+        }
+        if (content == NULL)
+        {
+            printf("dllDeletePrev: Error, content returned NULL when called with iterator on head->next->next\n");
+            return -1;
+        }
+        if (*(int*) content != 10)
+        {
+            printf("dllDeletePrev: Error, incorrect content returned when called with iterator on head->next->next\n");
+            return -1;
+        }
+        if (list.head != iterator.currentNode->prev)
+        {
+            printf("dllDeletePrev: Error, head did not get properly reconnected to currentNode (1)\n");
+            return -1;
+        }
+        if (list.head->next != iterator.currentNode)
+        {
+            printf("dllDeletePrev: Error, head did not get properly reconnected to currentNode (2)\n");
+            return -1;
+        }
+        free(content);
+
+        dllClear(&list, clearInt);
+    }
+    printf("Completed dllDeletePrev\n");
+
     printf("Tests complete\n");
     return 0;
 }
