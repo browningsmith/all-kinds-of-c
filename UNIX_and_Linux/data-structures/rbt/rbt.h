@@ -83,18 +83,7 @@ void rbtInit(RBT* tree, int (*compareFunction) (void* a, void* b));
  * Returns 1 if the head of the given tree is NULL, otherwise
  * returns 0
  ***************************************************************/
-int rbtIsTreeEmpty(RBT tree);
-
-/***************************************************************
- * rbtIsNodeEmpty
- * 
- * Inputs: RBTNode node
- * Returns: int
- * 
- * Returns 1 if the content of the given node is NULL, otherwise
- * returns 0
- ***************************************************************/
-int rbtIsNodeEmpty(RBTNode node);
+int rbtIsEmpty(RBT tree);
 
 /***************************************************************
  * rbtIsRed

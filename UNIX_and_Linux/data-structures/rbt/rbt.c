@@ -38,19 +38,9 @@ void rbtInit(RBT* tree, int (*compareFunction) (void*, void*))
     tree->compareFunction = compareFunction;
 }
 
-int rbtIsTreeEmpty(RBT tree)
+int rbtIsEmpty(RBT tree)
 {
     if (tree.head == NULL)
-    {
-        return 1;
-    }
-
-    return 0;
-}
-
-int rbtIsNodeEmpty(RBTNode node)
-{
-    if (node.content == NULL)
     {
         return 1;
     }
@@ -95,7 +85,7 @@ RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent)
     }
 
     // If the tree is empty, return not found
-    if (rbtIsTreeEmpty(tree))
+    if (rbtIsEmpty(tree))
     {
         printf("Tree is empty. Returning NOT_FOUND and NULL in result\n");
         printf("Setting returnedContent to NULL\n");
@@ -281,7 +271,7 @@ RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compare
     while (1)
     {
         // Check that currentNode is not empty
-        if (rbtIsNodeEmpty(*currentNode))
+        if (currentNode->content == NULL)
         {
             printf("Encountered empty node, returning EMPTY_NODE_ENCOUNTERED and currentNode\n");
             result.status = EMPTY_NODE_ENCOUNTERED;
