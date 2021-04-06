@@ -71,6 +71,28 @@ int main(int argc, char** argv)
     }
     printf("Completed rbtInit\n");
 
+    // Test rbtIsTreeEmpty
+    printf("Testing rbtIsTreeEmpty\n");
+    {
+        // Test if tree is not empty
+        RBTNode node;
+        tree.head = &node;
+        if (rbtIsTreeEmpty(tree) != 0)
+        {
+            printf("rbtIsTreeEmpty: Error, tree returned as empty when the head definitely points to a node\n");
+            return -1;
+        }
+
+        // Test if tree is empty after rbtInit
+        rbtInit(&tree, compareInt);
+        if (rbtIsTreeEmpty(tree) == 0)
+        {
+            printf("rbtIsTreeEmpty: Error, tree returned as not empty after rbtInit\n");
+            return -1;
+        }
+    }
+    printf("Completed rbtIsTreeEmpty\n");
+
     printf("Tests complete\n");
 
     return 0;
