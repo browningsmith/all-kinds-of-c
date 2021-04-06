@@ -6,7 +6,7 @@ rbtest: rbt.o rbtest.o
 rbtest.o: rbtest.c
 	gcc -Wall -c -o rbtest.o rbtest.c
 
-rbt.o: rbt.h rbt.c
+rbt.o: rbt.h rbtimpl.h rbt.c
 	gcc -Wall -c -o rbt.o rbt.c
 
 clean: cleanrbtest cleanrbt

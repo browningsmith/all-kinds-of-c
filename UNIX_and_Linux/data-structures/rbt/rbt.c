@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "rbtimpl.h"
+
 const char* rbtStatusAsText(RBTStatus status)
 {
     const char* result;
@@ -277,6 +279,8 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
 
     return result;
 }
+
+// Implementation only definitions
 
 RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))
 {

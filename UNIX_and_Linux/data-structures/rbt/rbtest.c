@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "rbtimpl.h"
+
 int compareInt(void* a, void* b);
 
 int main(int argc, char** argv)
