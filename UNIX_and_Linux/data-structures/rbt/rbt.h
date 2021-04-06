@@ -86,21 +86,6 @@ void rbtInit(RBT* tree, int (*compareFunction) (void* a, void* b));
 int rbtIsTreeEmpty(RBT tree);
 
 /***************************************************************
- * rbtNewNode
- * 
- * Inputs: void* content
- * Returns: RBTNode*
- * 
- * Creates a new RBTNode. This node is set to red (isRed = 1)
- * and sets parent, left, and right to NULL. Set's the new node's
- * content equal to the pointer passed in content
- * 
- * Failure returns NULL and sets errno, success returns a pointer
- * to a new RBTNode
- ***************************************************************/
-RBTNode* rbtNewNode(void* content);
-
-/***************************************************************
  * rbtIsNodeEmpty
  * 
  * Inputs: RBTNode node

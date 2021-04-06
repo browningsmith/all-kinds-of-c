@@ -48,25 +48,6 @@ int rbtIsTreeEmpty(RBT tree)
     return 0;
 }
 
-RBTNode* rbtNewNode(void* content)
-{
-    // Allocate space for the new node
-    RBTNode* newNode = malloc(sizeof(RBTNode));
-    if (newNode == NULL) // malloc returns NULL on error
-    {
-        return NULL;
-    }
-
-    // Initialize values
-    newNode->isRed = 1; // set new node to red
-    newNode->parent = NULL;
-    newNode->left = NULL;
-    newNode->right = NULL;
-    newNode->content = content;
-
-    return newNode;
-}
-
 int rbtIsNodeEmpty(RBTNode node)
 {
     if (node.content == NULL)
@@ -170,8 +151,8 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
         return result;
     }
 
-    // Create new node
-    RBTNode* newNode = rbtNewNode(content);
+    // Create new red node
+    RBTNode* newNode = malloc(sizeof(RBTNode));
     if (newNode == NULL) // rbt returns NULL on error
     {
         printf("NO_MEMORY error on creating new node. Returning NO_MEMORY and NULL in result\n");
@@ -179,14 +160,19 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
         result.status = NO_MEMORY;
         return result;
     }
+    newNode->isRed = 1;
+    newNode->parent = NULL;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    newNode->content = content;
     printf("New node created\n");
 
     // If tree is empty, insert new node as head and color it black, return SUCCESS and the new node
-    if (rbtIsTreeEmpty(*tree))
+    if (tree->head == NULL)
     {
         printf("Tree was empty, inserting new node as head, coloring black\n");
         tree->head = newNode;
-        rbtSetBlack(newNode);
+        newNode->isRed = 0;
 
         printf("Returning SUCCESS and new node in result\n");
         result.status = SUCCESS;

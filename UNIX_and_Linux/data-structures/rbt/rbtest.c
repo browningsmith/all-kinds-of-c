@@ -8,7 +8,7 @@
 
 int compareInt(void* a, void* b);
 
-int main(int argc, char** argv)
+int main()
 {
     RBT tree;
     
