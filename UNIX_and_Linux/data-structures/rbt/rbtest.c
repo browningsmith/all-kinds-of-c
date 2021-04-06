@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "rbtimpl.h"
 
@@ -9,7 +10,45 @@ int compareInt(void* a, void* b);
 
 int main(int argc, char** argv)
 {
-    printf("rbtest startup\n");
+    printf("Running tests on rbt\n");
+
+    // Test rbtStatusAsText
+    printf("Testing rbtStatusAsText\n");
+    {
+        RBTStatus status = SUCCESS;
+        if (strcmp(rbtStatusAsText(status), "SUCCESS") != 0)
+        {
+            printf("rbtStatusAsText: Error, incorrect status %s vs %s\n", rbtStatusAsText(status), "SUCCESS");
+            return -1;
+        }
+        status = NO_MEMORY;
+        if (strcmp(rbtStatusAsText(status), "NO_MEMORY") != 0)
+        {
+            printf("rbtStatusAsText: Error, incorrect status %s vs %s\n", rbtStatusAsText(status), "NO_MEMORY");
+            return -1;
+        }
+        status = NULL_CONTENT;
+        if (strcmp(rbtStatusAsText(status), "NULL_CONTENT") != 0)
+        {
+            printf("rbtStatusAsText: Error, incorrect status %s vs %s\n", rbtStatusAsText(status), "NULL_CONTENT");
+            return -1;
+        }
+        status = EMPTY_NODE_ENCOUNTERED;
+        if (strcmp(rbtStatusAsText(status), "EMPTY_NODE_ENCOUNTERED") != 0)
+        {
+            printf("rbtStatusAsText: Error, incorrect status %s vs %s\n", rbtStatusAsText(status), "EMPTY_NODE_ENCOUNTERED");
+            return -1;
+        }
+        status = NOT_FOUND;
+        if (strcmp(rbtStatusAsText(status), "NOT_FOUND") != 0)
+        {
+            printf("rbtStatusAsText: Error, incorrect status %s vs %s\n", rbtStatusAsText(status), "NOT_FOUND");
+            return -1;
+        }
+    }
+    printf("Completed rbtStatusAsText\n");
+
+    printf("Tests complete\n");
 
     return 0;
 }
