@@ -11,6 +11,7 @@ int compareInt(void* a, void* b);
 RBTNode* newIntNode(int num);
 void displayNode(RBTNode node);
 void constructTree(RBT* tree);
+void eraseTree(RBT* tree);
 
 int main()
 {
@@ -106,6 +107,8 @@ int main()
         rbtInit(&tree, compareInt);
 
         constructTree(&tree);
+
+        eraseTree(&tree);
     }
     printf("Completed rbtGetNodeFromStart__\n");
 
@@ -236,6 +239,7 @@ void constructTree(RBT* tree)
     // 400 Node (black)
     RBTNode* node400 = newIntNode(400);
     node400->isRed = 0;
+    tree->head = node400;
 
     // 200 Node (black)
     RBTNode* node200 = newIntNode(200);
@@ -283,4 +287,67 @@ void constructTree(RBT* tree)
     // displayNode(*node500);
     // printf("\nNode 700:\n");
     // displayNode(*node700);
+}
+
+void eraseTree(RBT* tree)
+{
+    if (tree->head == NULL)
+    {
+        return;
+    }
+
+    RBTNode* currentNode = tree->head;
+    int state = -1; // -1 go left, 1 go right, 0 clear this
+
+    while (1)
+    {
+        if (state == -1) // Go left
+        {
+            if (currentNode->left == NULL) // If no left child
+            {
+                state = 1; // Go right
+                continue;
+            }
+
+            currentNode = currentNode->left; // Recurse left
+            // State is already -1
+        }
+        else if (state == 1) // Go right
+        {
+            if (currentNode->right == NULL) // If no right child
+            {
+                state = 0; // Clear this
+                continue;
+            }
+
+            currentNode = currentNode->right; // Recurse right
+            state = -1; // Set to go left
+        }
+        else
+        {
+            RBTNode* parent = currentNode->parent;
+            
+            if (parent != NULL)
+            {
+                // If we are left child, set state to 1
+                if (currentNode == parent->left)
+                {
+                    state = 1;
+                }
+            }
+            // Otherwise state is already 0
+
+            free(currentNode->content);
+            free(currentNode);
+
+            if (parent == NULL)
+            {
+                break;
+            }
+
+            currentNode = parent;
+        }
+    }
+
+    tree->head = NULL;
 }
