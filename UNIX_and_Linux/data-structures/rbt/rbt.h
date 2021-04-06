@@ -197,6 +197,6 @@ RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent);
 RBTStatusStruct rbtInsert(RBT* tree, void* content);
 
 // Helper functions
-RBTStatusStruct rbtGetNodeFromStartingNode(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b));
+RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b));
 
 #endif /* RBT_H */

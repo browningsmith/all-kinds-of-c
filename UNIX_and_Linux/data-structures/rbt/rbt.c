@@ -124,7 +124,7 @@ RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent)
 
     // Perform search
     printf("Tree is not empty\n");
-    result = rbtGetNodeFromStartingNode(tree.head, query, tree.compareFunction);
+    result = rbtGetNodeFromStart__(tree.head, query, tree.compareFunction);
 
     if (result.status == SUCCESS)
     {
@@ -198,7 +198,7 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
     RBTNode* currentNode = tree->head;
 
     while (
-        ( result = rbtGetNodeFromStartingNode(
+        ( result = rbtGetNodeFromStart__(
             currentNode,
             content,
             tree->compareFunction
@@ -278,7 +278,7 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
     return result;
 }
 
-RBTStatusStruct rbtGetNodeFromStartingNode(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))
+RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))
 {
     // Initialize result
     RBTStatusStruct result = { .node = NULL };
