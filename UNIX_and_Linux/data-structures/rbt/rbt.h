@@ -86,37 +86,6 @@ void rbtInit(RBT* tree, int (*compareFunction) (void* a, void* b));
 int rbtIsEmpty(RBT tree);
 
 /***************************************************************
- * rbtIsRed
- * 
- * Inputs: RBTNode node
- * Returns: int
- * 
- * Returns 1 if the given RBTNode is red, otherwise
- * returns 0
- ***************************************************************/
-int rbtIsRed(RBTNode node);
-
-/***************************************************************
- * rbtSetRed
- * 
- * Inputs: RBTNode* node
- * Returns: None
- * 
- * Sets the given RBTNode to red
- ***************************************************************/
-void rbtSetRed(RBTNode* node);
-
-/***************************************************************
- * rbtSetBlack
- * 
- * Inputs: RBTNode* node
- * Returns: None
- * 
- * Sets the given RBTNode to black
- ***************************************************************/
-void rbtSetBlack(RBTNode* node);
-
-/***************************************************************
  * rbtFind
  * 
  * Inputs: RBT tree, void* query, void** returnedContent

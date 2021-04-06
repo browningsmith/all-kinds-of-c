@@ -48,26 +48,6 @@ int rbtIsEmpty(RBT tree)
     return 0;
 }
 
-int rbtIsRed(RBTNode node)
-{
-    if (node.isRed)
-    {
-        return 1;
-    }
-
-    return 0;
-}
-
-void rbtSetRed(RBTNode* node)
-{
-    node->isRed = 1;
-}
-
-void rbtSetBlack(RBTNode* node)
-{
-    node->isRed = 0;
-}
-
 RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent)
 {
     // Initialize result
