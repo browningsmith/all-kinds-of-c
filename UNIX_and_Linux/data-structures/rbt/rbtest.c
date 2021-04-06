@@ -10,6 +10,8 @@ int compareInt(void* a, void* b);
 
 int main(int argc, char** argv)
 {
+    RBT tree;
+    
     printf("Running tests on rbt\n");
 
     // Test rbtStatusAsText
@@ -47,6 +49,27 @@ int main(int argc, char** argv)
         }
     }
     printf("Completed rbtStatusAsText\n");
+
+    // Test rbtInit
+    printf("Testing rbtInit\n");
+    {
+        tree.head = (RBTNode*) 17;
+        tree.compareFunction = NULL;
+
+        rbtInit(&tree, compareInt);
+
+        if (tree.head != NULL)
+        {
+            printf("rbtInit: Error, tree.head not set to NULL\n");
+            return -1;
+        }
+        if (tree.compareFunction != compareInt)
+        {
+            printf("rbtInit: Error, tree.head not set given compareFunction\n");
+            return -1;
+        }
+    }
+    printf("Completed rbtInit\n");
 
     printf("Tests complete\n");
 
