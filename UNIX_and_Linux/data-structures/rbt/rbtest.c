@@ -200,10 +200,50 @@ int main()
     // Test rbtFind
     printf("Testing rbtFind\n");
     {
-        constructTree(&tree);
+        rbtInit(&tree, compareInt);
         int query;
         void* content;
         RBTStatusStruct status;
+
+        // Test searching on an empty tree
+        query = 43;
+        status = rbtFind(tree, (void*) &query, &content);
+        if (status.status != NOT_FOUND)
+        {
+            printf("rbtFind: Error, status returned with %s instead of NOT_FOUND, when tree is empty\n", rbtStatusAsText(status.status));
+            return -1;
+        }
+        if (status.node != NULL)
+        {
+            printf("rbtFind: Error, non NULL node returned when tree is empty\n");
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("rbtFind: Error, non NULL content was returned when tree is empty\n");
+            return -1;
+        }
+
+        // Construct a small tree
+        constructTree(&tree);
+
+        // Test trying to search with a NULL query
+        status = rbtFind(tree, NULL, &content);
+        if (status.status != NULL_CONTENT)
+        {
+            printf("rbtFind: Error, status returned with %s instead of NULL_CONTENT, when a NULL query was given\n", rbtStatusAsText(status.status));
+            return -1;
+        }
+        if (status.node != NULL)
+        {
+            printf("rbtFind: Error, non NULL node returned when NULL query was given\n");
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("rbtFind: Error, non NULL content was returned when NULL query was given\n");
+            return -1;
+        }
 
         // Test searching all nodes created by constructTree
         for (query = 100; query < 800; query += 100)
@@ -278,6 +318,37 @@ int main()
             printf("rbtFind: Error, non NULL content was returned when query of %i was not found on a non-empty list\n", query);
             return -1;
         }
+
+        // Break tree by making 300 an empty node
+        void* content300 = tree.head->left->right->content;
+        tree.head->left->right->content = NULL;
+
+        // Test EMPTY_NODE_ENCOUNTERED error
+        query = 300;
+        status = rbtFind(tree, (void*) &query, &content);
+        if (status.status != EMPTY_NODE_ENCOUNTERED)
+        {
+            printf("rbtFind: Error, status returned with %s instead of EMPTY_NODE_ENCOUNTERED, when the 300 node was set to have NULL content\n", rbtStatusAsText(status.status));
+            return -1;
+        }
+        if (status.node == NULL)
+        {
+            printf("rbtFind: Error, NULL node returned when the 300 node was set to have NULL content\n");
+            return -1;
+        }
+        if (status.node != tree.head->left->right)
+        {
+            printf("rbtFind: Error, incorrect node returned when the 300 node was set to have NULL content\n");
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("rbtFind: Error, non NULL content was returned when the 300 node was set to have NULL content\n");
+            return -1;
+        }
+
+        // Fix tree
+        tree.head->left->right->content = content300;
 
         eraseTree(&tree);
     }
