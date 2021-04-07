@@ -1,6 +1,6 @@
-all: rbtest rbt.o
+all: rbtest rbt.o rbtprint.o
 
-rbtest: rbt.o rbtest.o
+rbtest: rbt.o rbtprint.o rbtest.o
 	gcc -Wall -o rbtest rbt.o rbtest.o
 
 rbtest.o: rbtest.c
@@ -9,11 +9,17 @@ rbtest.o: rbtest.c
 rbt.o: rbt.h rbtimpl.h rbt.c
 	gcc -Wall -c -o rbt.o rbt.c
 
-clean: cleanrbtest cleanrbt
+rbtprint.o: rbtprint.h rbtprint.c
+	gcc -Wall -c -o rbtprint.o rbtprint.c
+
+clean: cleanrbtest cleanrbt cleanrbtprint
 
 cleanrbtest:
 	-rm -rf rbtest rbtest.o
 
 cleanrbt:
 	-rm -rf rbt.o
+
+cleanrbtprint:
+	-rm -rf rbtprint.o
 	
