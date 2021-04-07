@@ -197,6 +197,92 @@ int main()
     }
     printf("Completed rbtGetNodeFromStart__\n");
 
+    // Test rbtFind
+    printf("Testing rbtFind\n");
+    {
+        constructTree(&tree);
+        int query;
+        void* content;
+        RBTStatusStruct status;
+
+        // Test searching all nodes created by constructTree
+        for (query = 100; query < 800; query += 100)
+        {
+            status = rbtFind(tree, (void*) &query, &content);
+            if (status.status != SUCCESS)
+            {
+                printf("rbtFind: Error, status returned with %s instead of SUCCESS, when query of %i should have been matched\n", rbtStatusAsText(status.status), query);
+                return -1;
+            }
+            if (status.node == NULL)
+            {
+                printf("rbtFind: Error, NULL node returned when query of %i should have been matched\n", query);
+                return -1;
+            }
+            if (content == NULL)
+            {
+                printf("rbtFind: Error, NULL content returned when query of %i should have been matched\n", query);
+                return -1;
+            }
+            if (*(int*) status.node->content != *(int*) content)
+            {
+                printf("rbtFind: Error, incorrect content returned when query of %i should have been matched\n", query);
+                return -1;
+            }
+        }
+
+        // Test searching for a node that does not exist between 300 and 400
+        query = 305;
+        status = rbtFind(tree, (void*) &query, &content);
+        if (status.status != NOT_FOUND)
+        {
+            printf("rbtFind: Error, status returned with %s instead of NOT_FOUND, when query of %i should not have been matched\n", rbtStatusAsText(status.status), query);
+            return -1;
+        }
+        if (status.node == NULL)
+        {
+            printf("rbtFind: Error, NULL returned when query of %i was not found on a non-empty list\n", query);
+            return -1;
+        }
+        if (status.node != tree.head->left->right)
+        {
+            printf("rbtFind: Error, incorrect node returned when query of %i was not found on a non-empty list\n", query);
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("rbtFind: Error, non NULL content was returned when query of %i was not found on a non-empty list\n", query);
+            return -1;
+        }
+
+        // Test searching for a node that does not exist beyond 700
+        query = 800;
+        status = rbtFind(tree, (void*) &query, &content);
+        if (status.status != NOT_FOUND)
+        {
+            printf("rbtFind: Error, status returned with %s instead of NOT_FOUND, when query of %i should not have been matched\n", rbtStatusAsText(status.status), query);
+            return -1;
+        }
+        if (status.node == NULL)
+        {
+            printf("rbtFind: Error, NULL returned when query of %i was not found on a non-empty list\n", query);
+            return -1;
+        }
+        if (status.node != tree.head->right->right)
+        {
+            printf("rbtFind: Error, incorrect node returned when query of %i was not found on a non-empty list\n", query);
+            return -1;
+        }
+        if (content != NULL)
+        {
+            printf("rbtFind: Error, non NULL content was returned when query of %i was not found on a non-empty list\n", query);
+            return -1;
+        }
+
+        eraseTree(&tree);
+    }
+    printf("Completed rbtFind\n");
+
     printf("Tests complete\n");
 
     return 0;
