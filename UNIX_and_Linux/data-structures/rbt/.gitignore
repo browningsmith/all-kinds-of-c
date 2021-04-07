@@ -1,4 +1,7 @@
 .vscode*
 
 *.o
+include/*
+lib/*
 rbtest
+rbtprint

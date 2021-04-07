@@ -1,25 +1,50 @@
-all: rbtest rbt.o rbtprint.o
+all: rbt.o rbtprint.o rbtest rbtestprint
 
-rbtest: rbt.o rbtprint.o rbtest.o
+rbt.o: rbt.c
+	gcc -Wall -c -o rbt.o rbt.c
+
+rbt.c: rbt.h rbtimpl.h
+
+rbtprint.o: rbtprint.c
+	gcc -Wall -c -o rbtprint.o rbtprint.c
+
+rbtprint.c: rbtprint.h ./include/doublell.h
+
+./include/doublell.h: ../doublell/doublell.h
+	cp ../doublell/doublell.h include/
+
+rbtest: rbt.o rbtest.o
 	gcc -Wall -o rbtest rbt.o rbtest.o
 
 rbtest.o: rbtest.c
 	gcc -Wall -c -o rbtest.o rbtest.c
 
-rbt.o: rbt.h rbtimpl.h rbt.c
-	gcc -Wall -c -o rbt.o rbt.c
+rbtest.c: rbt.h rbtimpl.h
 
-rbtprint.o: rbtprint.h rbtprint.c
-	gcc -Wall -c -o rbtprint.o rbtprint.c
+rbtestprint: rbt.o lib/doublell.o rbtprint.o rbtestprint.o
+	gcc -Wall -o rbtestprint rbt.o lib/doublell.o rbtprint.o rbtestprint.o
 
-clean: cleanrbtest cleanrbt cleanrbtprint
+lib/doublell.o: ../doublell/doublell.o
+	cp ../doublell/doublell.o lib/
 
-cleanrbtest:
-	-rm -rf rbtest rbtest.o
+rbtestprint.o: rbtestprint.c
+	gcc -Wall -c -o rbtestprint.o rbtestprint.c
+
+rbtestprint.c: rbtprint.h
+
+clean: cleanrbt cleanrbtprint cleanrbtest cleanrbtestprint
 
 cleanrbt:
 	-rm -rf rbt.o
 
 cleanrbtprint:
 	-rm -rf rbtprint.o
-	
+
+cleanrbtest:
+	-rm -rf rbtest rbtest.o
+
+cleanrbtestprint:
+	-rm -rf rbtestprint rbtestprint.o
+
+cleandoublell:
+	-rm -rf lib/doublell.o
