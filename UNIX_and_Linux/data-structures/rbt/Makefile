@@ -11,6 +11,7 @@ rbtprint.o: rbtprint.c
 rbtprint.c: rbtprint.h ./include/doublell.h
 
 ./include/doublell.h: ../doublell/doublell.h
+	-mkdir include
 	cp ../doublell/doublell.h include/
 
 rbtest: rbt.o rbtest.o
@@ -25,6 +26,7 @@ rbtestprint: rbt.o lib/doublell.o rbtprint.o rbtestprint.o
 	gcc -Wall -o rbtestprint rbt.o lib/doublell.o rbtprint.o rbtestprint.o
 
 lib/doublell.o: ../doublell/doublell.o
+	-mkdir lib
 	cp ../doublell/doublell.o lib/
 
 rbtestprint.o: rbtestprint.c
