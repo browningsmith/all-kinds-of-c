@@ -1,5 +1,5 @@
 #ifndef RBTIMPL_H
-#define RBTIMPL_h
+#define RBTIMPL_H
 
 /*****************************************
  * Implementation only declarations for
