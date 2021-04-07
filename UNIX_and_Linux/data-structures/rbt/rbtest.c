@@ -104,9 +104,94 @@ int main()
     // Test rbtGetNodeFromStart__
     printf("Testing rbtGetNodeFromStart__\n");
     {
-        rbtInit(&tree, compareInt);
-
         constructTree(&tree);
+        RBTStatusStruct status;
+        int query;
+
+        // Test searching all nodes created by constructTree
+        for (query = 100; query < 800; query += 100)
+        {
+            status = rbtGetNodeFromStart__(tree.head, (void*) &query, tree.compareFunction);
+            if (status.status != SUCCESS)
+            {
+                printf("rbtGetNodeFromStart__: Error, status returned with %s instead of SUCCESS, when query of %i should have been matched\n", rbtStatusAsText(status.status), query);
+                return -1;
+            }
+            if (status.node == NULL)
+            {
+                printf("rbtGetNodeFromStart__: Error, NULL node returned when query of %i should have been matched\n", query);
+                return -1;
+            }
+            if (*(int*) status.node->content != query)
+            {
+                printf("rbtGetNodeFromStart__: Error, incorrect node returned when query of %i should have been matched\n", query);
+                return -1;
+            }
+        }
+
+        // Test searching for a node that does not exist between 300 and 400
+        query = 305;
+        status = rbtGetNodeFromStart__(tree.head, (void*) &query, tree.compareFunction);
+        if (status.status != NOT_FOUND)
+        {
+            printf("rbtGetNodeFromStart__: Error, status returned with %s instead of NOT_FOUND, when query of %i should not have been matched\n", rbtStatusAsText(status.status), query);
+            return -1;
+        }
+        if (status.node == NULL)
+        {
+            printf("rbtGetNodeFromStart__: Error, NULL returned when query of %i was not found on a non-empty list\n", query);
+            return -1;
+        }
+        if (status.node != tree.head->left->right)
+        {
+            printf("rbtGetNodeFromStart__: Error, incorrect node returned when query of %i was not found on a non-empty list\n", query);
+            return -1;
+        }
+
+        // Test searching for a node that does not exist beyond 700
+        query = 800;
+        status = rbtGetNodeFromStart__(tree.head, (void*) &query, tree.compareFunction);
+        if (status.status != NOT_FOUND)
+        {
+            printf("rbtGetNodeFromStart__: Error, status returned with %s instead of NOT_FOUND, when query of %i should not have been matched\n", rbtStatusAsText(status.status), query);
+            return -1;
+        }
+        if (status.node == NULL)
+        {
+            printf("rbtGetNodeFromStart__: Error, NULL returned when query of %i was not found on a non-empty list\n", query);
+            return -1;
+        }
+        if (status.node != tree.head->right->right)
+        {
+            printf("rbtGetNodeFromStart__: Error, incorrect node returned when query of %i was not found on a non-empty list\n", query);
+            return -1;
+        }
+
+        // Break tree by making 300 an empty node
+        void* content300 = tree.head->left->right->content;
+        tree.head->left->right->content = NULL;
+
+        // Test EMPTY_NODE_ENCOUNTERED error
+        query = 300;
+        status = rbtGetNodeFromStart__(tree.head, (void*) &query, tree.compareFunction);
+        if (status.status != EMPTY_NODE_ENCOUNTERED)
+        {
+            printf("rbtGetNodeFromStart__: Error, status returned with %s instead of EMPTY_NODE_ENCOUNTERED, when the 300 node was set to have NULL content\n", rbtStatusAsText(status.status));
+            return -1;
+        }
+        if (status.node == NULL)
+        {
+            printf("rbtGetNodeFromStart__: Error, NULL node returned when the 300 node was set to have NULL content\n");
+            return -1;
+        }
+        if (status.node != tree.head->left->right)
+        {
+            printf("rbtGetNodeFromStart__: Error, incorrect node returned when the 300 node was set to have NULL content\n");
+            return -1;
+        }
+
+        // Fix tree
+        tree.head->left->right->content = content300;
 
         eraseTree(&tree);
     }
