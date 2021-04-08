@@ -8,7 +8,7 @@ rbt.c: rbt.h rbtimpl.h
 rbtprint.o: rbtprint.c
 	gcc -Wall -c -o rbtprint.o rbtprint.c
 
-rbtprint.c: rbtprint.h ./include/doublell.h
+rbtprint.c: rbtprint.h rbtprintimpl.h ./include/doublell.h
 
 ./include/doublell.h: ../doublell/doublell.h
 	-mkdir include
@@ -32,7 +32,7 @@ lib/doublell.o: ../doublell/doublell.o
 rbtestprint.o: rbtestprint.c
 	gcc -Wall -c -o rbtestprint.o rbtestprint.c
 
-rbtestprint.c: rbtprint.h
+rbtestprint.c: rbtprint.h rbtprintimpl.h
 
 clean: cleanrbt cleanrbtprint cleanrbtest cleanrbtestprint
 

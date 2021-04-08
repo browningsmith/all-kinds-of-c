@@ -3,6 +3,9 @@
 #include <stdlib.h>
 
 #include "include/doublell.h"
+#include "rbtprintimpl.h"
+
+// Implementation only definitions
 
 PLine* newPLine(void)
 {

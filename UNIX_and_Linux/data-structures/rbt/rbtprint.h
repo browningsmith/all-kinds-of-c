@@ -9,6 +9,4 @@ typedef struct {
 	
 } PLine;
 
-PLine* newPLine(void);
-
 #endif /* RBTPRINT_H */
