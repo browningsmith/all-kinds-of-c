@@ -3,7 +3,13 @@
 #include <stdlib.h>
 
 #include "include/doublell.h"
+#include "rbt.h"
 #include "rbtprintimpl.h"
+
+int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
+{
+    return 0;
+}
 
 // Implementation only definitions
 

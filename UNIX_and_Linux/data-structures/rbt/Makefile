@@ -8,7 +8,7 @@ rbt.c: rbt.h rbtimpl.h
 rbtprint.o: rbtprint.c
 	gcc -Wall -c -o rbtprint.o rbtprint.c
 
-rbtprint.c: rbtprint.h rbtprintimpl.h ./include/doublell.h
+rbtprint.c: rbt.h rbtprint.h rbtprintimpl.h ./include/doublell.h
 
 ./include/doublell.h: ../doublell/doublell.h
 	-mkdir include

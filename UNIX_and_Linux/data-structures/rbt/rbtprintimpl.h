@@ -11,6 +11,14 @@
 
 #include "rbtprint.h"
 
+typedef struct {
+
+	long capacity;
+	long usage;
+	char* text;
+	
+} PLine;
+
 PLine* rbtNewPLine__(void);
 int rbtDeletePLine__(void* line); // void* instead of PLine* to be compatible with dllClear
 int rbtPLineIncreaseCapacity__(PLine* line);
