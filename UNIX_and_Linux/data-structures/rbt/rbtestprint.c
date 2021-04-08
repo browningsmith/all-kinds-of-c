@@ -39,6 +39,20 @@ int main()
     }
     printf("Completed rbtNewPLine__\n");
 
+    // Test rbtDeletePLine__
+    printf("Testing rbtDeletePLine__\n");
+    {
+        PLine* line = rbtNewPLine__();
+        if (line == NULL)
+        {
+            perror("rbtDeletePLine__: Unable to create line");
+            return -1;
+        }
+
+        rbtDeletePLine__(line);
+    }
+    printf("Testing rbtDeletePLine__\n");
+
     printf("Tests Complete\n");
 
     return 0;

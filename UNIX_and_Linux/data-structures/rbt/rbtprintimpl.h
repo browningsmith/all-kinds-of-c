@@ -12,5 +12,6 @@
 #include "rbtprint.h"
 
 PLine* rbtNewPLine__(void);
+int rbtDeletePLine__(void* line);
 
 #endif /* RBTPRINTIMPL_H */

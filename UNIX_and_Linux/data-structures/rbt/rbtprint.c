@@ -27,3 +27,13 @@ PLine* rbtNewPLine__(void)
 
     return newLine;
 }
+
+int rbtDeletePLine__(void* line)
+{
+    PLine* castLine = (PLine*) line;
+
+    free(castLine->text);
+    free(castLine);
+
+    return 0;
+}
