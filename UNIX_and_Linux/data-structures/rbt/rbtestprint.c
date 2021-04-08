@@ -9,35 +9,35 @@ int main()
 {
     printf("Running tests on rbtprint\n");
 
-    // Test newPLine
-    printf("Testing newPLine\n");
+    // Test rbtNewPLine__
+    printf("Testing rbtNewPLine__\n");
     {
-        PLine* line = newPLine();
+        PLine* line = rbtNewPLine__();
         if (line == NULL)
         {
-            perror("newPLine: Error creating new PLine");
+            perror("rbtNewPLine__: Error creating new PLine");
             return -1;
         }
         if (line->text == NULL)
         {
-            printf("newPLine: Error, line->text was set to NULL\n");
+            printf("rbtNewPLine__: Error, line->text was set to NULL\n");
             return -1;
         }
         if (line->capacity != 100)
         {
-            printf("newPLine: Error, line->capacity was not set to 100\n");
+            printf("rbtNewPLine__: Error, line->capacity was not set to 100\n");
             return -1;
         }
         if (line->usage != 0)
         {
-            printf("newPLine: Error, line->usage was not set to 0\n");
+            printf("rbtNewPLine__: Error, line->usage was not set to 0\n");
             return -1;
         }
 
         free(line->text);
         free(line);
     }
-    printf("Completed newPLine\n");
+    printf("Completed rbtNewPLine__\n");
 
     printf("Tests Complete\n");
 

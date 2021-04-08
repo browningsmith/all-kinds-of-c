@@ -11,6 +11,6 @@
 
 #include "rbtprint.h"
 
-PLine* newPLine(void);
+PLine* rbtNewPLine__(void);
 
 #endif /* RBTPRINTIMPL_H */

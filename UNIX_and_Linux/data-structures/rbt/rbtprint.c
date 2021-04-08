@@ -7,7 +7,7 @@
 
 // Implementation only definitions
 
-PLine* newPLine(void)
+PLine* rbtNewPLine__(void)
 {
     PLine* newLine = malloc(sizeof(PLine));
     if (newLine == NULL)
