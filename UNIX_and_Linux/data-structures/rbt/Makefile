@@ -32,7 +32,7 @@ lib/doublell.o: ../doublell/doublell.o
 rbtestprint.o: rbtestprint.c
 	gcc -Wall -c -o rbtestprint.o rbtestprint.c
 
-rbtestprint.c: rbtprint.h rbtprintimpl.h
+rbtestprint.c: rbt.h rbtprint.h rbtprintimpl.h
 
 clean: cleanrbt cleanrbtprint cleanrbtest cleanrbtestprint
 
