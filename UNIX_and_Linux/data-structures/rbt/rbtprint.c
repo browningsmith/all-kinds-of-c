@@ -15,7 +15,7 @@ PLine* rbtNewPLine__(void)
         return newLine;
     }
 
-    newLine->text = malloc(sizeof(100));
+    newLine->text = malloc(100);
     if (newLine->text == NULL)
     {
         free(newLine);
@@ -34,6 +34,20 @@ int rbtDeletePLine__(void* line)
 
     free(castLine->text);
     free(castLine);
+
+    return 0;
+}
+
+int rbtPLineIncreaseCapacity__(PLine* line)
+{
+    char* increased = (char*) realloc((void*) line->text, line->capacity + 100);
+    if (increased == NULL)
+    {
+        return -1;
+    }
+
+    line->text = increased;
+    line->capacity = line->capacity + 100;
 
     return 0;
 }

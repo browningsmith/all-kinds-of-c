@@ -12,6 +12,7 @@
 #include "rbtprint.h"
 
 PLine* rbtNewPLine__(void);
-int rbtDeletePLine__(void* line);
+int rbtDeletePLine__(void* line); // void* instead of PLine* to be compatible with dllClear
+int rbtPLineIncreaseCapacity__(PLine* line);
 
 #endif /* RBTPRINTIMPL_H */
