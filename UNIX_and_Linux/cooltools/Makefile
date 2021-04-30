@@ -1,17 +1,17 @@
-all: itoa.o cooltests
+all: cooltests itoa.o
 
-itoa.o: itoa.c
-	gcc -Wall -c -o itoa.o itoa.c
-
-itoa.c: cooltools.h
-
-cooltests: itoa.o cooltests.o
+cooltests: cooltests.o itoa.o
 	gcc -Wall -o cooltests itoa.o cooltests.o
+
+cooltests.c: cooltools.h
 
 cooltests.o: cooltests.c
 	gcc -Wall -c -o cooltests.o cooltests.c
 
-cooltests.c: cooltools.h
+itoa.c: cooltools.h
+
+itoa.o: itoa.c
+	gcc -Wall -c -o itoa.o itoa.c
 
 clean: cleantests cleanitoa
 
