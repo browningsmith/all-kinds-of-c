@@ -2,6 +2,10 @@ all: rbt.o rbtprint.o rbtest rbtestprint
 
 
 
+./include/cooltools.h: ../../cooltools/cooltools.h
+	-mkdir include
+	cp ../../cooltools/cooltools.h include/
+
 ./include/doublell.h: ../doublell/doublell.h
 	-mkdir include
 	cp ../doublell/doublell.h include/
@@ -9,6 +13,10 @@ all: rbt.o rbtprint.o rbtest rbtestprint
 ./lib/doublell.o: ../doublell/doublell.o
 	-mkdir lib
 	cp ../doublell/doublell.o lib/
+
+./lib/itoa.o: ../../cooltools/itoa.o
+	-mkdir lib
+	cp ../../cooltools/itoa.o lib/
 
 rbt.c: rbt.h rbtimpl.h
 	touch rbt.c
@@ -25,10 +33,10 @@ rbtest.c: rbt.h rbtimpl.h
 rbtest.o: rbtest.c
 	gcc -Wall -c -o rbtest.o rbtest.c
 
-rbtestprint: rbt.o ./lib/doublell.o rbtprint.o rbtestprint.o
-	gcc -Wall -o rbtestprint rbt.o lib/doublell.o rbtprint.o rbtestprint.o
+rbtestprint: rbt.o ./lib/doublell.o ./lib/itoa.o rbtprint.o rbtestprint.o
+	gcc -Wall -o rbtestprint rbt.o lib/doublell.o lib/itoa.o rbtprint.o rbtestprint.o
 
-rbtestprint.c: rbt.h rbtprint.h rbtprintimpl.h
+rbtestprint.c: rbt.h rbtprint.h rbtprintimpl.h ./include/cooltools.h
 	touch rbtestprint.c
 
 rbtestprint.o: rbtestprint.c

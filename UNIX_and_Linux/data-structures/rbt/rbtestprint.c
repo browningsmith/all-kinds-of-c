@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "include/cooltools.h"
 #include "rbt.h"
 #include "rbtprintimpl.h"
 
