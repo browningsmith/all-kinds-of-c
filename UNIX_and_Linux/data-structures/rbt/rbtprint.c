@@ -29,7 +29,7 @@ PLine* rbtNewPLine__(void)
     }
 
     newLine->capacity = 100;
-    newLine->usage = 0;
+    newLine->cursor = 0;
 
     return newLine;
 }

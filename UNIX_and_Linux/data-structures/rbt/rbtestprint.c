@@ -37,9 +37,9 @@ int main()
             printf("rbtNewPLine__: Error, line->capacity was not set to 100\n");
             return -1;
         }
-        if (line->usage != 0)
+        if (line->cursor != 0)
         {
-            printf("rbtNewPLine__: Error, line->usage was not set to 0\n");
+            printf("rbtNewPLine__: Error, line->cursor was not set to 0\n");
             return -1;
         }
 
@@ -58,7 +58,11 @@ int main()
             return -1;
         }
 
-        rbtDeletePLine__(line);
+        if (rbtDeletePLine__(line) != 0)
+        {
+            perror("rbtDeletePLine__: Error, returned with nonzero result");
+            return -1;
+        }
     }
     printf("Completed rbtDeletePLine__\n");
 

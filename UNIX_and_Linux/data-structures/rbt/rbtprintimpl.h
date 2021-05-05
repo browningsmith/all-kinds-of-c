@@ -13,8 +13,8 @@
 
 typedef struct {
 
-	long capacity;
-	long usage;
+	size_t capacity;
+	size_t cursor;
 	char* text;
 	
 } PLine;
