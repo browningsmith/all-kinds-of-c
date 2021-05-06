@@ -196,7 +196,112 @@ int main()
 
         rbtDeletePLine__(line);
     }
-    printf("Testing rbtPLineAdvanceCursor__\n");
+    printf("Completed rbtPLineAdvanceCursor__\n");
+
+    // Test rbtPrintAdvanceAll__
+    printf("Testing rbtPrintAdvanceAll__\n");
+    {
+        DLL list;
+        dllInit(&list);
+
+        // Add three lines
+        PLine* line = rbtNewPLine__();
+        if (line == NULL)
+        {
+            perror("rbtPrintAdvanceAll__: Unable to create first line");
+            return -1;
+        }
+        if (dllPush(&list, (void*) line) != 0)
+        {
+            perror("rbtPrintAdvanceAll__: Unable to add first line to list");
+        }
+
+        line = rbtNewPLine__();
+        if (line == NULL)
+        {
+            perror("rbtPrintAdvanceAll__: Unable to create second line");
+            return -1;
+        }
+        if (dllPush(&list, (void*) line) != 0)
+        {
+            perror("rbtPrintAdvanceAll__: Unable to add second line to list");
+        }
+
+        line = rbtNewPLine__();
+        if (line == NULL)
+        {
+            perror("rbtPrintAdvanceAll__: Unable to create third line");
+            return -1;
+        }
+        if (dllPush(&list, (void*) line) != 0)
+        {
+            perror("rbtPrintAdvanceAll__: Unable to add third line to list");
+        }
+
+        DLLIterator iter;
+        int result;
+
+        // Test advancing all cursors to 99
+        result = rbtPrintAdvanceAll__(&list, 99);
+        if (result != 0)
+        {
+            perror("rbtPrintAdvanceAll__: Error on function call on test 1");
+            return -1;
+        }
+        
+        dllToHead(&iter, &list);
+        dllGetThis(&iter, (void*) &line);
+        int i = 1;
+        do
+        {
+            if (line->cursor != 99)
+            {
+                printf("rbtPrintAdvanceAll__: Cursor did not advance to the proper spot for line %i on test 1\n", i);
+                return -1;
+            }
+
+            if (line->capacity != 100)
+            {
+                printf("rbtPrintAdvanceAll__: Capacity increased for line %i when it should not have on test 1\n", i);
+                return -1;
+            }
+
+            i++;
+        }
+        while (dllGetNext(&iter, (void*) &line) == 0);
+
+        // Test advancing all cursors another 306 to bring it to 405
+        result = rbtPrintAdvanceAll__(&list, 306);
+        if (result != 0)
+        {
+            perror("rbtPrintAdvanceAll__: Error on function call on test 2");
+            return -1;
+        }
+
+        dllToHead(&iter, &list);
+        dllGetThis(&iter, (void*) &line);
+        i = 1;
+        do
+        {
+            if (line->cursor != 405)
+            {
+                printf("rbtPrintAdvanceAll__: Cursor did not advance to the proper spot for line %i on test 2\n", i);
+                return -1;
+            }
+
+            if (line->capacity != 500)
+            {
+                printf("rbtPrintAdvanceAll__: Capacity did not increase properly for line %i on test 2\n", i);
+                return -1;
+            }
+
+            i++;
+        }
+        while (dllGetNext(&iter, (void*) &line) == 0);
+
+        dllClear(&list, rbtDeletePLine__);
+    }
+    printf("Completed rbtPrintAdvanceAll__\n");
 
     printf("Tests Complete\n");
 
