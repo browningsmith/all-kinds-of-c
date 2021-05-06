@@ -208,6 +208,52 @@ int main()
     }
     printf("Completed rbtPLineAdvanceCursor__\n");
 
+    // Test rbtPrintAddPLine__
+    printf("Testing rbtPrintAddPLine__\n");
+    {
+        DLL list;
+        dllInit(&list);
+
+        PLine* line = rbtNewPLine__();
+        if (line == NULL)
+        {
+            perror("rbtPrintAddPLine__: Unable to create first line");
+            return -1;
+        }
+        if (dllPush(&list, line) != 0)
+        {
+            perror("rbtPrintAddPLine__: Unable to add first line to list");
+            return -1;
+        }
+
+        // Advance cursor to 507
+        if (rbtPLineAdvanceCursor__(line, 507) != 0)
+        {
+            perror("rbtPrintAddPLine__: Unable to advance the cursor for line");
+            return -1;
+        }
+
+        DLLIterator iter;
+        dllToHead(&iter, &list);
+
+        // Test
+        if (rbtPrintAddPLine__(&iter) != 0)
+        {
+            perror("rbtPrintAddPLine__: Function returned nonzero result");
+            return -1;
+        }
+        PLine* newLine;
+        dllGetNext(&iter, (void*) &newLine);
+        if (newLine->cursor != line->cursor)
+        {
+            printf("rbtPrintAddPLine__: Cursor of newLine did not get moved to the same position as line: %lu vs %lu\n", newLine->cursor, line->cursor);
+            return -1;
+        }
+
+        dllClear(&list, rbtDeletePLine__);
+    }
+    printf("Completed rbtPrintAddPLine__\n");
+
     // Test rbtPrintAdvanceAll__
     printf("Testing rbtPrintAdvanceAll__\n");
     {

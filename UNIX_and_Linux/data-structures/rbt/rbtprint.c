@@ -94,7 +94,30 @@ int rbtPLineAdvanceCursor__(PLine* line, size_t amount)
 
 int rbtPrintAddPLine__(DLLIterator* iter)
 {
-    // TODO: IMPLEMENT THEEEES
+    PLine* currentLine;
+    dllGetThis(iter, (void*) &currentLine);
+    if (currentLine == NULL)
+    {
+        return -1;
+    }
+
+    PLine* newLine = rbtNewPLine__();
+    if (newLine == NULL)
+    {
+        return -1;
+    }
+
+    if (rbtPLineAdvanceCursor__(newLine, currentLine->cursor) != 0)
+    {
+        rbtDeletePLine__(newLine);
+        return -1;
+    }
+
+    if (dllInsertNext(iter, (void*) newLine) != 0)
+    {
+        rbtDeletePLine__(newLine);
+        return -1;
+    }
     
     return 0;
 }
