@@ -260,7 +260,7 @@ int main()
         DLL list;
         dllInit(&list);
 
-        // Add three lines
+        // Add first line
         PLine* line = rbtNewPLine__();
         if (line == NULL)
         {
@@ -270,31 +270,26 @@ int main()
         if (dllPush(&list, (void*) line) != 0)
         {
             perror("rbtPrintAdvanceAll__: Unable to add first line to list");
-        }
-
-        line = rbtNewPLine__();
-        if (line == NULL)
-        {
-            perror("rbtPrintAdvanceAll__: Unable to create second line");
             return -1;
-        }
-        if (dllPush(&list, (void*) line) != 0)
-        {
-            perror("rbtPrintAdvanceAll__: Unable to add second line to list");
-        }
-
-        line = rbtNewPLine__();
-        if (line == NULL)
-        {
-            perror("rbtPrintAdvanceAll__: Unable to create third line");
-            return -1;
-        }
-        if (dllPush(&list, (void*) line) != 0)
-        {
-            perror("rbtPrintAdvanceAll__: Unable to add third line to list");
         }
 
         DLLIterator iter;
+
+        // Add two more lines
+        dllToHead(&iter, &list);
+        if (rbtPrintAddPLine__(&iter) != 0)
+        {
+            perror("rbtPrintAdvanceAll__: Unable to add second line to list");
+            return -1;
+        }
+        void* content;
+        dllGetNext(&iter, &content);
+        if (rbtPrintAddPLine__(&iter) != 0)
+        {
+            perror("rbtPrintAdvanceAll__: Unable to add third line to list");
+            return -1;
+        }
+
         int result;
 
         // Test advancing all cursors to 99
