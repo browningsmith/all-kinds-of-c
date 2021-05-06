@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <strings.h>
 
 #include "include/doublell.h"
 #include "rbt.h"
@@ -16,7 +18,69 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
     }
 
     DLL list;
+    DLLIterator iter;
+    RBTNode* currentNode = tree.head;
+
     dllInit(&list);
+
+    // Add head node line
+    PLine* line = rbtNewPLine__();
+    if (line == NULL)
+    {
+        perror("Failed to print, rbtNewPLine__ error on first line");
+        return -1;
+    }
+    if (dllPush(&list, (void*) line) != 0)
+    {
+        perror("Failed to print, dllPush error on first line");
+        return -1;
+    }
+
+    // Iterate through tree and print nodes
+    // State 0: recurse left
+    // State 1: print this
+    // State 2: recurse right
+    int state = 0;
+    char buffer[51];
+    dllToHead(&iter, &list);
+    while (1)
+    {
+        if (state == 0)
+        {
+            // Add two lines if needed
+            
+        }
+    }
+
+    // Add null terminator to all lines
+    rbtPrintAdvanceAll__(&list, 1);
+    {
+        dllToHead(&iter, &list);
+        PLine* currentLine;
+        dllGetThis(&iter, (void*) &currentLine);
+        do
+        {
+            currentLine->text[currentLine->cursor - 1] = '\0';
+        }
+        while (dllGetNext(&iter, (void*) &currentLine) == 0);   
+    }
+
+    //Print all lines
+    {
+        dllToHead(&iter, &list);
+        PLine* currentLine;
+        dllGetThis(&iter, (void*) &currentLine);
+        int level = 1;
+        do
+        {
+            printf("L%i: %s\n", level, currentLine->text);
+
+            level++;
+        }
+        while (dllGetNext(&iter, (void*) &currentLine) == 0);   
+    }
+
+    dllClear(&list, rbtDeletePLine__);
     
     return 0;
 }
