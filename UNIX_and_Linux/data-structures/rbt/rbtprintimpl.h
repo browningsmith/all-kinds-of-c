@@ -22,5 +22,6 @@ typedef struct {
 PLine* rbtNewPLine__(void);
 int rbtDeletePLine__(void* line); // void* instead of PLine* to be compatible with dllClear
 int rbtPLineIncreaseCapacity__(PLine* line);
+int rbtPLineAdvanceCursor__(PLine* line, size_t amount);
 
 #endif /* RBTPRINTIMPL_H */

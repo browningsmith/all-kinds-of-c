@@ -118,15 +118,61 @@ int main()
     }
     printf("Completed rbtPLineIncreaseCapacity__\n");
 
-    // Test printing a tree
+    // Test rbtPLineAdvanceCursor__
+    printf("Testing rbtPLineAdvanceCursor__\n");
     {
-        RBT tree;
-        constructTree(&tree);
+        PLine* line = rbtNewPLine__();
+        if (line == NULL)
+        {
+            perror("rbtPLineAdvanceCursor__: Unable to create new line");
+            return -1;
+        }
 
-        rbtPrint(tree, NULL);
+        // Test advancing cursor to the limit
+        int result = rbtPLineAdvanceCursor__(line, 99);
+        if (result != 0)
+        {
+            perror("rbtPLineAdvanceCursor__: Error returned on function call on test 1\n");
+            return -1;
+        }
+        if (line->cursor != 99)
+        {
+            printf("rbtPLineAdvanceCursor__: Cursor did not advance to the proper spot on test 1\n");
+            return -1;
+        }
+        if (line->capacity != 100)
+        {
+            printf("rbtPLineAdvanceCursor__: Capacity increased when it should not have on test 1\n");
+            return -1;
+        }
 
-        eraseTree(&tree);
+        // Test advancing the cursor one more slot
+        result = rbtPLineAdvanceCursor__(line, 1);
+        if (result != 0)
+        {
+            perror("rbtPLineAdvanceCursor__: Error returned on function call on test 2\n");
+
+            if (line->cursor != 99)
+            {
+                printf("rbtPLineAdvanceCursor__: Cursor did not return to previous position on failure\n");
+            }
+
+            return -1;
+        }
+        if (line->cursor != 100)
+        {
+            printf("rbtPLineAdvanceCursor__: Cursor did not advance to the proper spot on test 2\n");
+            return -1;
+        }
+        if (line->capacity != 200)
+        {
+            printf("rbtPLineAdvanceCursor__: Capacity not properly increased on test 2\n");
+            return -1;
+        }
+
+        rbtDeletePLine__(line);
     }
+    printf("Testing rbtPLineAdvanceCursor__\n");
 
     printf("Tests Complete\n");
 

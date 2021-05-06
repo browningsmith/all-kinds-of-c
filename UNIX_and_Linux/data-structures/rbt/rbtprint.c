@@ -57,3 +57,19 @@ int rbtPLineIncreaseCapacity__(PLine* line)
 
     return 0;
 }
+
+int rbtPLineAdvanceCursor__(PLine* line, size_t amount)
+{
+    line->cursor += amount;
+
+    if (line->cursor >= line->capacity)
+    {
+        if (rbtPLineIncreaseCapacity__(line) != 0)
+        {
+            line->cursor -= amount;
+            return -1;
+        }
+    }
+
+    return 0;
+}
