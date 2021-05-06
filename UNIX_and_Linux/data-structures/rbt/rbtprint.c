@@ -1,6 +1,7 @@
 #include "rbtprint.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "include/doublell.h"
 #include "rbt.h"
@@ -8,6 +9,15 @@
 
 int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
 {
+    if (rbtIsEmpty(tree) == 1)
+    {
+        printf("[TREE EMPTY]\n");
+        return 0;
+    }
+
+    DLL list;
+    dllInit(&list);
+    
     return 0;
 }
 
@@ -71,6 +81,13 @@ int rbtPLineAdvanceCursor__(PLine* line, size_t amount)
         }
     }
 
+    return 0;
+}
+
+int rbtPrintAddPLine__(DLLIterator* iter)
+{
+    // TODO: IMPLEMENT THEEEES
+    
     return 0;
 }
 

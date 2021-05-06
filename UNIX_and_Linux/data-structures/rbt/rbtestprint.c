@@ -305,6 +305,14 @@ int main()
 
     printf("Tests Complete\n");
 
+    // Test printing a small tree
+    {
+        RBT tree;
+        constructTree(&tree);
+
+        eraseTree(&tree);
+    }
+
     return 0;
 }
 
