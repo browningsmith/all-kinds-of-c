@@ -170,6 +170,30 @@ int main()
             return -1;
         }
 
+        // Test advancing the cursor another 305 bringing it to 405
+        result = rbtPLineAdvanceCursor__(line, 305);
+        if (result != 0)
+        {
+            perror("rbtPLineAdvanceCursor__: Error returned on function call on test 3\n");
+
+            if (line->cursor != 100)
+            {
+                printf("rbtPLineAdvanceCursor__: Cursor did not return to previous position on failure\n");
+            }
+
+            return -1;
+        }
+        if (line->cursor != 405)
+        {
+            printf("rbtPLineAdvanceCursor__: Cursor did not advance to the proper spot on test 3\n");
+            return -1;
+        }
+        if (line->capacity != 500)
+        {
+            printf("rbtPLineAdvanceCursor__: Capacity not properly increased on test 3\n");
+            return -1;
+        }
+
         rbtDeletePLine__(line);
     }
     printf("Testing rbtPLineAdvanceCursor__\n");
