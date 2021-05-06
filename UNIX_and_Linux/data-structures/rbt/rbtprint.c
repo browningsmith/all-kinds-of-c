@@ -70,15 +70,23 @@ int rbtPLineIncreaseCapacity__(PLine* line)
 
 int rbtPLineAdvanceCursor__(PLine* line, size_t amount)
 {
+    size_t oldCursor = line->cursor;
     line->cursor += amount;
 
     while (line->cursor >= line->capacity)
-    {
+    {   
         if (rbtPLineIncreaseCapacity__(line) != 0)
         {
-            line->cursor -= amount;
+            line->cursor = oldCursor;
             return -1;
         }
+    }
+
+    while (oldCursor < line->cursor)
+    {
+        line->text[oldCursor] = ' ';
+
+        oldCursor++;
     }
 
     return 0;

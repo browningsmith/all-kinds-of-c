@@ -194,6 +194,16 @@ int main()
             return -1;
         }
 
+        // Test that 0 through 404 were replaced with spaces
+        for (size_t i = 0; i < line->cursor; i++)
+        {
+            if (line->text[i] != ' ')
+            {
+                printf("rbtPLineAdvanceCursor__: Space character not placed at index %lu on test 3: %hhu\n", i, line->text[i]);
+                return -1;
+            }
+        }
+
         rbtDeletePLine__(line);
     }
     printf("Completed rbtPLineAdvanceCursor__\n");
