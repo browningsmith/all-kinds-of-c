@@ -62,7 +62,7 @@ int rbtPLineAdvanceCursor__(PLine* line, size_t amount)
 {
     line->cursor += amount;
 
-    if (line->cursor >= line->capacity)
+    while (line->cursor >= line->capacity)
     {
         if (rbtPLineIncreaseCapacity__(line) != 0)
         {
@@ -70,6 +70,30 @@ int rbtPLineAdvanceCursor__(PLine* line, size_t amount)
             return -1;
         }
     }
+
+    return 0;
+}
+
+int rbtPrintAdvanceAll__(DLL* list, size_t amount)
+{
+    if (dllIsEmpty(*list) == 1)
+    {
+        return 0;
+    }
+
+    DLLIterator iter;
+    dllToHead(&iter, list);
+
+    PLine* line;
+    dllGetThis(&iter, (void*) &line);
+    do
+    {
+        if (rbtPLineAdvanceCursor__(line, amount) != 0)
+        {
+            return -1;
+        }
+    }
+    while (dllGetNext(&iter, (void*) &line) == 0);
 
     return 0;
 }

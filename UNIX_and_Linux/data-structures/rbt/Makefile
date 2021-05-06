@@ -54,7 +54,7 @@ rbtprint.h: rbt.h
 rbtprint.o: rbtprint.c
 	gcc -Wall -c -o rbtprint.o rbtprint.c
 
-rbtprintimpl.h: rbtprint.h
+rbtprintimpl.h: rbtprint.h ./include/doublell.h
 	touch rbtprintimpl.h
 
 
