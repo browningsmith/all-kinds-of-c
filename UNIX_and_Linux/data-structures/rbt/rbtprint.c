@@ -33,6 +33,7 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
     if (dllPush(&list, (void*) line) != 0)
     {
         perror("Failed to print, dllPush error on first line");
+        rbtDeletePLine__((void*) line);
         return -1;
     }
 
@@ -48,7 +49,21 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
         if (state == 0)
         {
             // Add two lines if needed
-            
+            if (dllGetNext(&iter, NULL) != 0)
+            {
+                for (int i=0; i<2; i++)
+                {
+                    if (rbtPrintAddPLine__(&iter) != 0)
+                    {
+                        perror("Error adding new line");
+                        dllClear(&list, rbtDeletePLine__);
+                        return -1;
+                    }
+                    dllGetNext(&iter, NULL);
+                }
+            }
+
+            break;
         }
     }
 
