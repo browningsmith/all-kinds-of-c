@@ -82,7 +82,6 @@ int dllGetHead(DLL list, void** returnedContent)
 {
     if (list.head == NULL)
     {
-        *returnedContent = NULL;
         return -1;
     }
 
@@ -94,7 +93,6 @@ int dllGetTail(DLL list, void** returnedContent)
 {
     if (list.tail == NULL)
     {
-        *returnedContent = NULL;
         return -1;
     }
 
@@ -106,7 +104,6 @@ int dllPop(DLL* list, void** returnedContent)
 {
     if (list->head == NULL)
     {
-        *returnedContent = NULL;
         return -1;
     }
 
@@ -124,7 +121,6 @@ int dllPop(DLL* list, void** returnedContent)
         // If the head has no next (broken list), cancel the pop operation
         if (nodeToDelete->next == NULL)
         {
-            *returnedContent = NULL;
             return -1;
         }
 
@@ -139,7 +135,6 @@ int dllPopTail(DLL* list, void** returnedContent)
 {
     if (list->tail == NULL)
     {
-        *returnedContent = NULL;
         return -1;
     }
 
@@ -157,7 +152,6 @@ int dllPopTail(DLL* list, void** returnedContent)
         // If the tail has no prev (broken list), cancel the pop operation
         if (nodeToDelete->prev == NULL)
         {
-            *returnedContent = NULL;
             return -1;
         }
 
@@ -242,7 +236,6 @@ int dllGetThis(DLLIterator* iterator, void** content)
     
     if (currentNode == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
@@ -256,17 +249,19 @@ int dllGetPrev(DLLIterator* iterator, void** content)
     
     if (currentNode == NULL)
     {
-        *content = NULL;
         return -1;
     }
     if (currentNode->prev == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
     iterator->currentNode = currentNode->prev;
-    *content = iterator->currentNode->content;
+    if (content != NULL)
+    {
+        *content = iterator->currentNode->content;
+    }
+    
     return 0;
 }
 
@@ -276,17 +271,19 @@ int dllGetNext(DLLIterator* iterator, void** content)
     
     if (currentNode == NULL)
     {
-        *content = NULL;
         return -1;
     }
     if (currentNode->next == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
     iterator->currentNode = currentNode->next;
-    *content = iterator->currentNode->content;
+    if (content != NULL)
+    {
+        *content = iterator->currentNode->content;
+    }
+    
     return 0;
 }
 
@@ -361,13 +358,11 @@ int dllDeletePrev(DLLIterator* iterator, void** content)
 {
     if (iterator->currentNode == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
     if (iterator->currentNode->prev == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
@@ -379,7 +374,6 @@ int dllDeletePrev(DLLIterator* iterator, void** content)
         // If list->head->next is NULL, we have broken list
         if (nodeToDelete->next == NULL)
         {
-            *content = NULL;
             return -1;
         }
 
@@ -395,13 +389,11 @@ int dllDeleteNext(DLLIterator* iterator, void** content)
 {
     if (iterator->currentNode == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
     if (iterator->currentNode->next == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
@@ -413,7 +405,6 @@ int dllDeleteNext(DLLIterator* iterator, void** content)
         // If list->tail->prev is NULL, we have broken list
         if (nodeToDelete->prev == NULL)
         {
-            *content = NULL;
             return -1;
         }
 
@@ -426,6 +417,7 @@ int dllDeleteNext(DLLIterator* iterator, void** content)
 }
 
 // Implementation-only definitions
+
 DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next)
 {
     //printf("INSERTING NODE\n");

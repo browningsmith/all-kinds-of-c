@@ -505,9 +505,9 @@ int main(int argc, char** argv)
             printf("dllGetHead: Error, returned success when called on empty list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 17)
         {
-            printf("dllGetHead: Error, did not return NULL content when called on empty list\n");
+            printf("dllGetHead: Error, did not return original content when called on empty list\n");
             return -1;
         }
 
@@ -548,9 +548,9 @@ int main(int argc, char** argv)
             printf("dllGetTail: Error, returned success when called on empty list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 17)
         {
-            printf("dllGetTail: Error, did not return NULL content when called on empty list\n");
+            printf("dllGetTail: Error, did not return original content when called on empty list\n");
             return -1;
         }
 
@@ -600,9 +600,9 @@ int main(int argc, char** argv)
             printf("dllPop: Error, incorrect result on empty list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 17)
         {
-            printf("dllPop: Error, bad content returned when called on empty list\n");
+            printf("dllPop: Error, content altered when called on empty list\n");
             return -1;
         }
         if (!dllIsEmpty(list))
@@ -644,13 +644,13 @@ int main(int argc, char** argv)
         num1 = 12;
         if (dllPush(&list, (void*) &num1) < 0)
         {
-            perror("Unable to push on first node for third test\n");
+            perror("dllPop: Unable to push on first node for third test\n");
             return -1;
         }
         int num2 = 14;
         if (dllPushTail(&list, (void*) &num2) < 0)
         {
-            perror("Unable to push on second node for third test\n");
+            perror("dllPop: Unable to push on second node for third test\n");
             return -1;
         }
         list.head->next = NULL;
@@ -661,9 +661,9 @@ int main(int argc, char** argv)
             printf("dllPop: Error, incorrect result on list with broken head\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 50)
         {
-            printf("dllPop: Error, incorrect content returned on list with broken head\n");
+            printf("dllPop: Error, altered content returned on list with broken head\n");
             return -1;
         }
         if (dllIsEmpty(list))
@@ -697,11 +697,6 @@ int main(int argc, char** argv)
             printf("dllPop: Error, incorrect result on list with two nodes\n");
             return -1;
         }
-        if (content == NULL)
-        {
-            printf("dllPop: Error, NULL content returned on list with two nodes\n");
-            return -1;
-        }
         if (*(int*) content != 47)
         {
             printf("dllPop: Error, incorrect content returned on list with two nodes\n");
@@ -731,15 +726,15 @@ int main(int argc, char** argv)
 
         // Test dllPopTail on empty list
         content = (void*) 17;
-        result = dllPop(&list, &content);
+        result = dllPopTail(&list, &content);
         if (result == 0)
         {
             printf("dllPopTail: Error, incorrect result on empty list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 17)
         {
-            printf("dllPopTail: Error, bad content returned when called on empty list\n");
+            printf("dllPopTail: Error, content altered when called on empty list\n");
             return -1;
         }
 
@@ -756,11 +751,6 @@ int main(int argc, char** argv)
         if (result < 0)
         {
             printf("dllPopTail: Error, incorrect result when called on single element list\n");
-            return -1;
-        }
-        if (content == NULL)
-        {
-            printf("dllPopTail: Error, NULL content returned when called on single element list\n");
             return -1;
         }
         if (*(int*) content != 12)
@@ -795,9 +785,9 @@ int main(int argc, char** argv)
             printf("dllPopTail: Error, incorrect result on list with broken head\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 50)
         {
-            printf("dllPopTail: Error, incorrect content returned on list with broken head\n");
+            printf("dllPopTail: Error, content altered on list with broken head\n");
             return -1;
         }
         if (dllIsEmpty(list))
@@ -829,11 +819,6 @@ int main(int argc, char** argv)
         if (result < 0)
         {
             printf("dllPopTail: Error, incorrect result on list with two nodes\n");
-            return -1;
-        }
-        if (content == NULL)
-        {
-            printf("dllPopTail: Error, NULL content returned on list with two nodes\n");
             return -1;
         }
         if (*(int*) content != 47)
@@ -1071,9 +1056,9 @@ int main(int argc, char** argv)
             printf("dllGetThis: Error, incorrect result when called on empty list iterator\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 17)
         {
-            printf("dllGetThis: Error, content not NULL when called on empty list iterator\n");
+            printf("dllGetThis: Error, content altered when called on empty list iterator\n");
             return -1;
         }
 
@@ -1085,11 +1070,6 @@ int main(int argc, char** argv)
         if (result != 0)
         {
             printf("dllGetThis: Error, incorrect result when called on non empty list iterator\n");
-            return -1;
-        }
-        if (content == NULL)
-        {
-            printf("dllGetThis: Error, NULL content when called on non empty list iterator\n");
             return -1;
         }
         if (*(int*) content != 12)
@@ -1118,9 +1098,9 @@ int main(int argc, char** argv)
             printf("dllGetPrev: Error, incorrect result when called on empty list iterator\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 23)
         {
-            printf("dllGetPrev: Error, content is not NULL when called on empty list iterator\n");
+            printf("dllGetPrev: Error, content altered when called on empty list iterator\n");
             return -1;
         }
 
@@ -1134,14 +1114,40 @@ int main(int argc, char** argv)
             printf("dllGetPrev: Error, incorrect result when called on head of non empty list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 23)
         {
-            printf("dllGetPrev: Error, content is not NULL when called on head of non empty list\n");
+            printf("dllGetPrev: Error, content altered when called on head of non empty list\n");
             return -1;
         }
         if (iterator.currentNode != list.head)
         {
             printf("dllGetPrev: Error, iterator shifted to new node when called on head of list\n");
+            return -1;
+        }
+
+        // Test a couple times starting from the tail with content set to NULL
+        dllToTail(&iterator, &list);
+        result = dllGetPrev(&iterator, NULL);
+        if (result != 0)
+        {
+            printf("dllGetPrev: Error, incorrect result when called on tail of non empty list, test 1\n");
+            return -1;
+        }
+        if (iterator.currentNode != list.tail->prev)
+        {
+            printf("dllGetPrev: Error, iterator did not shift to correct node when called on tail of non empty list, test 1\n");
+            return -1;
+        }
+
+        result = dllGetPrev(&iterator, NULL);
+        if (result != 0)
+        {
+            printf("dllGetPrev: Error, incorrect result when called again on non empty list, test 1\n");
+            return -1;
+        }
+        if (iterator.currentNode != list.tail->prev->prev)
+        {
+            printf("dllGetPrev: Error, iterator did not shift to correct node when called again on non empty list, test 1\n");
             return -1;
         }
 
@@ -1151,44 +1157,44 @@ int main(int argc, char** argv)
         result = dllGetPrev(&iterator, &content);
         if (result != 0)
         {
-            printf("dllGetPrev: Error, incorrect result when called on tail of non empty list\n");
+            printf("dllGetPrev: Error, incorrect result when called on tail of non empty list, test 2\n");
             return -1;
         }
         if (content == NULL)
         {
-            printf("dllGetPrev: Error, content is NULL when called on tail of non empty list\n");
+            printf("dllGetPrev: Error, content is NULL when called on tail of non empty list, test 2\n");
             return -1;
         }
         if (*(int*) content != 2)
         {
-            printf("dllGetPrev: Error, content is incorrect when called on tail of non empty list\n");
+            printf("dllGetPrev: Error, content is incorrect when called on tail of non empty list, test 2\n");
             return -1;
         }
         if (iterator.currentNode != list.tail->prev)
         {
-            printf("dllGetPrev: Error, iterator did not shift to correct node when called on tail of non empty list\n");
+            printf("dllGetPrev: Error, iterator did not shift to correct node when called on tail of non empty list, test 2\n");
             return -1;
         }
 
         result = dllGetPrev(&iterator, &content);
         if (result != 0)
         {
-            printf("dllGetPrev: Error, incorrect result when called again on non empty list\n");
+            printf("dllGetPrev: Error, incorrect result when called again on non empty list, test 2\n");
             return -1;
         }
         if (content == NULL)
         {
-            printf("dllGetPrev: Error, content is NULL when called again on non empty list\n");
+            printf("dllGetPrev: Error, content is NULL when called again on non empty list, test 2\n");
             return -1;
         }
         if (*(int*) content != 3)
         {
-            printf("dllGetPrev: Error, content is incorrect when called again on non empty list\n");
+            printf("dllGetPrev: Error, content is incorrect when called again on non empty list, test 2\n");
             return -1;
         }
         if (iterator.currentNode != list.tail->prev->prev)
         {
-            printf("dllGetPrev: Error, iterator did not shift to correct node when called again on non empty list\n");
+            printf("dllGetPrev: Error, iterator did not shift to correct node when called again on non empty list, test 2\n");
             return -1;
         }
 
@@ -1212,9 +1218,9 @@ int main(int argc, char** argv)
             printf("dllGetNext: Error, incorrect result when called on empty list iterator\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 23)
         {
-            printf("dllGetNext: Error, content is not NULL when called on empty list iterator\n");
+            printf("dllGetNext: Error, content altered when called on empty list iterator\n");
             return -1;
         }
 
@@ -1228,14 +1234,40 @@ int main(int argc, char** argv)
             printf("dllGetNext: Error, incorrect result when called on tail of non empty list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 23)
         {
-            printf("dllGetNext: Error, content is not NULL when called on tail of non empty list\n");
+            printf("dllGetNext: Error, content altered when called on tail of non empty list\n");
             return -1;
         }
         if (iterator.currentNode != list.tail)
         {
             printf("dllGetNext: Error, iterator shifted to new node when called on tail of list\n");
+            return -1;
+        }
+
+        // Test a couple times starting from the head, with content set to NULL
+        dllToHead(&iterator, &list);
+        result = dllGetNext(&iterator, NULL);
+        if (result != 0)
+        {
+            printf("dllGetNext: Error, incorrect result when called on head of non empty list, test 1\n");
+            return -1;
+        }
+        if (iterator.currentNode != list.head->next)
+        {
+            printf("dllGetNext: Error, iterator did not shift to correct node when called on head of non empty list, test 1\n");
+            return -1;
+        }
+
+        result = dllGetNext(&iterator, NULL);
+        if (result != 0)
+        {
+            printf("dllGetNext: Error, incorrect result when called again on non empty list, test 1\n");
+            return -1;
+        }
+        if (iterator.currentNode != list.head->next->next)
+        {
+            printf("dllGetNext: Error, iterator did not shift to correct node when called again on non empty list, test 1\n");
             return -1;
         }
 
@@ -1245,44 +1277,44 @@ int main(int argc, char** argv)
         result = dllGetNext(&iterator, &content);
         if (result != 0)
         {
-            printf("dllGetNext: Error, incorrect result when called on head of non empty list\n");
+            printf("dllGetNext: Error, incorrect result when called on head of non empty list, test 2\n");
             return -1;
         }
         if (content == NULL)
         {
-            printf("dllGetNext: Error, content is NULL when called on head of non empty list\n");
+            printf("dllGetNext: Error, content is NULL when called on head of non empty list, test 2\n");
             return -1;
         }
         if (*(int*) content != 11)
         {
-            printf("dllGetNext: Error, content is incorrect when called on head of non empty list\n");
+            printf("dllGetNext: Error, content is incorrect when called on head of non empty list, test 2\n");
             return -1;
         }
         if (iterator.currentNode != list.head->next)
         {
-            printf("dllGetNext: Error, iterator did not shift to correct node when called on head of non empty list\n");
+            printf("dllGetNext: Error, iterator did not shift to correct node when called on head of non empty list, test 2\n");
             return -1;
         }
 
         result = dllGetNext(&iterator, &content);
         if (result != 0)
         {
-            printf("dllGetNext: Error, incorrect result when called again on non empty list\n");
+            printf("dllGetNext: Error, incorrect result when called again on non empty list, test 2\n");
             return -1;
         }
         if (content == NULL)
         {
-            printf("dllGetNext: Error, content is NULL when called again on non empty list\n");
+            printf("dllGetNext: Error, content is NULL when called again on non empty list, test 2\n");
             return -1;
         }
         if (*(int*) content != 10)
         {
-            printf("dllGetNext: Error, content is incorrect when called again on non empty list\n");
+            printf("dllGetNext: Error, content is incorrect when called again on non empty list, test 2\n");
             return -1;
         }
         if (iterator.currentNode != list.head->next->next)
         {
-            printf("dllGetNext: Error, iterator did not shift to correct node when called again on non empty list\n");
+            printf("dllGetNext: Error, iterator did not shift to correct node when called again on non empty list, test 2\n");
             return -1;
         }
 
@@ -1496,9 +1528,9 @@ int main(int argc, char** argv)
             printf("dllDeletePrev: Error, incorrect result when called on empty list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 17)
         {
-            printf("dllDeletePrev: Error, non null content returned when called on empty list\n");
+            printf("dllDeletePrev: Error, content altered when called on empty list\n");
             return -1;
         }
         if (!dllIsEmpty(list))
@@ -1517,9 +1549,9 @@ int main(int argc, char** argv)
             printf("dllDeletePrev: Error, incorrect result when called as head of list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 23)
         {
-            printf("dllDeletePrev: Error, non null content returned when called on head of list\n");
+            printf("dllDeletePrev: Error, content altered when called on head of list\n");
             return -1;
         }
         if (iterator.currentNode != list.head)
@@ -1538,9 +1570,9 @@ int main(int argc, char** argv)
             printf("dllDeletePrev: Error, incorrect result when called with a broken head\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 45)
         {
-            printf("dllDeletePrev: Error, non null content returned when with a broken head\n");
+            printf("dllDeletePrev: Error, content altered when called with a broken head\n");
             return -1;
         }
         if (dllIsEmpty(list))
@@ -1628,9 +1660,9 @@ int main(int argc, char** argv)
             printf("dllDeleteNext: Error, incorrect result when called on empty list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 17)
         {
-            printf("dllDeleteNext: Error, non null content returned when called on empty list\n");
+            printf("dllDeleteNext: Error, content altered when called on empty list\n");
             return -1;
         }
         if (!dllIsEmpty(list))
@@ -1649,9 +1681,9 @@ int main(int argc, char** argv)
             printf("dllDeleteNext: Error, incorrect result when called as tail of list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 23)
         {
-            printf("dllDeleteNext: Error, non null content returned when called on tail of list\n");
+            printf("dllDeleteNext: Error, content altered when called on tail of list\n");
             return -1;
         }
         if (iterator.currentNode != list.tail)
@@ -1670,9 +1702,9 @@ int main(int argc, char** argv)
             printf("dllDeleteNext: Error, incorrect result when called with a broken tail\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 45)
         {
-            printf("dllDeletePrev: Error, non null content returned when called with a broken tail\n");
+            printf("dllDeletePrev: Error, content altered when called with a broken tail\n");
             return -1;
         }
         if (dllIsEmpty(list))
