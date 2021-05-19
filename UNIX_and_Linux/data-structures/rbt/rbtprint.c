@@ -85,12 +85,21 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
         dllToHead(&iter, &list);
         PLine* currentLine;
         dllGetThis(&iter, (void*) &currentLine);
+        int iteration = 1;
         int level = 1;
         do
         {
-            printf("L%i: %s\n", level, currentLine->text);
+            if (iteration % 2 != 0)
+            {
+                printf("L%i: %s\n", level, currentLine->text);
+                level++;
+            }
+            else
+            {
+                printf("     %s\n", currentLine->text);
+            }
 
-            level++;
+            iteration++;
         }
         while (dllGetNext(&iter, (void*) &currentLine) == 0);   
     }
