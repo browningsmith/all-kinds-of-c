@@ -41,15 +41,22 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
     // State 0: recurse left
     // State 1: print this
     // State 2: recurse right
+    // State 4: return up
+    int breaklimit = 10;
     int state = 0;
     char buffer[51];
     dllToHead(&iter, &list);
     while (1)
     {
+        if (breaklimit <= 1)
+        {
+            break;
+        }
+        
         if (state == 0)
         {
             // Add two lines if needed
-            if (dllGetNext(&iter, NULL) != 0)
+            if (iter.currentNode->next == NULL)
             {
                 for (int i=0; i<2; i++)
                 {
@@ -59,12 +66,44 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
                         dllClear(&list, rbtDeletePLine__);
                         return -1;
                     }
-                    dllGetNext(&iter, NULL);
                 }
             }
 
-            break;
+            // If left child is NULL
+            if (currentNode->left == NULL)
+            {
+                // Write NULL onto line two lines down
+                dllGetNext(&iter, NULL);
+                dllGetNext(&iter, (void**) &line);
+
+                rbtPrintAdvanceAll__(&list, 7);
+                strncpy(line->text + line->cursor - 7, "B(NULL)", 7);
+
+                // Write '/' one line down
+                dllGetPrev(&iter, (void**) &line);
+
+                rbtPrintAdvanceAll__(&list, 1);
+                line->text[line->cursor - 1] = '/';
+
+                // Return to original line
+                dllGetPrev(&iter, NULL);
+
+                state = 1;
+                continue;
+            }
+
+            // If left child is not NULL, recurse to it
+            currentNode = currentNode->left;
+            // remain at state 0
+            continue;
         }
+
+        if (state == 1)
+        {
+
+        }
+
+        breaklimit--;
     }
 
     // Add null terminator to all lines
