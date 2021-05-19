@@ -78,12 +78,10 @@ int dllPushTail(DLL* list, void* content)
     return 0;
 }
 
-// TODO: Do not alter returnedContent on error
 int dllGetHead(DLL list, void** returnedContent)
 {
     if (list.head == NULL)
     {
-        *returnedContent = NULL;
         return -1;
     }
 
@@ -91,12 +89,10 @@ int dllGetHead(DLL list, void** returnedContent)
     return 0;
 }
 
-// TODO: Do not alter returnedContent on error
 int dllGetTail(DLL list, void** returnedContent)
 {
     if (list.tail == NULL)
     {
-        *returnedContent = NULL;
         return -1;
     }
 
@@ -104,12 +100,10 @@ int dllGetTail(DLL list, void** returnedContent)
     return 0;
 }
 
-// TODO: Do not alter returnedContent on error
 int dllPop(DLL* list, void** returnedContent)
 {
     if (list->head == NULL)
     {
-        *returnedContent = NULL;
         return -1;
     }
 
@@ -127,7 +121,6 @@ int dllPop(DLL* list, void** returnedContent)
         // If the head has no next (broken list), cancel the pop operation
         if (nodeToDelete->next == NULL)
         {
-            *returnedContent = NULL;
             return -1;
         }
 
@@ -138,12 +131,10 @@ int dllPop(DLL* list, void** returnedContent)
     return 0;
 }
 
-// TODO: Do not alter returnedContent on error
 int dllPopTail(DLL* list, void** returnedContent)
 {
     if (list->tail == NULL)
     {
-        *returnedContent = NULL;
         return -1;
     }
 
@@ -161,7 +152,6 @@ int dllPopTail(DLL* list, void** returnedContent)
         // If the tail has no prev (broken list), cancel the pop operation
         if (nodeToDelete->prev == NULL)
         {
-            *returnedContent = NULL;
             return -1;
         }
 

@@ -505,9 +505,9 @@ int main(int argc, char** argv)
             printf("dllGetHead: Error, returned success when called on empty list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 17)
         {
-            printf("dllGetHead: Error, did not return NULL content when called on empty list\n");
+            printf("dllGetHead: Error, did not return original content when called on empty list\n");
             return -1;
         }
 
@@ -548,9 +548,9 @@ int main(int argc, char** argv)
             printf("dllGetTail: Error, returned success when called on empty list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 17)
         {
-            printf("dllGetTail: Error, did not return NULL content when called on empty list\n");
+            printf("dllGetTail: Error, did not return original content when called on empty list\n");
             return -1;
         }
 
@@ -600,9 +600,9 @@ int main(int argc, char** argv)
             printf("dllPop: Error, incorrect result on empty list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 17)
         {
-            printf("dllPop: Error, bad content returned when called on empty list\n");
+            printf("dllPop: Error, content altered when called on empty list\n");
             return -1;
         }
         if (!dllIsEmpty(list))
@@ -644,13 +644,13 @@ int main(int argc, char** argv)
         num1 = 12;
         if (dllPush(&list, (void*) &num1) < 0)
         {
-            perror("Unable to push on first node for third test\n");
+            perror("dllPop: Unable to push on first node for third test\n");
             return -1;
         }
         int num2 = 14;
         if (dllPushTail(&list, (void*) &num2) < 0)
         {
-            perror("Unable to push on second node for third test\n");
+            perror("dllPop: Unable to push on second node for third test\n");
             return -1;
         }
         list.head->next = NULL;
@@ -661,9 +661,9 @@ int main(int argc, char** argv)
             printf("dllPop: Error, incorrect result on list with broken head\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 50)
         {
-            printf("dllPop: Error, incorrect content returned on list with broken head\n");
+            printf("dllPop: Error, altered content returned on list with broken head\n");
             return -1;
         }
         if (dllIsEmpty(list))
@@ -697,11 +697,6 @@ int main(int argc, char** argv)
             printf("dllPop: Error, incorrect result on list with two nodes\n");
             return -1;
         }
-        if (content == NULL)
-        {
-            printf("dllPop: Error, NULL content returned on list with two nodes\n");
-            return -1;
-        }
         if (*(int*) content != 47)
         {
             printf("dllPop: Error, incorrect content returned on list with two nodes\n");
@@ -731,15 +726,15 @@ int main(int argc, char** argv)
 
         // Test dllPopTail on empty list
         content = (void*) 17;
-        result = dllPop(&list, &content);
+        result = dllPopTail(&list, &content);
         if (result == 0)
         {
             printf("dllPopTail: Error, incorrect result on empty list\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 17)
         {
-            printf("dllPopTail: Error, bad content returned when called on empty list\n");
+            printf("dllPopTail: Error, content altered when called on empty list\n");
             return -1;
         }
 
@@ -756,11 +751,6 @@ int main(int argc, char** argv)
         if (result < 0)
         {
             printf("dllPopTail: Error, incorrect result when called on single element list\n");
-            return -1;
-        }
-        if (content == NULL)
-        {
-            printf("dllPopTail: Error, NULL content returned when called on single element list\n");
             return -1;
         }
         if (*(int*) content != 12)
@@ -795,9 +785,9 @@ int main(int argc, char** argv)
             printf("dllPopTail: Error, incorrect result on list with broken head\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 50)
         {
-            printf("dllPopTail: Error, incorrect content returned on list with broken head\n");
+            printf("dllPopTail: Error, content altered on list with broken head\n");
             return -1;
         }
         if (dllIsEmpty(list))
@@ -829,11 +819,6 @@ int main(int argc, char** argv)
         if (result < 0)
         {
             printf("dllPopTail: Error, incorrect result on list with two nodes\n");
-            return -1;
-        }
-        if (content == NULL)
-        {
-            printf("dllPopTail: Error, NULL content returned on list with two nodes\n");
             return -1;
         }
         if (*(int*) content != 47)
