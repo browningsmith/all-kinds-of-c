@@ -230,14 +230,12 @@ int dllToTail(DLLIterator* iterator, DLL* list)
     return 0;
 }
 
-// TODO: Do not alter content on error
 int dllGetThis(DLLIterator* iterator, void** content)
 {
     DLLNode* currentNode = iterator->currentNode;
     
     if (currentNode == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
@@ -245,47 +243,47 @@ int dllGetThis(DLLIterator* iterator, void** content)
     return 0;
 }
 
-// TODO: Do not alter content on error
-// TODO: If content is given as NULL, do not use it
 int dllGetPrev(DLLIterator* iterator, void** content)
 {
     DLLNode* currentNode = iterator->currentNode;
     
     if (currentNode == NULL)
     {
-        *content = NULL;
         return -1;
     }
     if (currentNode->prev == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
     iterator->currentNode = currentNode->prev;
-    *content = iterator->currentNode->content;
+    if (content != NULL)
+    {
+        *content = iterator->currentNode->content;
+    }
+    
     return 0;
 }
 
-// TODO: Do not alter content on error
-// TODO: If content is given as NULL, do not use it
 int dllGetNext(DLLIterator* iterator, void** content)
 {
     DLLNode* currentNode = iterator->currentNode;
     
     if (currentNode == NULL)
     {
-        *content = NULL;
         return -1;
     }
     if (currentNode->next == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
     iterator->currentNode = currentNode->next;
-    *content = iterator->currentNode->content;
+    if (content != NULL)
+    {
+        *content = iterator->currentNode->content;
+    }
+    
     return 0;
 }
 
