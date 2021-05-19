@@ -354,18 +354,15 @@ int dllInsertNext(DLLIterator* iterator, void* content)
     return 0;
 }
 
-// TODO: do not alter content on error
 int dllDeletePrev(DLLIterator* iterator, void** content)
 {
     if (iterator->currentNode == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
     if (iterator->currentNode->prev == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
@@ -377,7 +374,6 @@ int dllDeletePrev(DLLIterator* iterator, void** content)
         // If list->head->next is NULL, we have broken list
         if (nodeToDelete->next == NULL)
         {
-            *content = NULL;
             return -1;
         }
 
@@ -389,18 +385,15 @@ int dllDeletePrev(DLLIterator* iterator, void** content)
     return 0;
 }
 
-// TODO: do not alter content on error
 int dllDeleteNext(DLLIterator* iterator, void** content)
 {
     if (iterator->currentNode == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
     if (iterator->currentNode->next == NULL)
     {
-        *content = NULL;
         return -1;
     }
 
@@ -412,7 +405,6 @@ int dllDeleteNext(DLLIterator* iterator, void** content)
         // If list->tail->prev is NULL, we have broken list
         if (nodeToDelete->prev == NULL)
         {
-            *content = NULL;
             return -1;
         }
 
