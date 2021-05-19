@@ -91,12 +91,12 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
         {
             if (iteration % 2 != 0)
             {
-                printf("L%i: %s\n", level, currentLine->text);
+                printf("L%3i: %s\n", level, currentLine->text);
                 level++;
             }
             else
             {
-                printf("     %s\n", currentLine->text);
+                printf("      %s\n", currentLine->text);
             }
 
             iteration++;
