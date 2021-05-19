@@ -93,8 +93,8 @@ int dllPushTail(DLL* list, void* content);
  * Returns 0 on success, and places the content of the node into
  * returnedContent
  *
- * Returns -1 on failure, meaning the list is empty, and places
- * NULL into returnedContent
+ * Returns -1 on failure, meaning the list is empty, and does not
+ * alter the content of returnedContent
  *****************************************************************/
 int dllGetHead(DLL list, void** returnedContent);
 
@@ -110,8 +110,8 @@ int dllGetHead(DLL list, void** returnedContent);
  * Returns 0 on success, and places the content of the node into
  * returnedContent
  *
- * Returns -1 on failure, meaning the list is empty, and places
- * NULL into returnedContent
+ * Returns -1 on failure, meaning the list is empty, and does not
+ * alter the content of returnedContent
  *****************************************************************/
 int dllGetTail(DLL list, void** returnedContent);
 
@@ -127,7 +127,7 @@ int dllGetTail(DLL list, void** returnedContent);
  * into returnedContent
  *
  * Returns -1 on failure, meaning the list is empty or broken, and
- * places NULL into returnedContent
+ * does not alter the content of returnedContent
  *****************************************************************/
 int dllPop(DLL* list, void** returnedContent);
 
@@ -143,7 +143,7 @@ int dllPop(DLL* list, void** returnedContent);
  * into returnedContent
  *
  * Returns -1 on failure, meaning the list is empty or broken, and
- * places NULL into returnedContent
+ * does not alter the content of returnedContent
  *****************************************************************/
 int dllPopTail(DLL* list, void** returnedContent);
 
@@ -226,8 +226,8 @@ int dllToTail(DLLIterator* iterator, DLL* list);
  * 
  * Returns 0 on success
  *
- * Returns -1 on failure, meaning the list is empty, and places
- * NULL into content
+ * Returns -1 on failure, meaning the list is empty, and does not
+ * alter the content of the content parameter
  *****************************************************************/
 int dllGetThis(DLLIterator* iterator, void** content);
 
@@ -240,10 +240,14 @@ int dllGetThis(DLLIterator* iterator, void** content);
  * Attempts to move the iterator to the previous node, and then
  * place that node's content into the given content parameter
  * 
+ * If content parameter is given as NULL, it is ignored, and
+ * the function simply moves the iterator to the previous node
+ * 
  * Returns 0 on success
  *
  * Returns -1 on failure, meaning the list is empty, or that the
- * node the iterator is on has no previous node
+ * node the iterator is on has no previous node, and does not
+ * alter the content of the content parameter
  *****************************************************************/
 int dllGetPrev(DLLIterator* iterator, void** content);
 
@@ -256,10 +260,14 @@ int dllGetPrev(DLLIterator* iterator, void** content);
  * Attempts to move the iterator to the next node, and then
  * place that node's content into the given content parameter
  * 
+ * If content parameter is given as NULL, it is ignored, and
+ * the function simply moves the iterator to the next node
+ * 
  * Returns 0 on success
  *
  * Returns -1 on failure, meaning the list is empty, or that the
- * node the iterator is on has no previous node
+ * node the iterator is on has no next node, and does not
+ * alter the content of the content parameter
  *****************************************************************/
 int dllGetNext(DLLIterator* iterator, void** content);
 
@@ -314,8 +322,9 @@ int dllInsertNext(DLLIterator* iterator, void* content);
  * Returns 0 on success, with the content of the deleted node being
  * placed into the given content argument
  * 
- * Returns -1 on failure, with NULL being placed into the given
- * content argument
+ * Returns -1 on failure, and does not alter the content of the
+ * given content parameter
+ * 
  * Failure can be caused by:
  *  - If the list is empty, and no node can be deleted
  *  - If the iterator's node has no prev node to delete
@@ -337,8 +346,9 @@ int dllDeletePrev(DLLIterator* iterator, void** content);
  * Returns 0 on success, with the content of the deleted node being
  * placed into the given content argument
  * 
- * Returns -1 on failure, with NULL being placed into the given
- * content argument
+ * Returns -1 on failure, and does not alter the content of the
+ * given content parameter
+ * 
  * Failure can be caused by:
  *  - If the list is empty, and no node can be deleted
  *  - If the iterator's node has no next node to delete

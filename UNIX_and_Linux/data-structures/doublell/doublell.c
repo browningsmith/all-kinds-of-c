@@ -78,6 +78,7 @@ int dllPushTail(DLL* list, void* content)
     return 0;
 }
 
+// TODO: Do not alter returnedContent on error
 int dllGetHead(DLL list, void** returnedContent)
 {
     if (list.head == NULL)
@@ -90,6 +91,7 @@ int dllGetHead(DLL list, void** returnedContent)
     return 0;
 }
 
+// TODO: Do not alter returnedContent on error
 int dllGetTail(DLL list, void** returnedContent)
 {
     if (list.tail == NULL)
@@ -102,6 +104,7 @@ int dllGetTail(DLL list, void** returnedContent)
     return 0;
 }
 
+// TODO: Do not alter returnedContent on error
 int dllPop(DLL* list, void** returnedContent)
 {
     if (list->head == NULL)
@@ -135,6 +138,7 @@ int dllPop(DLL* list, void** returnedContent)
     return 0;
 }
 
+// TODO: Do not alter returnedContent on error
 int dllPopTail(DLL* list, void** returnedContent)
 {
     if (list->tail == NULL)
@@ -236,6 +240,7 @@ int dllToTail(DLLIterator* iterator, DLL* list)
     return 0;
 }
 
+// TODO: Do not alter content on error
 int dllGetThis(DLLIterator* iterator, void** content)
 {
     DLLNode* currentNode = iterator->currentNode;
@@ -250,6 +255,8 @@ int dllGetThis(DLLIterator* iterator, void** content)
     return 0;
 }
 
+// TODO: Do not alter content on error
+// TODO: If content is given as NULL, do not use it
 int dllGetPrev(DLLIterator* iterator, void** content)
 {
     DLLNode* currentNode = iterator->currentNode;
@@ -270,6 +277,8 @@ int dllGetPrev(DLLIterator* iterator, void** content)
     return 0;
 }
 
+// TODO: Do not alter content on error
+// TODO: If content is given as NULL, do not use it
 int dllGetNext(DLLIterator* iterator, void** content)
 {
     DLLNode* currentNode = iterator->currentNode;
@@ -357,6 +366,7 @@ int dllInsertNext(DLLIterator* iterator, void* content)
     return 0;
 }
 
+// TODO: do not alter content on error
 int dllDeletePrev(DLLIterator* iterator, void** content)
 {
     if (iterator->currentNode == NULL)
@@ -391,6 +401,7 @@ int dllDeletePrev(DLLIterator* iterator, void** content)
     return 0;
 }
 
+// TODO: do not alter content on error
 int dllDeleteNext(DLLIterator* iterator, void** content)
 {
     if (iterator->currentNode == NULL)
@@ -426,6 +437,7 @@ int dllDeleteNext(DLLIterator* iterator, void** content)
 }
 
 // Implementation-only definitions
+
 DLLNode* dllInsertNode__(void* content, DLLNode* prev, DLLNode* next)
 {
     //printf("INSERTING NODE\n");
