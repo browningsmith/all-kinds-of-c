@@ -42,19 +42,11 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
     // State 1: print this
     // State 2: recurse right
     // State 4: return up
-    int breaklimit = 100;
     int state = 0;
     char buffer[51];
     dllToHead(&iter, &list);
     while (1)
-    {
-        breaklimit--;
-        
-        if (breaklimit <= 1)
-        {
-            break;
-        }
-        
+    {   
         if (state == 0)
         {
             // Add two lines if needed
@@ -74,7 +66,7 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
             // If left child is NULL
             if (currentNode->left == NULL)
             {
-                // Write NULL onto line two lines down
+                // Write "B(NULL)" onto line two lines down
                 dllGetNext(&iter, NULL);
                 dllGetNext(&iter, (void**) &line);
 
