@@ -175,6 +175,7 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
                 line->text[line->cursor - 1] = '/';
 
                 dllGetPrev(&iter, NULL);
+                currentNode = currentNode->parent;
                 state = 1;
                 continue;
             }
@@ -183,6 +184,7 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
                 // No need to print '\\' since it has already been printed
                 dllGetPrev(&iter, NULL);
                 dllGetPrev(&iter, NULL);
+                currentNode = currentNode->parent;
                 state = 4;
                 continue;
             }
