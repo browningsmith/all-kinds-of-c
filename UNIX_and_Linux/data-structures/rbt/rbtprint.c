@@ -126,6 +126,19 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
             strncpy(line->text + line->cursor - length - 1, buffer, length);
             line->text[line->cursor - 1] = ')';
 
+            if (currentNode->parent != NULL)
+            {
+                if (currentNode == currentNode->parent->left)
+                {
+                    // Print '/' one line up
+                    dllGetPrev(&iter, (void**) &line);
+                    rbtPLineAdvanceCursor__(line, 1);
+                    line->text[line->cursor - 1] = '/';
+                    line->cursor -= 1;
+                    dllGetNext(&iter, (void**) &line);
+                }
+            }
+
             // If right child is NULL
             if (currentNode->right == NULL)
             {
@@ -288,7 +301,10 @@ int rbtPLineAdvanceCursor__(PLine* line, size_t amount)
 
     while (oldCursor < line->cursor)
     {
-        line->text[oldCursor] = ' ';
+        if (line->text[oldCursor] != '/')
+        {
+            line->text[oldCursor] = ' ';
+        }
 
         oldCursor++;
     }
