@@ -138,12 +138,7 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
             }
 
             // If right child is not NULL, recurse to it
-
-            //Print '\\' one line down
-            dllGetNext(&iter, (void**) &line);
-            rbtPrintAdvanceAll__(&list, 1);
-            line->text[line->cursor - 1] = '\\';
-
+            dllGetNext(&iter, NULL);
             dllGetNext(&iter, NULL);
             currentNode = currentNode->right;
             state = 0;
@@ -162,10 +157,7 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
             if (currentNode == currentNode->parent->left)
             {
                 // Print '/' one line up
-                dllGetPrev(&iter, (void**) &line);
-                rbtPrintAdvanceAll__(&list, 1);
-                line->text[line->cursor - 1] = '/';
-
+                dllGetPrev(&iter, NULL);
                 dllGetPrev(&iter, NULL);
                 currentNode = currentNode->parent;
                 state = 1;
