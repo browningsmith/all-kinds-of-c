@@ -252,7 +252,7 @@ PLine* rbtNewPLine__(void)
     if (newLine->text == NULL)
     {
         free(newLine);
-	return NULL;
+	    return NULL;
     }
 
     newLine->capacity = 100;
