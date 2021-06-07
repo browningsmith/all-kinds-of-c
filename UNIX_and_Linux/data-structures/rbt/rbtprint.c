@@ -255,6 +255,11 @@ PLine* rbtNewPLine__(void)
 	    return NULL;
     }
 
+    for (int i=0; i<100; i++)
+    {
+        newLine->text[i] = ' ';
+    }
+
     newLine->capacity = 100;
     newLine->cursor = 0;
 
@@ -288,6 +293,7 @@ int rbtPLineIncreaseCapacity__(PLine* line)
 int rbtPLineAdvanceCursor__(PLine* line, size_t amount)
 {
     size_t oldCursor = line->cursor;
+    size_t oldCapacity = line->capacity;
     line->cursor += amount;
 
     while (line->cursor >= line->capacity)
@@ -299,14 +305,11 @@ int rbtPLineAdvanceCursor__(PLine* line, size_t amount)
         }
     }
 
-    while (oldCursor < line->cursor)
+    while (oldCapacity < line->capacity)
     {
-        if (line->text[oldCursor] != '/')
-        {
-            line->text[oldCursor] = ' ';
-        }
+        line->text[oldCapacity] = ' ';
 
-        oldCursor++;
+        oldCapacity++;
     }
 
     return 0;
