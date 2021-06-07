@@ -305,6 +305,7 @@ int rbtPLineAdvanceCursor__(PLine* line, size_t amount)
         }
     }
 
+    // Only replace with spaces data that has been newly allocated
     while (oldCapacity < line->capacity)
     {
         line->text[oldCapacity] = ' ';
