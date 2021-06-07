@@ -1,4 +1,4 @@
-all: rbt.o rbtprint.o rbtest rbtestprint
+all: rbt.o rbtprint.o rbtest rbtestprint rbtinsert
 
 
 
@@ -45,6 +45,15 @@ rbtestprint.o: rbtestprint.c
 rbtimpl.h: rbt.h
 	touch rbtimpl.h
 
+rbtinsert: rbt.o ./lib/doublell.o ./lib/itoa.o rbtprint.o rbtinsert.o
+	gcc -Wall -o rbtinsert rbt.o lib/doublell.o lib/itoa.o rbtprint.o rbtinsert.o
+
+rbtinsert.o: rbtinsert.c
+	gcc -Wall -c -o rbtinsert.o rbtinsert.c
+
+rbtinsert.c: ./include/cooltools.h rbt.h rbtprint.h
+	touch rbtinsert.c
+
 rbtprint.c: rbt.h rbtprint.h rbtprintimpl.h ./include/doublell.h
 	touch rbtprint.c
 
@@ -59,10 +68,13 @@ rbtprintimpl.h: rbtprint.h ./include/doublell.h
 
 
 
-clean: cleanrbt cleanrbtprint cleanrbtest cleanrbtestprint
+clean: cleanrbt cleanrbtprint cleanrbtest cleanrbtestprint cleanrbtinsert
 
 cleandoublell:
 	-rm -rf lib/doublell.o
+
+cleanitoa:
+	-rm -rf lib/itoa.o
 
 cleanrbt:
 	-rm -rf rbt.o
@@ -75,3 +87,6 @@ cleanrbtestprint:
 
 cleanrbtprint:
 	-rm -rf rbtprint.o
+
+cleanrbtinsert:
+	-rm -rf rbtinsert rbtinsert.o
