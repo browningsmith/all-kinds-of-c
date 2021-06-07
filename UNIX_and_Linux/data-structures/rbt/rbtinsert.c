@@ -15,7 +15,30 @@ int main()
     RBT tree;
     rbtInit(&tree, compareInt);
 
-    rbtPrint(tree, testitoa);
+    char inBuffer[13];
+    while (1)
+    {
+        bzero(inBuffer, 13);
+        
+        printf("Enter a number: ");
+        if (fgets(inBuffer, 13, stdin) != NULL)
+        {
+            int i = atoi(inBuffer);
+            printf("Entered %i\n", i);
+
+            void* newContent = malloc(sizeof(int));
+            if (newContent == NULL)
+            {
+                perror("Unable to allocate space for new int");
+                return -1;
+            }
+            *(int*) newContent = i;
+
+            RBTStatusStruct result = rbtInsert(&tree, newContent);
+
+            rbtPrint(tree, testitoa);
+        }
+    }
 
     return 0;
 }
