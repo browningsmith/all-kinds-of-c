@@ -5,13 +5,16 @@
 #include <string.h>
 #include <errno.h>
 
+#include "include/cooltools.h"
 #include "rbtimpl.h"
+#include "rbtprint.h"
 
 int compareInt(void* a, void* b);
 RBTNode* newIntNode(int num);
 void displayNode(RBTNode node);
 void constructTree(RBT* tree);
 void eraseTree(RBT* tree);
+int testitoa(char* buffer, void* content);
 
 int main()
 {
@@ -592,4 +595,11 @@ void eraseTree(RBT* tree)
     }
 
     tree->head = NULL;
+}
+
+int testitoa(char* buffer, void* content)
+{
+    itoa(buffer, *(int32_t*) content);
+    
+    return strlen(buffer);
 }

@@ -24,10 +24,10 @@ rbt.c: rbt.h rbtimpl.h
 rbt.o: rbt.c
 	gcc -Wall -c -o rbt.o rbt.c
 
-rbtest: rbt.o rbtest.o
-	gcc -Wall -o rbtest rbt.o rbtest.o
+rbtest: rbt.o rbtest.o ./lib/doublell.o ./lib/itoa.o rbtprint.o
+	gcc -Wall -o rbtest rbt.o rbtest.o lib/doublell.o lib/itoa.o
 
-rbtest.c: rbt.h rbtimpl.h
+rbtest.c: rbt.h rbtimpl.h rbtprint.h ./include/cooltools.h
 	touch rbtest.c
 
 rbtest.o: rbtest.c
