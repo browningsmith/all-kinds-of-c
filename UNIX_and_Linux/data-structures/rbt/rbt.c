@@ -444,3 +444,73 @@ int rbtRotateRight__(RBT* tree, RBTNode* leftChild)
 
     return 0;
 }
+
+int rbtRotateLeft__(RBT* tree, RBTNode* rightChild)
+{
+    RBTNode* parent;
+    RBTNode* grandParent;
+    RBTNode* rightChildsLeftChild;
+
+    // If tree or rightChild are NULL, error
+    if ((tree == NULL) || (rightChild == NULL))
+    {
+        return -1;
+    }
+
+    // If tree->head is NULL, error
+    if (tree->head == NULL)
+    {
+        return -1;
+    }
+
+    // If rightChild is the head, can't do a left rotation
+    if (rightChild->parent == NULL)
+    {
+        return -1;
+    }
+
+    parent = rightChild->parent;
+
+    // If rightChild is not a right child, can't do
+    if (rightChild != parent->right)
+    {
+        return -1;
+    }
+
+    grandParent = parent->parent;
+    rightChildsLeftChild = rightChild->left;
+
+    // Set right child's parent to the grandParent
+    rightChild->parent = grandParent;
+
+    // If rightChild's parent is now NULL, rightChild is now the head
+    if (rightChild->parent == NULL)
+    {
+        tree->head = rightChild;
+    }
+    else
+    {
+        // If parent was Grandparent's right child
+        if (parent == grandParent->right)
+        {
+            grandParent->right = rightChild;
+        }
+        else // If parent was Grandparen't left child
+        {
+            grandParent->left = rightChild;
+        }
+    }
+
+    // Right child's left becomes parent
+    rightChild->left = parent;
+    parent->parent = rightChild;
+
+    // Parent's right becomes rightChildsLeftChild
+    parent->right = rightChildsLeftChild;
+    if (rightChildsLeftChild != NULL)
+    {
+        rightChildsLeftChild->parent = parent;
+    }
+
+    return 0;
+}
