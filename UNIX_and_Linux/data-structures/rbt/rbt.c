@@ -392,7 +392,7 @@ int rbtRotateRight__(RBT* tree, RBTNode* leftChild)
     // If leftChild is not a left child, can't do
     if (leftChild != parent->left)
     {
-        return -2;
+        return -1;
     }
 
     grandParent = parent->parent;
