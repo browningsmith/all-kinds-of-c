@@ -16,6 +16,7 @@ void constructTree(RBT* tree);
 void eraseTree(RBT* tree);
 int testitoa(char* buffer, void* content);
 int testclear(void* content);
+int badclear(void* content);
 
 int main()
 {
@@ -113,10 +114,67 @@ int main()
         int result = rbtClear(&tree, testclear);
         if (result != 0)
         {
-            if (result == -1)
+            printf("rbtClear: Returned with incorrect result on test 1: %i\n", result);
+            return -1;
+        }
+        if (tree.head != NULL)
+        {
+            printf("rbtClear: Head of tree is not NULL on test 1\n");
+            return -1;
+        }
+
+        // Test clearing non empty tree
+        constructTree(&tree);
+        result = rbtClear(&tree, testclear);
+        if (result != 0)
+        {
+            printf("rbtClear: Returned with incorrect result on test 2: %i\n", result);
+        }
+        if (tree.head != NULL)
+        {
+            printf("rbtClear: Head of tree is not NULL on test 2\n");
+            return -1;
+        }
+
+        // Test clearing non empty tree with bad clearing function
+        constructTree(&tree);
+        result = rbtClear(&tree, badclear);
+        if (result == 0)
+        {
+            printf("rbtClear: Returned with success even with a clearing function that does not clear contents\n");
+            return -1;
+        }
+        if (result != -1)
+        {
+            if (result == -2)
             {
-                
+                perror("rbtClear: Returned with status -2, meaning tree of uncleared nodes could not be fully constructed");
             }
+            else
+            {
+                printf("rbtClear: Returned with unexpected status on test 3: %i\n", result);
+                return -1;
+            }
+        }
+        else
+        {
+            if (tree.head == NULL)
+            {
+                printf("rbtClear: Tree returned as empty even on status code -1, on test 3\n");
+                return -1;
+            }
+        }
+
+        // Test clearing the same tree (rbtClear should be able to clear all trees)
+        result = rbtClear(&tree, testclear);
+        if (result != 0)
+        {
+            printf("rbtClear: Returned with incorrect result on test 4: %i\n", result);
+        }
+        if (tree.head != NULL)
+        {
+            printf("rbtClear: Head of tree is not NULL on test 4\n");
+            return -1;
         }
     }
     printf("Completed rbtClear\n");
@@ -627,4 +685,9 @@ int testclear(void* content)
     free(content);
 
     return 0;
+}
+
+int badclear(void* content)
+{
+    return 1;
 }
