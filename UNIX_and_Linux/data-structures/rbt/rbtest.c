@@ -108,21 +108,16 @@ int main()
     // Test rbtClear
     printf("Testing rbtClear\n");
     {
-        constructTree(&tree);
-        rbtPrint(tree, testitoa);
-        printf("Clearing tree...\n");
+        // Test clearing empty tree
+        rbtInit(&tree, compareInt);
         int result = rbtClear(&tree, testclear);
-        if (result == -1)
+        if (result != 0)
         {
-            perror("rbtClear: Resulted with -1");
-            rbtPrint(tree, testitoa);
+            if (result == -1)
+            {
+                
+            }
         }
-        if (result == -2)
-        {
-            perror("rbtClear: Resulted with -1");
-            rbtPrint(tree, testitoa);
-        }
-        rbtPrint(tree, testitoa);
     }
     printf("Completed rbtClear\n");
 
