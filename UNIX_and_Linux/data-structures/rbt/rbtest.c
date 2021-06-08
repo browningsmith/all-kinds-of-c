@@ -15,6 +15,7 @@ void displayNode(RBTNode node);
 void constructTree(RBT* tree);
 void eraseTree(RBT* tree);
 int testitoa(char* buffer, void* content);
+int testclear(void* content);
 
 int main()
 {
@@ -196,7 +197,7 @@ int main()
         // Fix tree
         tree.head->left->right->content = content300;
 
-        eraseTree(&tree);
+        rbtClear(&tree, testclear);
     }
     printf("Completed rbtGetNodeFromStart__\n");
 
@@ -353,7 +354,8 @@ int main()
         // Fix tree
         tree.head->left->right->content = content300;
 
-        eraseTree(&tree);
+        //eraseTree(&tree);
+        rbtClear(&tree, testclear);
     }
     printf("Completed rbtFind\n");
 
@@ -602,4 +604,11 @@ int testitoa(char* buffer, void* content)
     itoa(buffer, *(int32_t*) content);
     
     return strlen(buffer);
+}
+
+int testclear(void* content)
+{
+    free(content);
+
+    return 0;
 }
