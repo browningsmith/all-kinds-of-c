@@ -435,91 +435,68 @@ int main()
     printf("Testing rbtRotateRight__\n");
     {
         int result;
-
-        RBTNode* oldhead;
-        RBTNode* oldleft;
-        RBTNode* oldleftleft;
-        RBTNode* newhead;
-        RBTNode* newleft;
-        RBTNode* newleftleft;
-        
-        // Test trying to rotate the head
         constructTree(&tree);
 
-        oldhead = tree.head;
-        oldleft = tree.head->left;
-        oldleftleft = tree.head->left->left;
-
-        result = rbtRotateRight__(&tree, oldhead);
+        // Test trying to rotate the head
+        RBTNode* node = tree.head;
+        //printf("rbtRotateRight__: Tree before rotation on head\n");
+        //rbtPrint(tree, testitoa);
+        result = rbtRotateRight__(&tree, node);
+        //printf("rbtRotateRight__: Tree after rotation on head\n");
+        //rbtPrint(tree, testitoa);
         if (result == 0)
         {
-            printf("rbtRotateRight__: Error, returned with success when tested on head\n");
-            return -1;
-        }
-        newhead = tree.head;
-        newleft = tree.head->left;
-        newleftleft = tree.head->left->left;
-        if (oldhead != newhead)
-        {
-            printf("rbtRotateRight__: Error, head was changed when tested on head\n");
-            return -1;
-        }
-        if (oldleft != newleft)
-        {
-            printf("rbtRotateRight__: Error, left was changed when tested on head\n");
-            return -1;
-        }
-        if (oldleftleft != newleftleft)
-        {
-            printf("rbtRotateRight__: Error, left-left was changed when tested on head\n");
+            printf("rbtRotateRight__: Returned success when attempting to rotate head, should have been error\n");
             return -1;
         }
 
-        // Test trying to rotate on a right child
-        result = rbtRotateRight__(&tree, oldhead->right);
+        // Test trying to rotate right child
+        node = tree.head->right;
+        //printf("rbtRotateRight__: Tree before rotation on head's right\n");
+        //rbtPrint(tree, testitoa);
+        result = rbtRotateRight__(&tree, node);
+        //printf("rbtRotateRight__: Tree after rotation on head's right\n");
+        //rbtPrint(tree, testitoa);
         if (result == 0)
         {
-            printf("rbtRotateRight__: Error, returned with success when tested on right\n");
-            return -1;
-        }
-        newhead = tree.head;
-        newleft = tree.head->left;
-        newleftleft = tree.head->left->left;
-        if (oldhead != newhead)
-        {
-            printf("rbtRotateRight__: Error, head was changed when tested on right\n");
-            return -1;
-        }
-        if (oldleft != newleft)
-        {
-            printf("rbtRotateRight__: Error, left was changed when tested on right\n");
-            return -1;
-        }
-        if (oldleftleft != newleftleft)
-        {
-            printf("rbtRotateRight__: Error, left-left was changed when tested on right\n");
+            printf("rbtRotateRight__: Returned success when attempting to rotate head's right, should have been error\n");
             return -1;
         }
 
-        // Test rotating the left child of head
-        oldhead = tree.head;
-        oldleft = tree.head->left;
-        oldleftleft = tree.head->left->left;
-        result = rbtRotateRight__(&tree, oldleft);
+        // Test rotating left child
+        node = tree.head->left;
+        //printf("rbtRotateRight__: Tree before rotation on head's left\n");
+        //rbtPrint(tree, testitoa);
+        result = rbtRotateRight__(&tree, node);
+        //printf("rbtRotateRight__: Tree after rotation on head's left\n");
+        //rbtPrint(tree, testitoa);
         if (result != 0)
         {
-            printf("rbtRotateRight__: Error, returned with nonzero when tested on left child\n");
+            printf("rbtRotateRight__: Returned error when attempting to rotate head's left, should have been error: %i\n", result);
             return -1;
         }
-        // Test that oldleft is now the head
-        if (tree.head != oldleft)
+        if (tree.head != node)
         {
-            printf("rbtRotateRight__: Error, left is not now the new head when tested on left\n");
+            printf("rbtRotateRight__: Head's former left child did not replace head of list\n");
+            return -1;
+        }
+        rbtClear(&tree, testclear);
+        constructTree(&tree);
+
+        // Test rotating left child's left child
+        node = tree.head->left->left;
+        //printf("rbtRotateRight__: Tree before rotation on head's left's left\n");
+        //rbtPrint(tree, testitoa);
+        result = rbtRotateRight__(&tree, node);
+        //printf("rbtRotateRight__: Tree after rotation on head's left's left\n");
+        //rbtPrint(tree, testitoa);
+        if (result != 0)
+        {
+            printf("rbtRotateRight__: Returned error when attempting to rotate head's left's left, should have been error: %i\n", result);
             return -1;
         }
 
         rbtClear(&tree, testclear);
-
     }
     printf("Completed rbtRotateRight__\n");
 
