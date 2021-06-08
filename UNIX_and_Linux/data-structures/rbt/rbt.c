@@ -381,6 +381,18 @@ int rbtRotateRight__(RBT* tree, RBTNode* leftChild)
     RBTNode* grandParent;
     RBTNode* leftChildsRightChild;
 
+    // If tree or leftChild are NULL, error
+    if ((tree == NULL) || (leftChild == NULL))
+    {
+        return -1;
+    }
+
+    // If tree->head is NULL, error
+    if (tree->head == NULL)
+    {
+        return -1;
+    }
+
     // If leftChild is the head, can't do a right rotation
     if (leftChild->parent == NULL)
     {
