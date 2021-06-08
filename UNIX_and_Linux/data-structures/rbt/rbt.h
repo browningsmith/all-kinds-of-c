@@ -139,4 +139,32 @@ RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent);
  ***************************************************************/
 RBTStatusStruct rbtInsert(RBT* tree, void* content);
 
+/***************************************************************
+ * rbtClear
+ * 
+ * Inputs: RBT* tree, int (*clearingFunction) (void*)
+ * Returns: int
+ * 
+ * This function attempts to erase each node and the content of
+ * each node within the given tree. It erases the content of
+ * the node using the given clearingFunction
+ * 
+ * Returns 0 on success, and sets the head of the tree to NULL
+ * 
+ * Returns -1 on failure to delete all nodes. Failure is caused
+ * if the given clearingFunction returns a nonzero result, meaning
+ * it could not clear the content of one or more nodes. If that is
+ * the ncase, tree will now contain all nodes that could not be
+ * deleted
+ * 
+ * Returns -2 if the function was unable to delete the content
+ * of all nodes, and at the same time was not able to fully
+ * reconstruct the tree containing all non deleted nodes.
+ * 
+ * clearingFunction must behave in the following way:
+ *   -return 0 if content is cleared successfully
+ *   -return nonzero if content is not cleared successfully
+ ***************************************************************/
+int rbtClear(RBT* tree, int (*clearingFunction) (void*));
+
 #endif /* RBT_H */

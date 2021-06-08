@@ -91,6 +91,111 @@ RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent)
     return result;
 }
 
+int rbtClear(RBT* tree, int (*clearingFunction) (void*))
+{
+    // If tree is empty, return success
+    if (tree->head == NULL)
+    {
+        return 0;
+    }
+    
+    int status = 0; // -1 means clearingFunction failed at some point
+                    // -2 means the above, plus a tree containing
+                    // undeleted data could not be constructed
+
+    RBT undeletedNodes;
+    rbtInit(&undeletedNodes, tree->compareFunction);
+
+    // state 0 = recurse left
+    // state 1 = recurse right
+    // state 2 = delete this node and go up
+    int state = 0;
+    RBTNode* currentNode = tree->head;
+    while (1)
+    {
+        if (state == 0)
+        {
+            // If left child is NULL, change to state 1
+            if (currentNode->left == NULL)
+            {
+                state = 1;
+                continue;
+            }
+
+            // Recurse left and remain at state 0
+            currentNode = currentNode->left;
+            continue;
+        }
+
+        if (state == 1)
+        {
+            // If right child is NULL, change to state 2
+            if (currentNode->right == NULL)
+            {
+                state = 2;
+                continue;
+            }
+
+            // Recurse right and change to state 0
+            currentNode = currentNode->right;
+            state = 0;
+            continue;
+        }
+
+        if (state == 2)
+        {
+            RBTNode* parent = currentNode->parent;
+
+            if (parent != NULL)
+            {
+                // If we are left child, set state to 1 before we go back up
+                if (currentNode == parent->left)
+                {
+                    state = 1;
+                }
+                else // If we are right child, set state to 2 before we go back up
+                {
+                    state = 2;
+                }
+            }
+
+            void* content = currentNode->content;
+            free(currentNode);
+
+            // Attempt to clear content using clearingFunction
+            if (clearingFunction(content) != 0)
+            {
+                if (status > -1)
+                {
+                    status = -1;
+                }
+
+                // Attempt to insert content into undeletedNodes
+                RBTStatusStruct insertStatus = rbtInsert(&undeletedNodes, content);
+                if (insertStatus.status != SUCCESS)
+                {
+                    status = -2;
+                }
+            }
+
+            // If parent is NULL, we be done
+            if (parent == NULL)
+            {
+                break;
+            }
+
+            // Go up to parent
+            currentNode = parent;
+            continue;
+        }
+    }
+    
+    // Set new head of tree to be the head of undeletedNodes
+    tree->head = undeletedNodes.head;
+
+    return status;
+}
+
 RBTStatusStruct rbtInsert(RBT* tree, void* content)
 {
     // Initialize result
