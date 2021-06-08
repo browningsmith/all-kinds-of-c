@@ -13,7 +13,6 @@ int compareInt(void* a, void* b);
 RBTNode* newIntNode(int num);
 void displayNode(RBTNode node);
 void constructTree(RBT* tree);
-void eraseTree(RBT* tree);
 int testitoa(char* buffer, void* content);
 int testclear(void* content);
 int badclear(void* content);
@@ -428,7 +427,6 @@ int main()
         // Fix tree
         tree.head->left->right->content = content300;
 
-        //eraseTree(&tree);
         rbtClear(&tree, testclear);
     }
     printf("Completed rbtFind\n");
@@ -608,69 +606,6 @@ void constructTree(RBT* tree)
     // displayNode(*node500);
     // printf("\nNode 700:\n");
     // displayNode(*node700);
-}
-
-void eraseTree(RBT* tree)
-{
-    if (tree->head == NULL)
-    {
-        return;
-    }
-
-    RBTNode* currentNode = tree->head;
-    int state = -1; // -1 go left, 1 go right, 0 clear this
-
-    while (1)
-    {
-        if (state == -1) // Go left
-        {
-            if (currentNode->left == NULL) // If no left child
-            {
-                state = 1; // Go right
-                continue;
-            }
-
-            currentNode = currentNode->left; // Recurse left
-            // State is already -1
-        }
-        else if (state == 1) // Go right
-        {
-            if (currentNode->right == NULL) // If no right child
-            {
-                state = 0; // Clear this
-                continue;
-            }
-
-            currentNode = currentNode->right; // Recurse right
-            state = -1; // Set to go left
-        }
-        else
-        {
-            RBTNode* parent = currentNode->parent;
-            
-            if (parent != NULL)
-            {
-                // If we are left child, set state to 1
-                if (currentNode == parent->left)
-                {
-                    state = 1;
-                }
-            }
-            // Otherwise state is already 0
-
-            free(currentNode->content);
-            free(currentNode);
-
-            if (parent == NULL)
-            {
-                break;
-            }
-
-            currentNode = parent;
-        }
-    }
-
-    tree->head = NULL;
 }
 
 int testitoa(char* buffer, void* content)
