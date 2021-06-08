@@ -431,6 +431,27 @@ int main()
     }
     printf("Completed rbtFind\n");
 
+    // Test rbtRotateRight__
+    printf("Testing rbtRotateRight__\n");
+    {
+        // Construct small tree
+        constructTree(&tree);
+        printf("Printing tree before rotation\n");
+        rbtPrint(tree, testitoa);
+
+        // Rotate node 100 to the right
+        RBTNode* node = tree.head->left;
+        int status = rbtRotateRight__(&tree, node);
+        printf("Printing tree after rotation\n");
+        rbtPrint(tree, testitoa);
+
+        node = tree.head->left;
+        status = rbtRotateRight__(&tree, node);
+        printf("Printing tree after second rotation\n");
+        rbtPrint(tree, testitoa);
+    }
+    printf("Completed rbtRotateRight__\n");
+
     printf("Tests complete\n");
 
     return 0;

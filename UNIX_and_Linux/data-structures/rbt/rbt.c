@@ -425,7 +425,10 @@ int rbtRotateRight__(RBT* tree, RBTNode* leftChild)
 
     // Parent's left becomes leftChildsRightChild
     parent->left = leftChildsRightChild;
-    leftChildsRightChild->parent = parent;
+    if (leftChildsRightChild != NULL)
+    {
+        leftChildsRightChild->parent = parent;
+    }
 
     return 0;
 }
