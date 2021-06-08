@@ -25,7 +25,7 @@ rbt.o: rbt.c
 	gcc -Wall -c -o rbt.o rbt.c
 
 rbtest: rbt.o rbtest.o ./lib/doublell.o ./lib/itoa.o rbtprint.o
-	gcc -Wall -o rbtest rbt.o rbtest.o lib/doublell.o lib/itoa.o
+	gcc -Wall -o rbtest rbt.o rbtest.o lib/doublell.o lib/itoa.o rbtprint.o
 
 rbtest.c: rbt.h rbtimpl.h rbtprint.h ./include/cooltools.h
 	touch rbtest.c

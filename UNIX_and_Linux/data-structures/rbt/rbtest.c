@@ -105,6 +105,27 @@ int main()
     }
     printf("Completed rbtIsEmpty\n");
 
+    // Test rbtClear
+    printf("Testing rbtClear\n");
+    {
+        constructTree(&tree);
+        rbtPrint(tree, testitoa);
+        printf("Clearing tree...\n");
+        int result = rbtClear(&tree, testclear);
+        if (result == -1)
+        {
+            perror("rbtClear: Resulted with -1");
+            rbtPrint(tree, testitoa);
+        }
+        if (result == -2)
+        {
+            perror("rbtClear: Resulted with -1");
+            rbtPrint(tree, testitoa);
+        }
+        rbtPrint(tree, testitoa);
+    }
+    printf("Completed rbtClear\n");
+
     // Test rbtGetNodeFromStart__
     printf("Testing rbtGetNodeFromStart__\n");
     {
