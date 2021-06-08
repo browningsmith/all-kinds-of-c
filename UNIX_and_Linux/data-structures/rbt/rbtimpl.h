@@ -13,4 +13,6 @@
 
 RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b));
 
+int rbtRotateRight__(RBT* tree, RBTNode* leftChild);
+
 #endif /* RBTIMPL_H */

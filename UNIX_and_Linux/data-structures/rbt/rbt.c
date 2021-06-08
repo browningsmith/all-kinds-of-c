@@ -269,3 +269,58 @@ RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compare
 
     return result;
 }
+
+int rbtRotateRight__(RBT* tree, RBTNode* leftChild)
+{
+    RBTNode* parent;
+    RBTNode* grandParent;
+    RBTNode* leftChildsRightChild;
+
+    // If leftChild is the head, can't do a right rotation
+    if (leftChild->parent == NULL)
+    {
+        return -1;
+    }
+
+    parent = leftChild->parent;
+
+    // If leftChild is not a left child, can't do
+    if (leftChild != parent->left)
+    {
+        return -2;
+    }
+
+    grandParent = parent->parent;
+    leftChildsRightChild = leftChild->right;
+
+    // Set left child's parent to the grandParent
+    leftChild->parent = grandParent;
+
+    // If leftChild's parent is now NULL, leftChild is now the head
+    if (leftChild->parent == NULL)
+    {
+        tree->head = leftChild;
+    }
+    else
+    {
+        // If parent was Grandparent's left child
+        if (parent == grandParent->left)
+        {
+            grandParent->left = leftChild;
+        }
+        else // If parent was Grandparen't right child
+        {
+            grandParent->right = leftChild;
+        }
+    }
+
+    // Left child's right becomes parent
+    leftChild->right = parent;
+    parent->parent = leftChild;
+
+    // Parent's left becomes leftChildsRightChild
+    parent->left = leftChildsRightChild;
+    leftChildsRightChild->parent = parent;
+
+    return 0;
+}
