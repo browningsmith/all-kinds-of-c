@@ -100,16 +100,16 @@ int rbtIsEmpty(RBT tree);
  * If the search fails due to the node not being found, returns
  * result with result.status being NOT_FOUND, and result.node being
  * equal to the last node searched, or NULL if the tree is empty
- * Also sets returnedContent to NULL
+ * Does not alter returnedContent
  * 
  * If the search fails due to an empty node being encountered in
  * the tree, returns result with result.status being
  * EMPTY_NODE_ENCOUNTERED, and result.node being set to the node
- * which caused the problem. Also sets returnedContent to NULL
+ * which caused the problem. Does not alter returnedContent
  * 
  * If the user attempts to search using a query that is NULL, returns
  * result with result.status being NULL_CONTENT, and result.node
- * being set to NULL. Also sets returnedContent to NULL
+ * being set to NULL. Does not alter returnedContent
  ***************************************************************/
 RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent);
 

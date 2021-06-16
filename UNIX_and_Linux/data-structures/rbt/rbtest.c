@@ -284,6 +284,7 @@ int main()
 
         // Test searching on an empty tree
         query = 43;
+        content = (void*) 72;
         status = rbtFind(tree, (void*) &query, &content);
         if (status.status != NOT_FOUND)
         {
@@ -295,9 +296,9 @@ int main()
             printf("rbtFind: Error, non NULL node returned when tree is empty\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 72)
         {
-            printf("rbtFind: Error, non NULL content was returned when tree is empty\n");
+            printf("rbtFind: Error, content argument was altered when tree is empty\n");
             return -1;
         }
 
@@ -306,6 +307,7 @@ int main()
 
         // Test trying to search with a NULL query
         status = rbtFind(tree, NULL, &content);
+        content = (void*) 33;
         if (status.status != NULL_CONTENT)
         {
             printf("rbtFind: Error, status returned with %s instead of NULL_CONTENT, when a NULL query was given\n", rbtStatusAsText(status.status));
@@ -316,9 +318,9 @@ int main()
             printf("rbtFind: Error, non NULL node returned when NULL query was given\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 33)
         {
-            printf("rbtFind: Error, non NULL content was returned when NULL query was given\n");
+            printf("rbtFind: Error, content argument was altered when NULL query was given\n");
             return -1;
         }
 
@@ -350,6 +352,7 @@ int main()
 
         // Test searching for a node that does not exist between 300 and 400
         query = 305;
+        content = (void*) 99;
         status = rbtFind(tree, (void*) &query, &content);
         if (status.status != NOT_FOUND)
         {
@@ -366,14 +369,15 @@ int main()
             printf("rbtFind: Error, incorrect node returned when query of %i was not found on a non-empty list\n", query);
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 99)
         {
-            printf("rbtFind: Error, non NULL content was returned when query of %i was not found on a non-empty list\n", query);
+            printf("rbtFind: Error, content argument altered when query of %i was not found on a non-empty list\n", query);
             return -1;
         }
 
         // Test searching for a node that does not exist beyond 700
         query = 800;
+        content = (void*) 232;
         status = rbtFind(tree, (void*) &query, &content);
         if (status.status != NOT_FOUND)
         {
@@ -390,9 +394,9 @@ int main()
             printf("rbtFind: Error, incorrect node returned when query of %i was not found on a non-empty list\n", query);
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 232)
         {
-            printf("rbtFind: Error, non NULL content was returned when query of %i was not found on a non-empty list\n", query);
+            printf("rbtFind: Error, content argument was altered when query of %i was not found on a non-empty list\n", query);
             return -1;
         }
 
@@ -402,6 +406,7 @@ int main()
 
         // Test EMPTY_NODE_ENCOUNTERED error
         query = 300;
+        content = (void*) 17;
         status = rbtFind(tree, (void*) &query, &content);
         if (status.status != EMPTY_NODE_ENCOUNTERED)
         {
@@ -418,9 +423,9 @@ int main()
             printf("rbtFind: Error, incorrect node returned when the 300 node was set to have NULL content\n");
             return -1;
         }
-        if (content != NULL)
+        if (content != (void*) 17)
         {
-            printf("rbtFind: Error, non NULL content was returned when the 300 node was set to have NULL content\n");
+            printf("rbtFind: Error, content argument was altered when the 300 node was set to have NULL content\n");
             return -1;
         }
 

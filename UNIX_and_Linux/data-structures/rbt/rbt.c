@@ -56,7 +56,6 @@ RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent)
     // Check that query is not null
     if (query == NULL)
     {
-        *returnedContent = NULL;
         result.status = NULL_CONTENT;
         return result;
     }
@@ -64,7 +63,6 @@ RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent)
     // If the tree is empty, return not found
     if (tree.head == NULL)
     {
-        *returnedContent = NULL;
         result.status = NOT_FOUND;
         return result;
     }
@@ -79,12 +77,10 @@ RBTStatusStruct rbtFind(RBT tree, void* query, void** returnedContent)
     }
     else if (result.status == NOT_FOUND)
     {
-        *returnedContent = NULL;
         // result.status is NOT_FOUND and result.node is equal to the last node searched
     }
     else if (result.status == EMPTY_NODE_ENCOUNTERED)
     {
-        *returnedContent = NULL;
         // result.status is EMPTY_NODE_ENCOUNTERED and result.node is equal to the erroneous node
     }
 
