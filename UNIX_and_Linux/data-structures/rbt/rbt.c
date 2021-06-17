@@ -263,6 +263,7 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
 
                 result.status = SUCCESS;
                 result.node = newNode;
+                rbtFixRedViolations__(tree, newNode);
                 return result;
             }
             // Otherwise, recurse search for new place to insert
@@ -298,6 +299,8 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
         result.status = SUCCESS;
         result.node = newNode;
     }
+
+    rbtFixRedViolations__(tree, newNode);
 
     return result;
 }
@@ -506,6 +509,99 @@ int rbtRotateLeft__(RBT* tree, RBTNode* rightChild)
     if (rightChildsLeftChild != NULL)
     {
         rightChildsLeftChild->parent = parent;
+    }
+
+    return 0;
+}
+
+int rbtFixRedViolations__(RBT* tree, RBTNode* node)
+{
+    // If node is black, return error
+    if (node->isRed == 0)
+    {
+        return -1;
+    }
+
+    while (1)
+    {
+        RBTNode* parent;
+        RBTNode* grandparent;
+        RBTNode* uncle;
+
+        int parentIsLeftChild;
+
+        // If node is the head, color black and return
+        if (node == tree->head)
+        {
+            node->isRed = 0;
+            break;
+        }
+
+        parent = node->parent;
+
+        // If parent is black, return
+        if (parent->isRed == 0)
+        {
+            break;
+        }
+
+        // A node in red violation must have a grandparent
+        grandparent = parent->parent;
+
+        // Record what kind of child parent is, and get uncle
+        if (parent == grandparent->left)
+        {
+            parentIsLeftChild = 1;
+            uncle = grandparent->right;
+        }
+        else
+        {
+            parentIsLeftChild = 0;
+            uncle = grandparent->left;
+        }
+
+        // If parent and uncle are both red, color them black and color grandparent red, recurse to grandparent
+        if (uncle != NULL)
+        {
+            if (uncle->isRed != 0)
+            {
+                parent->isRed = 0;
+                uncle->isRed = 0;
+                grandparent->isRed = 1;
+                node = grandparent;
+                continue;
+            }
+        }
+
+        // Parent is left child case
+        if (parentIsLeftChild != 0)
+        {
+            if (node == parent->right)
+            {
+                rbtRotateLeft__(tree, node);
+                parent = node;
+            }
+
+            parent->isRed = 0;
+            grandparent->isRed = 1;
+            rbtRotateRight__(tree, parent);
+            break;
+        }
+
+        // Parent is right child case
+        else
+        {
+            if (node == parent->left)
+            {
+                rbtRotateRight__(tree, node);
+                parent = node;
+            }
+
+            parent->isRed = 0;
+            grandparent->isRed = 1;
+            rbtRotateLeft__(tree, parent);
+            break;
+        }
     }
 
     return 0;
