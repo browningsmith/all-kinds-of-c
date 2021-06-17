@@ -17,4 +17,6 @@ int rbtRotateRight__(RBT* tree, RBTNode* leftChild);
 
 int rbtRotateLeft__(RBT* tree, RBTNode* rightChild);
 
+int rbtFixRedViolations__(RBT* tree, RBTNode* node);
+
 #endif /* RBTIMPL_H */
