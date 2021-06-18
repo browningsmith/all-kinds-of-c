@@ -648,6 +648,73 @@ int main()
     }
     printf("Completed rbtRotateLeft__\n");
 
+    // Test rbtGetPrev__
+    printf("Testing rbtGetPrev__\n");
+    {
+        rbtInit(&tree, compareInt);
+
+        // Insert the numbers 1-100 into the tree
+        for (int i=1; i<101; i++)
+        {
+            void* content = malloc(sizeof(int));
+            if (content == NULL)
+            {
+                printf("rbtGetPrev__: Error allocating space to store %i\n", i);
+                perror("");
+                return -1;
+            }
+            *(int*) content = i;
+
+            RBTStatusStruct status = rbtInsert(&tree, content);
+            if (status.status != SUCCESS)
+            {
+                printf("rbtGetPrev__: Error inserting %i. rbtInsert returned with %s\n", i, rbtStatusAsText(status.status));
+                perror("");
+                return -1;
+            }
+        }
+
+        // Move to node 100
+        RBTNode* node = tree.head;
+        while (node->right != NULL)
+        {
+            node = node->right;
+        }
+        if (*(int*) node->content != 100)
+        {
+            printf("rbtGetPrev__: Attempt to get the node at the rightmost end of the tree failed, content is %i\n", *(int*) node->content);
+            return -1;
+        }
+
+        // For 99-1, check that predecessor matches that value
+        for (int i=99; i>0; i--)
+        {
+            node = rbtGetPrev__(node);
+
+            if (node == NULL)
+            {
+                printf("rbtGetPrev__: Returned NULL when it should have found the previous node: %i\n", i);
+                return -1;
+            }
+            if (i != *(int*) node->content)
+            {
+                printf("rbtGetPrev__: Previous node %i does not match expected %i\n", *(int*) node->content, i);
+                return -1;
+            }
+        }
+
+        // Check that one more call to rbtGetPrev__ returns NULL
+        node = rbtGetPrev__(node);
+        if (node != NULL)
+        {
+            printf("rbtGetPrev__: Error, did not return NULL even though there was no previous node\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtGetPrev__\n");
+
     printf("Tests complete\n");
 
     return 0;
