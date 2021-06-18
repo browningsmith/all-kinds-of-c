@@ -606,3 +606,41 @@ int rbtFixRedViolations__(RBT* tree, RBTNode* node)
 
     return 0;
 }
+
+RBTNode* rbtGetPrev__(RBTNode* node)
+{
+    // If left child exists
+    if (node->left != NULL)
+    {
+        node = node->left;
+        while (node->right != NULL)
+        {
+            node = node->right;
+        }
+    }
+
+    // If left child does not exist
+    else
+    {
+        while (1)
+        {
+            // If node is the head, no predecessor, return NULL
+            if (node->parent == NULL)
+            {
+                return NULL;
+            }
+
+            // If node is left child
+            if (node == node->parent->left)
+            {
+                node = node->parent;
+                continue;
+            }
+
+            node = node->parent;
+            break;
+        }
+    }
+
+    return node;
+}
