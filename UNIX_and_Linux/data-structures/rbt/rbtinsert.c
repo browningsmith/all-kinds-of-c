@@ -10,6 +10,7 @@
 
 int compareInt(void* a, void* b);
 int testitoa(char* buffer, void* content);
+char decodeCommand(char* buffer);
 
 int main()
 {
@@ -17,11 +18,81 @@ int main()
     rbtInit(&tree, compareInt);
 
     char inBuffer[13];
+
     while (1)
     {
         bzero(inBuffer, 13);
+        char command = 'x';
         
-        printf("Enter a number: ");
+        printf("Enter a command (f = find, i = insert): ");
+        if (fgets(inBuffer, 13, stdin) != NULL)
+        {
+            command = decodeCommand(inBuffer);
+            switch (command)
+            {
+                case 'f':
+                    printf("You chose to find!\n");
+
+                    printf("Enter a number to find: ");
+                    if (fgets(inBuffer, 13, stdin) != NULL)
+                    {
+                        int i = atoi(inBuffer);
+                        printf("Finding %i\n", i);
+                        rbtPrint(tree, testitoa);
+
+                        void* returnedContent;
+                        RBTStatusStruct result = rbtFind(tree, (void*) &i, &returnedContent);
+                        if (result.status == SUCCESS)
+                        {
+                            printf("%i was found!\n", *(int*) returnedContent);
+                        }
+                        else if (result.status == NOT_FOUND)
+                        {
+                            printf("%i was not found\n", i);
+                        }
+                        else
+                        {
+                            printf("rbtFind returned with %s\n", rbtStatusAsText(result.status));
+                            perror("");
+                        }
+                    }
+
+                    break;
+                case 'i':
+                    printf("You chose to insert!\n");
+
+                    printf("Enter a number to insert: ");
+                    if (fgets(inBuffer, 13, stdin) != NULL)
+                    {
+                        int i = atoi(inBuffer);
+                        printf("Inserting %i\n", i);
+
+                        void* newContent = malloc(sizeof(int));
+                        if (newContent == NULL)
+                        {
+                            perror("Unable to allocate space for new int");
+                            return -1;
+                        }
+                        *(int*) newContent = i;
+
+                        RBTStatusStruct result = rbtInsert(&tree, newContent);
+                        if (result.status != SUCCESS)
+                        {
+                            printf("rbtInsert returned with %s\n", rbtStatusAsText(result.status));
+                            perror("");
+                        }
+
+                        rbtPrint(tree, testitoa);
+                    }
+
+                    break;
+                default:
+                    printf("Invalid command!\n");
+                    break;
+            }
+        }
+        
+        /*printf("Enter a number: ");
         if (fgets(inBuffer, 13, stdin) != NULL)
         {
             int i = atoi(inBuffer);
@@ -38,7 +109,7 @@ int main()
             RBTStatusStruct result = rbtInsert(&tree, newContent);
 
             rbtPrint(tree, testitoa);
-        }
+        }*/
     }
 
     return 0;
@@ -73,4 +144,22 @@ int testitoa(char* buffer, void* content)
     itoa(buffer, *(int32_t*) content);
     
     return strlen(buffer);
+}
+
+char decodeCommand(char* buffer)
+{
+    for (int i=0; i<13; i++)
+    {
+        switch (buffer[i])
+        {
+            case 'f':
+                return 'f';
+            case 'i':
+                return 'i';
+            default:
+                break;
+        }
+    }
+
+    return 'x';
 }
