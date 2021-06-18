@@ -305,6 +305,149 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
     return result;
 }
 
+RBTStatusStruct rbtDelete(RBT* tree, void* query, void** returnedContent)
+{
+    // Initialize result
+    RBTStatusStruct result = { .node = NULL };
+
+    // Check that query is not null
+    if (query == NULL)
+    {
+        result.status = NULL_CONTENT;
+        return result;
+    }
+
+    // If the tree is empty, return not found
+    if (tree->head == NULL)
+    {
+        result.status = NOT_FOUND;
+        return result;
+    }
+
+    // Perform search
+    result = rbtGetNodeFromStart__(tree->head, query, tree->compareFunction);
+
+    if (result.status == NOT_FOUND)
+    {
+        // result.status is NOT_FOUND and result.node is equal to the last node searched
+    }
+    else if (result.status == EMPTY_NODE_ENCOUNTERED)
+    {
+        // result.status is EMPTY_NODE_ENCOUNTERED and result.node is equal to the erroneous node
+    }
+    else if (result.status == SUCCESS)
+    {
+        RBTNode* nodeToDelete = result.node;
+
+        // Prepare result and returnedContent
+        *returnedContent = nodeToDelete->content;
+        result.node = NULL;
+
+        // Begin deletion procedure
+
+        // If node has two non NULL children
+        if ((nodeToDelete->left != NULL) && (nodeToDelete->right != NULL))
+        {
+            RBTNode* replacement = rbtGetPrev__(nodeToDelete);
+            nodeToDelete->content = replacement->content;
+            nodeToDelete = replacement;
+        }
+
+        char nodeType; // h, l, or r
+        RBTNode* parent = NULL;
+
+        if (nodeToDelete == tree->head)
+        {
+            nodeType = 'h';
+        }
+        else
+        {
+            parent = nodeToDelete->parent;
+            if (nodeToDelete == parent->left)
+            {
+                nodeType = 'l';
+            }
+            else
+            {
+                nodeType = 'r';
+            }
+        }
+
+        // If node is red, just delete
+        if (nodeToDelete->isRed != 0)
+        {
+            if (nodeType == 'l')
+            {
+                parent->left = NULL;
+            }
+            else
+            {
+                parent->right = NULL;
+            }
+        }
+        // If node is black and left child exists
+        else if (nodeToDelete->left != NULL)
+        {
+            nodeToDelete->left->isRed = 0;
+            nodeToDelete->left->parent = parent;
+
+            if (nodeType == 'l')
+            {
+                parent->left = nodeToDelete->left;
+            }
+            else if (nodeType == 'r')
+            {
+                parent->right = nodeToDelete->left;
+            }
+            else
+            {
+                tree->head = nodeToDelete->left;
+            }
+        }
+        // If node is black and right child exists
+        else if (nodeToDelete->right != NULL)
+        {
+            nodeToDelete->right->isRed = 0;
+            nodeToDelete->right->parent = parent;
+
+            if (nodeType == 'l')
+            {
+                parent->left = nodeToDelete->right;
+            }
+            else if (nodeType == 'r')
+            {
+                parent->right = nodeToDelete->right;
+            }
+            else
+            {
+                tree->head = nodeToDelete->right;
+            }
+        }
+        // If node is black and has no children
+        else
+        {
+            // TODO: Run this node through rbtFixBlackViolations__
+
+            if (nodeType == 'l')
+            {
+                parent->left = NULL;
+            }
+            else if (nodeType == 'r')
+            {
+                parent->right = NULL;
+            }
+            else
+            {
+                tree->head = NULL;
+            }
+        }
+
+        free(nodeToDelete);
+    }
+
+    return result;
+}
+
 // Implementation only definitions
 
 RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))
