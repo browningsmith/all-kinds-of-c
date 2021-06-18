@@ -86,6 +86,35 @@ int main()
                     }
 
                     break;
+                case 'd':
+
+                    printf("You chose to delete!\n");
+
+                    printf("Enter a number to delete: ");
+                    if (fgets(inBuffer, 13, stdin) != NULL)
+                    {
+                        int i = atoi(inBuffer);
+                        printf("Deleting %i\n", i);
+
+                        void* returnedContent;
+                        RBTStatusStruct result = rbtDelete(&tree, (void*) &i, &returnedContent);
+                        rbtPrint(tree, testitoa);
+                        if (result.status == SUCCESS)
+                        {
+                            printf("%i was deleted!\n", *(int*) returnedContent);
+                        }
+                        else if (result.status == NOT_FOUND)
+                        {
+                            printf("%i was not found\n", i);
+                        }
+                        else
+                        {
+                            printf("rbtDelete returned with %s\n", rbtStatusAsText(result.status));
+                            perror("");
+                        }
+                    }
+
+                    break;
                 default:
                     printf("Invalid command!\n");
                     break;
@@ -156,6 +185,8 @@ char decodeCommand(char* buffer)
                 return 'f';
             case 'i':
                 return 'i';
+            case 'd':
+                return 'd';
             default:
                 break;
         }
