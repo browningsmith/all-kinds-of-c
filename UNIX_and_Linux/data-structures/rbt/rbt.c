@@ -426,19 +426,24 @@ RBTStatusStruct rbtDelete(RBT* tree, void* query, void** returnedContent)
         // If node is black and has no children
         else
         {
-            // TODO: Run this node through rbtFixBlackViolations__
-
-            if (nodeType == 'l')
+            if (nodeType == 'h')
             {
-                parent->left = NULL;
-            }
-            else if (nodeType == 'r')
-            {
-                parent->right = NULL;
+                tree->head = NULL;
             }
             else
             {
-                tree->head = NULL;
+                // TODO: Run this node through rbtFixBlackViolations__
+
+                // Parent of nodeToDelete may have updated
+                parent = nodeToDelete->parent;
+                if (nodeToDelete == parent->left)
+                {
+                    parent->left = NULL;
+                }
+                else
+                {
+                    parent->right = NULL;
+                }
             }
         }
 
