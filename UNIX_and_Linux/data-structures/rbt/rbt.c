@@ -354,7 +354,7 @@ RBTStatusStruct rbtDelete(RBT* tree, void* query, void** returnedContent)
         }
 
         char nodeType; // h, l, or r
-        RBTNode* parent = NULL;
+        RBTNode* parent = nodeToDelete->parent;
 
         if (nodeToDelete == tree->head)
         {
@@ -362,7 +362,6 @@ RBTStatusStruct rbtDelete(RBT* tree, void* query, void** returnedContent)
         }
         else
         {
-            parent = nodeToDelete->parent;
             if (nodeToDelete == parent->left)
             {
                 nodeType = 'l';
@@ -432,7 +431,7 @@ RBTStatusStruct rbtDelete(RBT* tree, void* query, void** returnedContent)
             }
             else
             {
-                // TODO: Run this node through rbtFixBlackViolations__
+                rbtFixBlackViolations__(tree, nodeToDelete);
 
                 // Parent of nodeToDelete may have updated
                 parent = nodeToDelete->parent;
@@ -749,6 +748,254 @@ int rbtFixRedViolations__(RBT* tree, RBTNode* node)
             grandparent->isRed = 1;
             rbtRotateLeft__(tree, parent);
             break;
+        }
+    }
+
+    return 0;
+}
+
+int rbtFixBlackViolations__(RBT* tree, RBTNode* node)
+{
+    // If node is red, return error
+    if (node->isRed != 0)
+    {
+        return -1;
+    }
+
+    while (1)
+    {
+        // If violating node is the head, no violation, break
+        if (node == tree->head)
+        {
+            break;
+        }
+
+        RBTNode* parent = node->parent;
+
+        // Left case
+        if (node == parent->left)
+        {
+            RBTNode* sibling = parent->right;
+            RBTNode* leftNephew = sibling->left;
+            RBTNode* rightNephew = sibling->right;
+
+            int fixCase;
+            // 1: black sibling with two black children
+            // 2: black sibling with red right nephew
+            // 3: black sibling with black right nephew
+            // 4: red sibling
+
+            if (sibling->isRed == 0)
+            {
+                int leftRed;
+                int rightRed;
+
+                if (leftNephew == NULL)
+                {
+                    leftRed = 0;
+                }
+                else if (leftNephew->isRed == 0)
+                {
+                    leftRed = 0;
+                }
+                else
+                {
+                    leftRed = 1;
+                }
+
+                if (rightNephew == NULL)
+                {
+                    rightRed = 0;
+                }
+                else if (rightNephew->isRed == 0)
+                {
+                    rightRed = 0;
+                }
+                else
+                {
+                    rightRed = 1;
+                }
+
+                if ((leftRed == 0) && (rightRed == 0))
+                {
+                    fixCase = 1;
+                }
+                else if (rightRed != 0)
+                {
+                    fixCase = 2;
+                }
+                else
+                {
+                    fixCase = 3;
+                }
+            }
+            else
+            {
+                fixCase = 4;
+            }
+
+            switch (fixCase)
+            {
+                case 1:
+                    
+                    sibling->isRed = 1;
+
+                    // If parent is red, color black and we're done
+                    if (parent->isRed != 0)
+                    {
+                        parent->isRed = 0;
+                        return 0;
+                    }
+
+                    // Else parent is now in violation, recurse to parent
+                    node = parent;
+                    
+                    break;
+                case 2:
+
+                    // If parent is red
+                    if (parent->isRed != 0)
+                    {
+                        parent->isRed = 0;
+                        sibling->isRed = 1;
+                    }
+                    rightNephew->isRed = 0;
+                    rbtRotateLeft__(tree, sibling);
+                    return 0;
+
+                    break;
+                case 3:
+
+                    // Color left nephew black, color sibling red, rotate nephew with sibling
+                    leftNephew->isRed = 0;
+                    sibling->isRed = 1;
+                    rbtRotateRight__(tree, leftNephew);
+
+                    break;
+                case 4:
+                    
+                    // Color parent red, color sibling black, rotate sibling with parent
+                    parent->isRed = 1;
+                    sibling->isRed = 0;
+                    rbtRotateLeft__(tree, sibling);
+                    
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Right case
+        else
+        {
+            RBTNode* sibling = parent->left;
+            RBTNode* leftNephew = sibling->left;
+            RBTNode* rightNephew = sibling->right;
+
+            int fixCase;
+            // 1: black sibling with two black children
+            // 2: black sibling with red left nephew
+            // 3: black sibling with black left nephew
+            // 4: red sibling
+
+            if (sibling->isRed == 0)
+            {
+                int leftRed;
+                int rightRed;
+
+                if (leftNephew == NULL)
+                {
+                    leftRed = 0;
+                }
+                else if (leftNephew->isRed == 0)
+                {
+                    leftRed = 0;
+                }
+                else
+                {
+                    leftRed = 1;
+                }
+
+                if (rightNephew == NULL)
+                {
+                    rightRed = 0;
+                }
+                else if (rightNephew->isRed == 0)
+                {
+                    rightRed = 0;
+                }
+                else
+                {
+                    rightRed = 1;
+                }
+
+                if ((leftRed == 0) && (rightRed == 0))
+                {
+                    fixCase = 1;
+                }
+                else if (leftRed != 0)
+                {
+                    fixCase = 2;
+                }
+                else
+                {
+                    fixCase = 3;
+                }
+            }
+            else
+            {
+                fixCase = 4;
+            }
+
+            switch (fixCase)
+            {
+                case 1:
+                    
+                    sibling->isRed = 1;
+
+                    // If parent is red, color black and we're done
+                    if (parent->isRed != 0)
+                    {
+                        parent->isRed = 0;
+                        return 0;
+                    }
+
+                    // Else parent is now in violation, recurse to parent
+                    node = parent;
+                    
+                    break;
+                case 2:
+
+                    // If parent is red
+                    if (parent->isRed != 0)
+                    {
+                        parent->isRed = 0;
+                        sibling->isRed = 1;
+                    }
+                    leftNephew->isRed = 0;
+                    rbtRotateRight__(tree, sibling);
+                    return 0;
+
+                    break;
+                case 3:
+
+                    // Color right nephew black, color sibling red, rotate nephew with sibling
+                    rightNephew->isRed = 0;
+                    sibling->isRed = 1;
+                    rbtRotateLeft__(tree, rightNephew);
+
+                    break;
+                case 4:
+                    
+                    // Color parent red, color sibling black, rotate sibling with parent
+                    parent->isRed = 1;
+                    sibling->isRed = 0;
+                    rbtRotateRight__(tree, sibling);
+                    
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
