@@ -102,6 +102,7 @@ int main()
                         if (result.status == SUCCESS)
                         {
                             printf("%i was deleted!\n", *(int*) returnedContent);
+                            free(returnedContent);
                         }
                         else if (result.status == NOT_FOUND)
                         {
@@ -120,25 +121,6 @@ int main()
                     break;
             }
         }
-        
-        /*printf("Enter a number: ");
-        if (fgets(inBuffer, 13, stdin) != NULL)
-        {
-            int i = atoi(inBuffer);
-            printf("Entered %i\n", i);
-
-            void* newContent = malloc(sizeof(int));
-            if (newContent == NULL)
-            {
-                perror("Unable to allocate space for new int");
-                return -1;
-            }
-            *(int*) newContent = i;
-
-            RBTStatusStruct result = rbtInsert(&tree, newContent);
-
-            rbtPrint(tree, testitoa);
-        }*/
     }
 
     return 0;
