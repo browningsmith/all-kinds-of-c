@@ -9,6 +9,9 @@
 #include "rbtimpl.h"
 #include "rbtprint.h"
 
+// TODO: Finish testing rbtInsert
+// TODO: Finish testing rbtDelete
+
 int compareInt(void* a, void* b);
 RBTNode* newIntNode(int num);
 void displayNode(RBTNode node);
@@ -520,6 +523,65 @@ int main()
         rbtClear(&tree, testclear);
     }
     printf("Completed rbtGetPrev__\n");
+
+    // Test rbtInsert
+    printf("Testing rbtInsert\n");
+    {
+        RBTStatus status;
+        void* content;
+        
+        rbtInit(&tree, compareInt);
+
+        // Test trying to insert NULL content
+        status = rbtInsert(&tree, NULL);
+        if (status != NULL_CONTENT)
+        {
+            printf("rbtInsert: Error, returned with %s when attempting to insert NULL content\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+        if (rbtIsEmpty(tree) != 1)
+        {
+            printf("rbtInsert: Error, tree is not empty after attempted insert with NULL content\n");
+            return -1;
+        }
+
+        // Test inserting into an empty tree
+        content = malloc(sizeof(int));
+        if (content == NULL)
+        {
+            perror("rbtInsert: Unable to allocate space for new int for inserting into an empty tree");
+            return -1;
+        }
+        *(int*) content = 9000;
+        status = rbtInsert(&tree, content);
+        if (status != SUCCESS)
+        {
+            printf("rbtInsert: Error, returned with %s when attempting to insert into an empty tree\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+        if (rbtIsEmpty(tree) != 0)
+        {
+            printf("rbtInsert: Error, tree is empty after attempted insert into empty tree\n");
+            return -1;
+        }
+        if (tree.head->isRed != 0)
+        {
+            printf("rbtInsert: Error, new node is not black when added to an empty tree\n");
+            return -1;
+        }
+        if (*(int*) tree.head->content != 9000)
+        {
+            printf("rbtInsert: Error, int did not get added as head when inserted into an empty tree\n");
+            return -1;
+        }
+
+        // Test attempting to insert 
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtInsert\n");
 
     printf("Tests complete\n");
 

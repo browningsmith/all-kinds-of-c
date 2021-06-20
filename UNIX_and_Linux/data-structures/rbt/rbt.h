@@ -1,6 +1,8 @@
 #ifndef RBT_H
 #define RBT_H
 
+// TODO Create struct and methods for an iterator
+
 typedef enum {
 
     SUCCESS,
