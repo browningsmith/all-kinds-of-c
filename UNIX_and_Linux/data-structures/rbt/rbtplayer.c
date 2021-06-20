@@ -75,10 +75,10 @@ int main()
                         }
                         *(int*) newContent = i;
 
-                        RBTStatusStruct result = rbtInsert(&tree, newContent);
-                        if (result.status != SUCCESS)
+                        RBTStatus result = rbtInsert(&tree, newContent);
+                        if (result != SUCCESS)
                         {
-                            printf("rbtInsert returned with %s\n", rbtStatusAsText(result.status));
+                            printf("rbtInsert returned with %s\n", rbtStatusAsText(result));
                             perror("");
                         }
 

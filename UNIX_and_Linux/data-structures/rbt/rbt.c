@@ -162,8 +162,8 @@ int rbtClear(RBT* tree, int (*clearingFunction) (void*))
                 }
 
                 // Attempt to insert content into undeletedNodes
-                RBTStatusStruct insertStatus = rbtInsert(&undeletedNodes, content);
-                if (insertStatus.status != SUCCESS)
+                RBTStatus insertStatus = rbtInsert(&undeletedNodes, content);
+                if (insertStatus != SUCCESS)
                 {
                     status = -2;
                 }
@@ -187,24 +187,19 @@ int rbtClear(RBT* tree, int (*clearingFunction) (void*))
     return status;
 }
 
-RBTStatusStruct rbtInsert(RBT* tree, void* content)
+RBTStatus rbtInsert(RBT* tree, void* content)
 {
-    // Initialize result
-    RBTStatusStruct result = { .node = NULL };
-
     // Check that content is not null
     if (content == NULL)
     {
-        result.status = NULL_CONTENT;
-        return result;
+        return NULL_CONTENT;
     }
 
     // Create new node
     RBTNode* newNode = malloc(sizeof(RBTNode));
     if (newNode == NULL) // rbt returns NULL on error
     {
-        result.status = NO_MEMORY;
-        return result;
+        return NO_MEMORY;
     }
     newNode->parent = NULL;
     newNode->left = NULL;
@@ -217,9 +212,7 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
         tree->head = newNode;
         newNode->isRed = 0;
 
-        result.status = SUCCESS;
-        result.node = newNode;
-        return result;
+        return SUCCESS;
     }
 
     // Tree was not empty, color new node red
@@ -227,6 +220,7 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
 
     // Search for area to insert new node
     RBTNode* currentNode = tree->head;
+    RBTStatusStruct result;
 
     while (
         ( result = rbtGetNodeFromStart__(
@@ -241,8 +235,7 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
         {
             free(newNode);
 
-            // result.status is EMPTY_NODE_ENCOUNTERED and result.node is the offending node
-            return result;
+            return result.status;
         }
 
         // SUCCESS means an equivalent node was found, attempt to insert to the right
@@ -255,11 +248,9 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
             {
                 currentNode->right = newNode;
                 newNode->parent = currentNode;
-
-                result.status = SUCCESS;
-                result.node = newNode;
                 rbtFixRedViolations__(tree, newNode);
-                return result;
+
+                return SUCCESS;
             }
             // Otherwise, recurse search for new place to insert
             else
@@ -281,23 +272,17 @@ RBTStatusStruct rbtInsert(RBT* tree, void* content)
     {
         currentNode->left = newNode;
         newNode->parent = currentNode;
-
-        result.status = SUCCESS;
-        result.node = newNode;
     }
     // If new node is greater than current node, insert to the right
     else
     {
         currentNode->right = newNode;
         newNode->parent = currentNode;
-
-        result.status = SUCCESS;
-        result.node = newNode;
     }
 
     rbtFixRedViolations__(tree, newNode);
 
-    return result;
+    return SUCCESS;
 }
 
 RBTStatusStruct rbtDelete(RBT* tree, void* query, void** returnedContent)

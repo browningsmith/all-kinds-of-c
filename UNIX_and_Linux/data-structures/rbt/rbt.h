@@ -133,7 +133,7 @@ RBTStatus rbtFind(RBT tree, void* query, void** returnedContent);
  * new node, instead returns result.status as EMPTY_NODE_ENCOUNTERED
  * and result.node as NULL
  ***************************************************************/
-RBTStatusStruct rbtInsert(RBT* tree, void* content);
+RBTStatus rbtInsert(RBT* tree, void* content);
 
 /***************************************************************
  * rbtDelete

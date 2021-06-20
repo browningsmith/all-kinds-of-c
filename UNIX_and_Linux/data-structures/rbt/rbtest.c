@@ -471,10 +471,10 @@ int main()
             }
             *(int*) content = i;
 
-            RBTStatusStruct status = rbtInsert(&tree, content);
-            if (status.status != SUCCESS)
+            RBTStatus status = rbtInsert(&tree, content);
+            if (status != SUCCESS)
             {
-                printf("rbtGetPrev__: Error inserting %i. rbtInsert returned with %s\n", i, rbtStatusAsText(status.status));
+                printf("rbtGetPrev__: Error inserting %i. rbtInsert returned with %s\n", i, rbtStatusAsText(status));
                 perror("");
                 return -1;
             }
