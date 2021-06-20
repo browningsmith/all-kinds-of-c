@@ -11,6 +11,13 @@
 
 #include "rbt.h"
 
+typedef struct {
+
+    RBTStatus status;
+    RBTNode* node;
+
+} RBTStatusStruct;
+
 RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b));
 
 void rbtRotateRight__(RBT* tree, RBTNode* leftChild);

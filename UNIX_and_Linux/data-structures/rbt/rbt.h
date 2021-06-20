@@ -30,13 +30,6 @@ typedef struct {
 
 } RBT;
 
-typedef struct {
-
-    RBTStatus status;
-    RBTNode* node;
-
-} RBTStatusStruct;
-
 /***************************************************************
  * rbtStatusAsText
  * 
