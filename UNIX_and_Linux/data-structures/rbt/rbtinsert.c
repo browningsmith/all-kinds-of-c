@@ -24,7 +24,7 @@ int main()
         bzero(inBuffer, 13);
         char command = 'x';
         
-        printf("Enter a command (f = find, i = insert): ");
+        printf("Enter a command (f = find, i = insert, d = delete): ");
         if (fgets(inBuffer, 13, stdin) != NULL)
         {
             command = decodeCommand(inBuffer);
