@@ -602,10 +602,9 @@ int main()
 
         free(content);
         brokenNode->content = brokenContent; // Fix tree
+        rbtClear(&tree, testclear);
 
-        constructTree(&tree);
-        rbtPrint(tree, testitoa);
-        checkBlackHeight(tree);
+        
 
         rbtClear(&tree, testclear);
     }
@@ -827,58 +826,35 @@ int checkBlackHeight(RBT tree)
     {
         if (state == 1)
         {
-            printf("Examining node %i\n", *(int*) node->content);
-
             // If node is black, increment black height
             if (node->isRed == 0)
             {
-                printf("Node is black, incrementing black height\n");
                 blackHeight++;
-                printf("Black height is now %i\n", blackHeight);
             }
-            else
-            {
-                printf("Node is red, black height is still %i\n", blackHeight);
-            }
-
-            printf("Attempting to recurse left\n");
 
             // If left node is NULL, record final black height
             if (node->left == NULL)
             {
-                printf("Left child is NULL, incrementing black height\n");
                 blackHeight++;
-                printf("Black height is now %i\n", blackHeight);
 
                 if (blackHeight != firstBlackHeight)
                 {
                     if (firstBlackHeight < 0)
                     {
-                        printf("This is the first leaf encountered\n");
                         firstBlackHeight = blackHeight;
-                        printf("Black height recorded as %i\n", blackHeight);
                     }
                     else
                     {
-                        printf("Black height of %i on this path does not match the recorded %i height. Error\n", blackHeight, firstBlackHeight);
                         return -1;
                     }
                 }
-                else
-                {
-                    printf("Black height along this path %i matches recorded black height %i\n", blackHeight, firstBlackHeight);
-                }
 
                 blackHeight--;
-                printf("Decremented black height back to %i\n", blackHeight);
-
-                printf("Preparing to recurse right\n");
                 state = 2;
                 continue;
             }
             else
             {
-                printf("Left child is not NULL, recursing left\n");
                 node = node->left;
                 // state remains at 1
                 continue;
@@ -887,44 +863,29 @@ int checkBlackHeight(RBT tree)
 
         if (state == 2)
         {
-            printf("Attempting to recurse right\n");
-
             // If right node is NULL, record final black height
             if (node->right == NULL)
             {
-                printf("Right child is NULL, incrementing black height\n");
                 blackHeight++;
-                printf("Black height is now %i\n", blackHeight);
 
                 if (blackHeight != firstBlackHeight)
                 {
                     if (firstBlackHeight < 0)
                     {
-                        printf("This is the first leaf encountered\n");
                         firstBlackHeight = blackHeight;
-                        printf("Black height recorded as %i\n", blackHeight);
                     }
                     else
                     {
-                        printf("Black height of %i on this path does not match the recorded %i height. Error\n", blackHeight, firstBlackHeight);
                         return -1;
                     }
                 }
-                else
-                {
-                    printf("Black height along this path %i matches recorded black height %i\n", blackHeight, firstBlackHeight);
-                }
 
                 blackHeight--;
-                printf("Decremented black height back to %i\n", blackHeight);
-
-                printf("Preparing to return up\n");
                 state = 3;
                 continue;
             }
             else
             {
-                printf("Right child is not NULL, recursing right\n");
                 node = node->right;
                 state = 1;
                 continue;
@@ -935,30 +896,21 @@ int checkBlackHeight(RBT tree)
         {
             if (node->isRed == 0)
             {
-                printf("Node is black, decrementing black height\n");
                 blackHeight--;
-                printf("Black height is now %i\n", blackHeight);
-            }
-            else
-            {
-                printf("Node is red, black height remains %i\n", blackHeight);
             }
 
             if (node->parent == NULL)
             {
-                printf("This is the head, we are done\n");
                 break;
             }
 
             // If we are a left child, set state to 2
             if (node == node->parent->left)
             {
-                printf("Going up to parent and preparing to recurse right\n");
                 state = 2;
             }
             else
             {
-                printf("Going up to parent and preparing to go up again\n");
                 state = 3;
             }
 
@@ -967,6 +919,5 @@ int checkBlackHeight(RBT tree)
         }
     }
 
-    printf("Final black height is %i\n", firstBlackHeight);
     return firstBlackHeight;
 }
