@@ -1,24 +1,92 @@
-all: rbtest
+all: rbt.o rbtprint.o rbtest rbtestprint rbtplayer
 
-rbtest: rbt.o rbtprinter.o rbtest.o
-	gcc -Wall -o rbtest rbt.o rbtprinter.o rbtest.o
+
+
+./include/cooltools.h: ../../cooltools/cooltools.h
+	-mkdir include
+	cp ../../cooltools/cooltools.h include/
+
+./include/doublell.h: ../doublell/doublell.h
+	-mkdir include
+	cp ../doublell/doublell.h include/
+
+./lib/doublell.o: ../doublell/doublell.o
+	-mkdir lib
+	cp ../doublell/doublell.o lib/
+
+./lib/itoa.o: ../../cooltools/itoa.o
+	-mkdir lib
+	cp ../../cooltools/itoa.o lib/
+
+rbt.c: rbt.h rbtimpl.h
+	touch rbt.c
+
+rbt.o: rbt.c
+	gcc -Wall -c -o rbt.o rbt.c
+
+rbtest: rbt.o rbtest.o ./lib/doublell.o ./lib/itoa.o rbtprint.o
+	gcc -Wall -o rbtest rbt.o rbtest.o lib/doublell.o lib/itoa.o rbtprint.o
+
+rbtest.c: rbt.h rbtimpl.h rbtprint.h ./include/cooltools.h
+	touch rbtest.c
 
 rbtest.o: rbtest.c
 	gcc -Wall -c -o rbtest.o rbtest.c
 
-rbt.o: rbt.h rbt.c
-	gcc -Wall -c -o rbt.o rbt.c
+rbtestprint: rbt.o ./lib/doublell.o ./lib/itoa.o rbtprint.o rbtestprint.o
+	gcc -Wall -o rbtestprint rbt.o lib/doublell.o lib/itoa.o rbtprint.o rbtestprint.o
 
-rbtprinter.o: rbtprinter.h rbtprinter.c
-	gcc -Wall -c -o rbtprinter.o rbtprinter.c
+rbtestprint.c: rbt.h rbtprint.h rbtprintimpl.h ./include/cooltools.h
+	touch rbtestprint.c
 
-clean: cleanrbtest cleanrbt cleanrbtprinter
+rbtestprint.o: rbtestprint.c
+	gcc -Wall -c -o rbtestprint.o rbtestprint.c
 
-cleanrbtest:
-	-rm -rf rbtest rbtest.o
+rbtimpl.h: rbt.h
+	touch rbtimpl.h
+
+rbtplayer: rbt.o ./lib/doublell.o ./lib/itoa.o rbtprint.o rbtplayer.o
+	gcc -Wall -o rbtplayer rbt.o lib/doublell.o lib/itoa.o rbtprint.o rbtplayer.o
+
+rbtplayer.o: rbtplayer.c
+	gcc -Wall -c -o rbtplayer.o rbtplayer.c
+
+rbtplayer.c: ./include/cooltools.h rbt.h rbtprint.h
+	touch rbtplayer.c
+
+rbtprint.c: rbt.h rbtprint.h rbtprintimpl.h ./include/doublell.h
+	touch rbtprint.c
+
+rbtprint.h: rbt.h
+	touch rbtprint.h
+
+rbtprint.o: rbtprint.c
+	gcc -Wall -c -o rbtprint.o rbtprint.c
+
+rbtprintimpl.h: rbtprint.h ./include/doublell.h
+	touch rbtprintimpl.h
+
+
+
+clean: cleanrbt cleanrbtprint cleanrbtest cleanrbtestprint cleanrbtplayer
+
+cleandoublell:
+	-rm -rf lib/doublell.o
+
+cleanitoa:
+	-rm -rf lib/itoa.o
 
 cleanrbt:
 	-rm -rf rbt.o
 
-cleanrbtprinter:
-	-rm -rf rbtprinter.o
+cleanrbtest:
+	-rm -rf rbtest rbtest.o
+
+cleanrbtestprint:
+	-rm -rf rbtestprint rbtestprint.o
+
+cleanrbtprint:
+	-rm -rf rbtprint.o
+
+cleanrbtplayer:
+	-rm -rf rbtplayer rbtplayer.o
