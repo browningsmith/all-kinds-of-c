@@ -280,20 +280,15 @@ int main()
         rbtInit(&tree, compareInt);
         int query;
         void* content;
-        RBTStatusStruct status;
+        RBTStatus status;
 
         // Test searching on an empty tree
         query = 43;
         content = (void*) 72;
         status = rbtFind(tree, (void*) &query, &content);
-        if (status.status != NOT_FOUND)
+        if (status != NOT_FOUND)
         {
-            printf("rbtFind: Error, status returned with %s instead of NOT_FOUND, when tree is empty\n", rbtStatusAsText(status.status));
-            return -1;
-        }
-        if (status.node != NULL)
-        {
-            printf("rbtFind: Error, non NULL node returned when tree is empty\n");
+            printf("rbtFind: Error, status returned with %s instead of NOT_FOUND, when tree is empty\n", rbtStatusAsText(status));
             return -1;
         }
         if (content != (void*) 72)
@@ -308,14 +303,9 @@ int main()
         // Test trying to search with a NULL query
         status = rbtFind(tree, NULL, &content);
         content = (void*) 33;
-        if (status.status != NULL_CONTENT)
+        if (status != NULL_CONTENT)
         {
-            printf("rbtFind: Error, status returned with %s instead of NULL_CONTENT, when a NULL query was given\n", rbtStatusAsText(status.status));
-            return -1;
-        }
-        if (status.node != NULL)
-        {
-            printf("rbtFind: Error, non NULL node returned when NULL query was given\n");
+            printf("rbtFind: Error, status returned with %s instead of NULL_CONTENT, when a NULL query was given\n", rbtStatusAsText(status));
             return -1;
         }
         if (content != (void*) 33)
@@ -328,24 +318,14 @@ int main()
         for (query = 100; query < 800; query += 100)
         {
             status = rbtFind(tree, (void*) &query, &content);
-            if (status.status != SUCCESS)
+            if (status != SUCCESS)
             {
-                printf("rbtFind: Error, status returned with %s instead of SUCCESS, when query of %i should have been matched\n", rbtStatusAsText(status.status), query);
-                return -1;
-            }
-            if (status.node == NULL)
-            {
-                printf("rbtFind: Error, NULL node returned when query of %i should have been matched\n", query);
+                printf("rbtFind: Error, status returned with %s instead of SUCCESS, when query of %i should have been matched\n", rbtStatusAsText(status), query);
                 return -1;
             }
             if (content == NULL)
             {
                 printf("rbtFind: Error, NULL content returned when query of %i should have been matched\n", query);
-                return -1;
-            }
-            if (*(int*) status.node->content != *(int*) content)
-            {
-                printf("rbtFind: Error, incorrect content returned when query of %i should have been matched\n", query);
                 return -1;
             }
         }
@@ -354,19 +334,9 @@ int main()
         query = 305;
         content = (void*) 99;
         status = rbtFind(tree, (void*) &query, &content);
-        if (status.status != NOT_FOUND)
+        if (status != NOT_FOUND)
         {
-            printf("rbtFind: Error, status returned with %s instead of NOT_FOUND, when query of %i should not have been matched\n", rbtStatusAsText(status.status), query);
-            return -1;
-        }
-        if (status.node == NULL)
-        {
-            printf("rbtFind: Error, NULL returned when query of %i was not found on a non-empty list\n", query);
-            return -1;
-        }
-        if (status.node != tree.head->left->right)
-        {
-            printf("rbtFind: Error, incorrect node returned when query of %i was not found on a non-empty list\n", query);
+            printf("rbtFind: Error, status returned with %s instead of NOT_FOUND, when query of %i should not have been matched\n", rbtStatusAsText(status), query);
             return -1;
         }
         if (content != (void*) 99)
@@ -379,19 +349,9 @@ int main()
         query = 800;
         content = (void*) 232;
         status = rbtFind(tree, (void*) &query, &content);
-        if (status.status != NOT_FOUND)
+        if (status != NOT_FOUND)
         {
-            printf("rbtFind: Error, status returned with %s instead of NOT_FOUND, when query of %i should not have been matched\n", rbtStatusAsText(status.status), query);
-            return -1;
-        }
-        if (status.node == NULL)
-        {
-            printf("rbtFind: Error, NULL returned when query of %i was not found on a non-empty list\n", query);
-            return -1;
-        }
-        if (status.node != tree.head->right->right)
-        {
-            printf("rbtFind: Error, incorrect node returned when query of %i was not found on a non-empty list\n", query);
+            printf("rbtFind: Error, status returned with %s instead of NOT_FOUND, when query of %i should not have been matched\n", rbtStatusAsText(status), query);
             return -1;
         }
         if (content != (void*) 232)
@@ -408,19 +368,9 @@ int main()
         query = 300;
         content = (void*) 17;
         status = rbtFind(tree, (void*) &query, &content);
-        if (status.status != EMPTY_NODE_ENCOUNTERED)
+        if (status != EMPTY_NODE_ENCOUNTERED)
         {
-            printf("rbtFind: Error, status returned with %s instead of EMPTY_NODE_ENCOUNTERED, when the 300 node was set to have NULL content\n", rbtStatusAsText(status.status));
-            return -1;
-        }
-        if (status.node == NULL)
-        {
-            printf("rbtFind: Error, NULL node returned when the 300 node was set to have NULL content\n");
-            return -1;
-        }
-        if (status.node != tree.head->left->right)
-        {
-            printf("rbtFind: Error, incorrect node returned when the 300 node was set to have NULL content\n");
+            printf("rbtFind: Error, status returned with %s instead of EMPTY_NODE_ENCOUNTERED, when the 300 node was set to have NULL content\n", rbtStatusAsText(status));
             return -1;
         }
         if (content != (void*) 17)

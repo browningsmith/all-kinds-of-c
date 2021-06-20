@@ -41,18 +41,18 @@ int main()
                         rbtPrint(tree, testitoa);
 
                         void* returnedContent;
-                        RBTStatusStruct result = rbtFind(tree, (void*) &i, &returnedContent);
-                        if (result.status == SUCCESS)
+                        RBTStatus result = rbtFind(tree, (void*) &i, &returnedContent);
+                        if (result == SUCCESS)
                         {
                             printf("%i was found!\n", *(int*) returnedContent);
                         }
-                        else if (result.status == NOT_FOUND)
+                        else if (result == NOT_FOUND)
                         {
                             printf("%i was not found\n", i);
                         }
                         else
                         {
-                            printf("rbtFind returned with %s\n", rbtStatusAsText(result.status));
+                            printf("rbtFind returned with %s\n", rbtStatusAsText(result));
                             perror("");
                         }
                     }
