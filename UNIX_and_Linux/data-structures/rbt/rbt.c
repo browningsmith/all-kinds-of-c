@@ -661,14 +661,8 @@ int rbtRotateLeft__(RBT* tree, RBTNode* rightChild)
     return 0;
 }
 
-int rbtFixRedViolations__(RBT* tree, RBTNode* node)
+void rbtFixRedViolations__(RBT* tree, RBTNode* node)
 {
-    // If node is black, return error
-    if (node->isRed == 0)
-    {
-        return -1;
-    }
-
     while (1)
     {
         RBTNode* parent;
@@ -751,17 +745,11 @@ int rbtFixRedViolations__(RBT* tree, RBTNode* node)
         }
     }
 
-    return 0;
+    return;
 }
 
-int rbtFixBlackViolations__(RBT* tree, RBTNode* node)
+void rbtFixBlackViolations__(RBT* tree, RBTNode* node)
 {
-    // If node is red, return error
-    if (node->isRed != 0)
-    {
-        return -1;
-    }
-
     while (1)
     {
         // If violating node is the head, no violation, break
@@ -844,7 +832,7 @@ int rbtFixBlackViolations__(RBT* tree, RBTNode* node)
                     if (parent->isRed != 0)
                     {
                         parent->isRed = 0;
-                        return 0;
+                        return;
                     }
 
                     // Else parent is now in violation, recurse to parent
@@ -861,7 +849,7 @@ int rbtFixBlackViolations__(RBT* tree, RBTNode* node)
                     }
                     rightNephew->isRed = 0;
                     rbtRotateLeft__(tree, sibling);
-                    return 0;
+                    return;
 
                     break;
                 case 3:
@@ -957,7 +945,7 @@ int rbtFixBlackViolations__(RBT* tree, RBTNode* node)
                     if (parent->isRed != 0)
                     {
                         parent->isRed = 0;
-                        return 0;
+                        return;
                     }
 
                     // Else parent is now in violation, recurse to parent
@@ -974,7 +962,7 @@ int rbtFixBlackViolations__(RBT* tree, RBTNode* node)
                     }
                     leftNephew->isRed = 0;
                     rbtRotateRight__(tree, sibling);
-                    return 0;
+                    return;
 
                     break;
                 case 3:
@@ -999,7 +987,7 @@ int rbtFixBlackViolations__(RBT* tree, RBTNode* node)
         }
     }
 
-    return 0;
+    return;
 }
 
 RBTNode* rbtGetPrev__(RBTNode* node)
