@@ -12,13 +12,14 @@
 // TODO: Finish testing rbtInsert
 // TODO: Finish testing rbtDelete
 
-int compareInt(void* a, void* b);
-RBTNode* newIntNode(int num);
-void displayNode(RBTNode node);
-void constructTree(RBT* tree);
-int testitoa(char* buffer, void* content);
-int testclear(void* content);
-int badclear(void* content);
+int compareInt(void* a, void* b); // Custom function for RBT to compare two ints
+RBTNode* newIntNode(int num); // Creates a new RBT node containing an int in early tests
+void displayNode(RBTNode node); // Displays the contents of a node
+void constructTree(RBT* tree); // Constructs a small, valid, and balanced RBT without using RBTInsert
+int testitoa(char* buffer, void* content); // Custom function used by rbtPrint to display the tree to the console
+int testclear(void* content); // Custom function used by rbtClear to clear the contents of a node
+int badclear(void* content); // Custom function that does nothing other than return nonzero, simulating if rbtClear received a clearing function that potentially could not clear a node's contents
+int checkBlackHeight(RBT tree); // Helper function to test that the black height of the given tree is uniform throughout
 
 int main()
 {
@@ -577,7 +578,34 @@ int main()
             return -1;
         }
 
-        // Test attempting to insert 
+        // Test attempting to insert into a broken tree
+        rbtClear(&tree, testclear);
+        constructTree(&tree);
+
+        content = malloc(sizeof(int)); // Allocate space for new int
+        if (content == NULL)
+        {
+            perror("rbtInsert: Unable to allocate space for new int on inserting into a broken tree test\n");
+            return -1;
+        }
+        *(int*) content = 501; // Should try to insert this along path 400->600->500
+        RBTNode* brokenNode = tree.head->right; // 660 node
+        void* brokenContent = brokenNode->content; // Break this node
+        brokenNode->content = NULL;
+        status = rbtInsert(&tree, content);
+        if (status != EMPTY_NODE_ENCOUNTERED)
+        {
+            printf("rbtInsert: Error, returned with %s when attempting to insert along a path that contained a NULL content node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+
+        free(content);
+        brokenNode->content = brokenContent; // Fix tree
+
+        constructTree(&tree);
+        rbtPrint(tree, testitoa);
+        checkBlackHeight(tree);
 
         rbtClear(&tree, testclear);
     }
@@ -777,4 +805,168 @@ int testclear(void* content)
 int badclear(void* content)
 {
     return 1;
+}
+
+int checkBlackHeight(RBT tree)
+{
+    int blackHeight = 0;
+    int firstBlackHeight = -1;
+
+    RBTNode* node = tree.head;
+    if (node == NULL)
+    {
+        return 0;
+    }
+
+    int state = 1;
+    // 1 = examine this node and recurse left
+    // 2 = recurse right
+    // 3 = return up
+
+    while (1)
+    {
+        if (state == 1)
+        {
+            printf("Examining node %i\n", *(int*) node->content);
+
+            // If node is black, increment black height
+            if (node->isRed == 0)
+            {
+                printf("Node is black, incrementing black height\n");
+                blackHeight++;
+                printf("Black height is now %i\n", blackHeight);
+            }
+            else
+            {
+                printf("Node is red, black height is still %i\n", blackHeight);
+            }
+
+            printf("Attempting to recurse left\n");
+
+            // If left node is NULL, record final black height
+            if (node->left == NULL)
+            {
+                printf("Left child is NULL, incrementing black height\n");
+                blackHeight++;
+                printf("Black height is now %i\n", blackHeight);
+
+                if (blackHeight != firstBlackHeight)
+                {
+                    if (firstBlackHeight < 0)
+                    {
+                        printf("This is the first leaf encountered\n");
+                        firstBlackHeight = blackHeight;
+                        printf("Black height recorded as %i\n", blackHeight);
+                    }
+                    else
+                    {
+                        printf("Black height of %i on this path does not match the recorded %i height. Error\n", blackHeight, firstBlackHeight);
+                        return -1;
+                    }
+                }
+                else
+                {
+                    printf("Black height along this path %i matches recorded black height %i\n", blackHeight, firstBlackHeight);
+                }
+
+                blackHeight--;
+                printf("Decremented black height back to %i\n", blackHeight);
+
+                printf("Preparing to recurse right\n");
+                state = 2;
+                continue;
+            }
+            else
+            {
+                printf("Left child is not NULL, recursing left\n");
+                node = node->left;
+                // state remains at 1
+                continue;
+            }
+        }
+
+        if (state == 2)
+        {
+            printf("Attempting to recurse right\n");
+
+            // If right node is NULL, record final black height
+            if (node->right == NULL)
+            {
+                printf("Right child is NULL, incrementing black height\n");
+                blackHeight++;
+                printf("Black height is now %i\n", blackHeight);
+
+                if (blackHeight != firstBlackHeight)
+                {
+                    if (firstBlackHeight < 0)
+                    {
+                        printf("This is the first leaf encountered\n");
+                        firstBlackHeight = blackHeight;
+                        printf("Black height recorded as %i\n", blackHeight);
+                    }
+                    else
+                    {
+                        printf("Black height of %i on this path does not match the recorded %i height. Error\n", blackHeight, firstBlackHeight);
+                        return -1;
+                    }
+                }
+                else
+                {
+                    printf("Black height along this path %i matches recorded black height %i\n", blackHeight, firstBlackHeight);
+                }
+
+                blackHeight--;
+                printf("Decremented black height back to %i\n", blackHeight);
+
+                printf("Preparing to return up\n");
+                state = 3;
+                continue;
+            }
+            else
+            {
+                printf("Right child is not NULL, recursing right\n");
+                node = node->right;
+                state = 1;
+                continue;
+            }
+        }
+
+        if (state == 3)
+        {
+            if (node->isRed == 0)
+            {
+                printf("Node is black, decrementing black height\n");
+                blackHeight--;
+                printf("Black height is now %i\n", blackHeight);
+            }
+            else
+            {
+                printf("Node is red, black height remains %i\n", blackHeight);
+            }
+
+            if (node->parent == NULL)
+            {
+                printf("This is the head, we are done\n");
+                break;
+            }
+
+            // If we are a left child, set state to 2
+            if (node == node->parent->left)
+            {
+                printf("Going up to parent and preparing to recurse right\n");
+                state = 2;
+            }
+            else
+            {
+                printf("Going up to parent and preparing to go up again\n");
+                state = 3;
+            }
+
+            node = node->parent;
+            continue;
+        }
+    }
+
+    printf("Final black height is %i\n", firstBlackHeight);
+    return firstBlackHeight;
 }
