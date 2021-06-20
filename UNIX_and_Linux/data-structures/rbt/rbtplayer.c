@@ -97,20 +97,20 @@ int main()
                         printf("Deleting %i\n", i);
 
                         void* returnedContent;
-                        RBTStatusStruct result = rbtDelete(&tree, (void*) &i, &returnedContent);
+                        RBTStatus result = rbtDelete(&tree, (void*) &i, &returnedContent);
                         rbtPrint(tree, testitoa);
-                        if (result.status == SUCCESS)
+                        if (result == SUCCESS)
                         {
                             printf("%i was deleted!\n", *(int*) returnedContent);
                             free(returnedContent);
                         }
-                        else if (result.status == NOT_FOUND)
+                        else if (result == NOT_FOUND)
                         {
                             printf("%i was not found\n", i);
                         }
                         else
                         {
-                            printf("rbtDelete returned with %s\n", rbtStatusAsText(result.status));
+                            printf("rbtDelete returned with %s\n", rbtStatusAsText(result));
                             perror("");
                         }
                     }

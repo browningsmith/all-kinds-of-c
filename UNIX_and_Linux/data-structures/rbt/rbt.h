@@ -113,25 +113,22 @@ RBTStatus rbtFind(RBT tree, void* query, void** returnedContent);
  * rbtInsert
  * 
  * Inputs: RBT* tree, void* content
- * Returns: RBTStatusStruct result
+ * Returns: RBTStatus
  * 
  * Attempts to insert a new node with the provided content into
  * the given RBT* tree
  * 
  * If the new node is successfully inserted, method returns
- * with result.status as SUCCESS, and result.node equal to
- * the newly created node.
+ * SUCCESS
  * 
  * If the caller attempts to provide content that is NULL, the
- * method returns with result.status as NULL_CONTENT, and
- * result.node as NULL
+ * method returns with NULL_CONTENT
  * 
  * If the method is unable to create the new node before inserting
- * returns with result.status as NO_MEMORY and result.node as NULL
+ * returns with NO_MEMORY
  * 
  * If the method encounters an empty node, it does not insert a
- * new node, instead returns result.status as EMPTY_NODE_ENCOUNTERED
- * and result.node as NULL
+ * new node, instead returns EMPTY_NODE_ENCOUNTERED
  ***************************************************************/
 RBTStatus rbtInsert(RBT* tree, void* content);
 
@@ -139,32 +136,26 @@ RBTStatus rbtInsert(RBT* tree, void* content);
  * rbtDelete
  * 
  * Inputs: RBT* tree, void* query, void** returnedContent
- * Returns: RBTStatusStruct result
+ * Returns: RBTStatus result
  * 
  * Searches for a node within tree based on the given query object,
  * and if it exists removes it from the tree
  * 
- * If the deletion is successful, returns RBTStatusStruct with a
- * status of SUCCESS, result.node set to NULL.
- * Also sets returnedContent equal to the content of the deleted node
+ * If the deletion is successful, returns with a status of SUCCESS
+ * Also places the content of the deleted node into returnedContent
  * 
  * If the search fails due to the node not being found, returns
- * result with result.status being NOT_FOUND, and result.node being
- * equal to the last node searched, or NULL if the tree is empty
- * Does not alter returnedContent or delete any nodes
+ * NOT_FOUND. Does not alter returnedContent or delete any nodes
  * 
  * If the search fails due to an empty node being encountered in
- * the tree, returns result with result.status being
- * EMPTY_NODE_ENCOUNTERED, and result.node being set to the node
- * which caused the problem. Does not alter returnedContent or
- * delete any nodes
+ * the tree, returns EMPTY_NODE_ENCOUNTERED, and result.node being
+ * set to the node. Does not alter returnedContent or delete any
+ * nodes
  * 
  * If the user attempts to search using a query that is NULL, returns
- * result with result.status being NULL_CONTENT, and result.node
- * being set to NULL. Does not alter returnedContent or delete
- * any nodes
+ * NULL_CONTENT. Does not alter returnedContent or deleteany nodes
  ***************************************************************/
-RBTStatusStruct rbtDelete(RBT* tree, void* query, void** returnedContent);
+RBTStatus rbtDelete(RBT* tree, void* query, void** returnedContent);
 
 /***************************************************************
  * rbtClear

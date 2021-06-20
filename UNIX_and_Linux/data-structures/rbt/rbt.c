@@ -285,43 +285,29 @@ RBTStatus rbtInsert(RBT* tree, void* content)
     return SUCCESS;
 }
 
-RBTStatusStruct rbtDelete(RBT* tree, void* query, void** returnedContent)
+RBTStatus rbtDelete(RBT* tree, void* query, void** returnedContent)
 {
-    // Initialize result
-    RBTStatusStruct result = { .node = NULL };
-
     // Check that query is not null
     if (query == NULL)
     {
-        result.status = NULL_CONTENT;
-        return result;
+        return NULL_CONTENT;
     }
 
     // If the tree is empty, return not found
     if (tree->head == NULL)
     {
-        result.status = NOT_FOUND;
-        return result;
+        return NOT_FOUND;
     }
 
     // Perform search
-    result = rbtGetNodeFromStart__(tree->head, query, tree->compareFunction);
+    RBTStatusStruct result = rbtGetNodeFromStart__(tree->head, query, tree->compareFunction);
 
-    if (result.status == NOT_FOUND)
-    {
-        // result.status is NOT_FOUND and result.node is equal to the last node searched
-    }
-    else if (result.status == EMPTY_NODE_ENCOUNTERED)
-    {
-        // result.status is EMPTY_NODE_ENCOUNTERED and result.node is equal to the erroneous node
-    }
-    else if (result.status == SUCCESS)
+    if (result.status == SUCCESS)
     {
         RBTNode* nodeToDelete = result.node;
 
-        // Prepare result and returnedContent
+        // Prepare returnedContent
         *returnedContent = nodeToDelete->content;
-        result.node = NULL;
 
         // Begin deletion procedure
 
@@ -429,7 +415,7 @@ RBTStatusStruct rbtDelete(RBT* tree, void* query, void** returnedContent)
         free(nodeToDelete);
     }
 
-    return result;
+    return result.status;
 }
 
 // Implementation only definitions
