@@ -1,4 +1,4 @@
-all: rbt.o rbtprint.o rbtest rbtestprint rbtinsert
+all: rbt.o rbtprint.o rbtest rbtestprint rbtplayer
 
 
 
@@ -45,14 +45,14 @@ rbtestprint.o: rbtestprint.c
 rbtimpl.h: rbt.h
 	touch rbtimpl.h
 
-rbtinsert: rbt.o ./lib/doublell.o ./lib/itoa.o rbtprint.o rbtinsert.o
-	gcc -Wall -o rbtinsert rbt.o lib/doublell.o lib/itoa.o rbtprint.o rbtinsert.o
+rbtplayer: rbt.o ./lib/doublell.o ./lib/itoa.o rbtprint.o rbtplayer.o
+	gcc -Wall -o rbtplayer rbt.o lib/doublell.o lib/itoa.o rbtprint.o rbtplayer.o
 
-rbtinsert.o: rbtinsert.c
-	gcc -Wall -c -o rbtinsert.o rbtinsert.c
+rbtplayer.o: rbtplayer.c
+	gcc -Wall -c -o rbtplayer.o rbtplayer.c
 
-rbtinsert.c: ./include/cooltools.h rbt.h rbtprint.h
-	touch rbtinsert.c
+rbtplayer.c: ./include/cooltools.h rbt.h rbtprint.h
+	touch rbtplayer.c
 
 rbtprint.c: rbt.h rbtprint.h rbtprintimpl.h ./include/doublell.h
 	touch rbtprint.c
@@ -68,7 +68,7 @@ rbtprintimpl.h: rbtprint.h ./include/doublell.h
 
 
 
-clean: cleanrbt cleanrbtprint cleanrbtest cleanrbtestprint cleanrbtinsert
+clean: cleanrbt cleanrbtprint cleanrbtest cleanrbtestprint cleanrbtplayer
 
 cleandoublell:
 	-rm -rf lib/doublell.o
@@ -88,5 +88,5 @@ cleanrbtestprint:
 cleanrbtprint:
 	-rm -rf rbtprint.o
 
-cleanrbtinsert:
-	-rm -rf rbtinsert rbtinsert.o
+cleanrbtplayer:
+	-rm -rf rbtplayer rbtplayer.o
