@@ -521,38 +521,13 @@ RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compare
     return result;
 }
 
-int rbtRotateRight__(RBT* tree, RBTNode* leftChild)
+void rbtRotateRight__(RBT* tree, RBTNode* leftChild)
 {
     RBTNode* parent;
     RBTNode* grandParent;
     RBTNode* leftChildsRightChild;
 
-    // If tree or leftChild are NULL, error
-    if ((tree == NULL) || (leftChild == NULL))
-    {
-        return -1;
-    }
-
-    // If tree->head is NULL, error
-    if (tree->head == NULL)
-    {
-        return -1;
-    }
-
-    // If leftChild is the head, can't do a right rotation
-    if (leftChild->parent == NULL)
-    {
-        return -1;
-    }
-
     parent = leftChild->parent;
-
-    // If leftChild is not a left child, can't do
-    if (leftChild != parent->left)
-    {
-        return -1;
-    }
-
     grandParent = parent->parent;
     leftChildsRightChild = leftChild->right;
 
@@ -588,41 +563,16 @@ int rbtRotateRight__(RBT* tree, RBTNode* leftChild)
         leftChildsRightChild->parent = parent;
     }
 
-    return 0;
+    return;
 }
 
-int rbtRotateLeft__(RBT* tree, RBTNode* rightChild)
+void rbtRotateLeft__(RBT* tree, RBTNode* rightChild)
 {
     RBTNode* parent;
     RBTNode* grandParent;
     RBTNode* rightChildsLeftChild;
 
-    // If tree or rightChild are NULL, error
-    if ((tree == NULL) || (rightChild == NULL))
-    {
-        return -1;
-    }
-
-    // If tree->head is NULL, error
-    if (tree->head == NULL)
-    {
-        return -1;
-    }
-
-    // If rightChild is the head, can't do a left rotation
-    if (rightChild->parent == NULL)
-    {
-        return -1;
-    }
-
     parent = rightChild->parent;
-
-    // If rightChild is not a right child, can't do
-    if (rightChild != parent->right)
-    {
-        return -1;
-    }
-
     grandParent = parent->parent;
     rightChildsLeftChild = rightChild->left;
 
@@ -658,7 +608,7 @@ int rbtRotateLeft__(RBT* tree, RBTNode* rightChild)
         rightChildsLeftChild->parent = parent;
     }
 
-    return 0;
+    return;
 }
 
 void rbtFixRedViolations__(RBT* tree, RBTNode* node)

@@ -13,9 +13,9 @@
 
 RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b));
 
-int rbtRotateRight__(RBT* tree, RBTNode* leftChild);
+void rbtRotateRight__(RBT* tree, RBTNode* leftChild);
 
-int rbtRotateLeft__(RBT* tree, RBTNode* rightChild);
+void rbtRotateLeft__(RBT* tree, RBTNode* rightChild);
 
 void rbtFixRedViolations__(RBT* tree, RBTNode* node);
 
