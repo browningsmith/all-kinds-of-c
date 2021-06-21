@@ -34,13 +34,13 @@ const char* rbtStatusAsText(RBTStatus status)
 void rbtInit(RBT* tree, int (*compareFunction) (void*, void*))
 {
     // Initialize values
-    tree->head = NULL;
+    tree->root = NULL;
     tree->compareFunction = compareFunction;
 }
 
 int rbtIsEmpty(RBT tree)
 {
-    if (tree.head == NULL)
+    if (tree.root == NULL)
     {
         return 1;
     }
@@ -57,13 +57,13 @@ RBTStatus rbtFind(RBT tree, void* query, void** returnedContent)
     }
 
     // If the tree is empty, return not found
-    if (tree.head == NULL)
+    if (tree.root == NULL)
     {
         return NOT_FOUND;
     }
 
     // Perform search
-    RBTStatusStruct result = rbtGetNodeFromStart__(tree.head, query, tree.compareFunction);
+    RBTStatusStruct result = rbtGetNodeFromStart__(tree.root, query, tree.compareFunction);
 
     if (result.status == SUCCESS)
     {
@@ -85,7 +85,7 @@ RBTStatus rbtFind(RBT tree, void* query, void** returnedContent)
 int rbtClear(RBT* tree, int (*clearingFunction) (void*))
 {
     // If tree is empty, return success
-    if (tree->head == NULL)
+    if (tree->root == NULL)
     {
         return 0;
     }
@@ -101,7 +101,7 @@ int rbtClear(RBT* tree, int (*clearingFunction) (void*))
     // state 1 = recurse right
     // state 2 = delete this node and go up
     int state = 0;
-    RBTNode* currentNode = tree->head;
+    RBTNode* currentNode = tree->root;
     while (1)
     {
         if (state == 0)
@@ -181,8 +181,8 @@ int rbtClear(RBT* tree, int (*clearingFunction) (void*))
         }
     }
     
-    // Set new head of tree to be the head of undeletedNodes
-    tree->head = undeletedNodes.head;
+    // Set new root of tree to be the root of undeletedNodes
+    tree->root = undeletedNodes.root;
 
     return status;
 }
@@ -206,10 +206,10 @@ RBTStatus rbtInsert(RBT* tree, void* content)
     newNode->right = NULL;
     newNode->content = content;
 
-    // If tree is empty, insert new node as head and color it black, return SUCCESS and the new node
-    if (tree->head == NULL)
+    // If tree is empty, insert new node as root and color it black, return SUCCESS and the new node
+    if (tree->root == NULL)
     {
-        tree->head = newNode;
+        tree->root = newNode;
         newNode->isRed = 0;
 
         return SUCCESS;
@@ -219,7 +219,7 @@ RBTStatus rbtInsert(RBT* tree, void* content)
     newNode->isRed = 1;
 
     // Search for area to insert new node
-    RBTNode* currentNode = tree->head;
+    RBTNode* currentNode = tree->root;
     RBTStatusStruct result;
 
     while (
@@ -294,13 +294,13 @@ RBTStatus rbtDelete(RBT* tree, void* query, void** returnedContent)
     }
 
     // If the tree is empty, return not found
-    if (tree->head == NULL)
+    if (tree->root == NULL)
     {
         return NOT_FOUND;
     }
 
     // Perform search
-    RBTStatusStruct result = rbtGetNodeFromStart__(tree->head, query, tree->compareFunction);
+    RBTStatusStruct result = rbtGetNodeFromStart__(tree->root, query, tree->compareFunction);
 
     if (result.status == SUCCESS)
     {
@@ -322,7 +322,7 @@ RBTStatus rbtDelete(RBT* tree, void* query, void** returnedContent)
         char nodeType; // h, l, or r
         RBTNode* parent = nodeToDelete->parent;
 
-        if (nodeToDelete == tree->head)
+        if (nodeToDelete == tree->root)
         {
             nodeType = 'h';
         }
@@ -366,7 +366,7 @@ RBTStatus rbtDelete(RBT* tree, void* query, void** returnedContent)
             }
             else
             {
-                tree->head = nodeToDelete->left;
+                tree->root = nodeToDelete->left;
             }
         }
         // If node is black and right child exists
@@ -385,7 +385,7 @@ RBTStatus rbtDelete(RBT* tree, void* query, void** returnedContent)
             }
             else
             {
-                tree->head = nodeToDelete->right;
+                tree->root = nodeToDelete->right;
             }
         }
         // If node is black and has no children
@@ -393,7 +393,7 @@ RBTStatus rbtDelete(RBT* tree, void* query, void** returnedContent)
         {
             if (nodeType == 'h')
             {
-                tree->head = NULL;
+                tree->root = NULL;
             }
             else
             {
@@ -500,10 +500,10 @@ void rbtRotateRight__(RBT* tree, RBTNode* leftChild)
     // Set left child's parent to the grandParent
     leftChild->parent = grandParent;
 
-    // If leftChild's parent is now NULL, leftChild is now the head
+    // If leftChild's parent is now NULL, leftChild is now the root
     if (leftChild->parent == NULL)
     {
-        tree->head = leftChild;
+        tree->root = leftChild;
     }
     else
     {
@@ -545,10 +545,10 @@ void rbtRotateLeft__(RBT* tree, RBTNode* rightChild)
     // Set right child's parent to the grandParent
     rightChild->parent = grandParent;
 
-    // If rightChild's parent is now NULL, rightChild is now the head
+    // If rightChild's parent is now NULL, rightChild is now the root
     if (rightChild->parent == NULL)
     {
-        tree->head = rightChild;
+        tree->root = rightChild;
     }
     else
     {
@@ -587,8 +587,8 @@ void rbtFixRedViolations__(RBT* tree, RBTNode* node)
 
         int parentIsLeftChild;
 
-        // If node is the head, color black and return
-        if (node == tree->head)
+        // If node is the root, color black and return
+        if (node == tree->root)
         {
             node->isRed = 0;
             break;
@@ -668,8 +668,8 @@ void rbtFixBlackViolations__(RBT* tree, RBTNode* node)
 {
     while (1)
     {
-        // If violating node is the head, no violation, break
-        if (node == tree->head)
+        // If violating node is the root, no violation, break
+        if (node == tree->root)
         {
             break;
         }
@@ -923,7 +923,7 @@ RBTNode* rbtGetPrev__(RBTNode* node)
     {
         while (1)
         {
-            // If node is the head, no predecessor, return NULL
+            // If node is the root, no predecessor, return NULL
             if (node->parent == NULL)
             {
                 return NULL;

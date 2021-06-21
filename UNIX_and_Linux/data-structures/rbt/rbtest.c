@@ -10,8 +10,6 @@
 #include "rbtimpl.h"
 #include "rbtprint.h"
 
-// TODO: Finish testing rbtDelete
-
 int compareInt(void* a, void* b); // Custom function for RBT to compare two ints
 RBTNode* newIntNode(int num); // Creates a new RBT node containing an int in early tests
 void displayNode(RBTNode node); // Displays the contents of a node
@@ -76,19 +74,19 @@ int main()
     // Test rbtInit
     printf("Testing rbtInit\n");
     {
-        tree.head = (RBTNode*) 17;
+        tree.root = (RBTNode*) 17;
         tree.compareFunction = NULL;
 
         rbtInit(&tree, compareInt);
 
-        if (tree.head != NULL)
+        if (tree.root != NULL)
         {
-            printf("rbtInit: Error, tree.head not set to NULL\n");
+            printf("rbtInit: Error, tree.root not set to NULL\n");
             return -1;
         }
         if (tree.compareFunction != compareInt)
         {
-            printf("rbtInit: Error, tree.head not set given compareFunction\n");
+            printf("rbtInit: Error, tree.root not set given compareFunction\n");
             return -1;
         }
     }
@@ -99,10 +97,10 @@ int main()
     {
         // Test if tree is not empty
         RBTNode node;
-        tree.head = &node;
+        tree.root = &node;
         if (rbtIsEmpty(tree) != 0)
         {
-            printf("rbtIsEmpty: Error, tree returned as empty when the head definitely points to a node\n");
+            printf("rbtIsEmpty: Error, tree returned as empty when the root definitely points to a node\n");
             return -1;
         }
 
@@ -127,9 +125,9 @@ int main()
             printf("rbtClear: Returned with incorrect result on test 1: %i\n", result);
             return -1;
         }
-        if (tree.head != NULL)
+        if (tree.root != NULL)
         {
-            printf("rbtClear: Head of tree is not NULL on test 1\n");
+            printf("rbtClear: root of tree is not NULL on test 1\n");
             return -1;
         }
 
@@ -140,9 +138,9 @@ int main()
         {
             printf("rbtClear: Returned with incorrect result on test 2: %i\n", result);
         }
-        if (tree.head != NULL)
+        if (tree.root != NULL)
         {
-            printf("rbtClear: Head of tree is not NULL on test 2\n");
+            printf("rbtClear: root of tree is not NULL on test 2\n");
             return -1;
         }
 
@@ -168,7 +166,7 @@ int main()
         }
         else
         {
-            if (tree.head == NULL)
+            if (tree.root == NULL)
             {
                 printf("rbtClear: Tree returned as empty even on status code -1, on test 3\n");
                 return -1;
@@ -181,9 +179,9 @@ int main()
         {
             printf("rbtClear: Returned with incorrect result on test 4: %i\n", result);
         }
-        if (tree.head != NULL)
+        if (tree.root != NULL)
         {
-            printf("rbtClear: Head of tree is not NULL on test 4\n");
+            printf("rbtClear: root of tree is not NULL on test 4\n");
             return -1;
         }
     }
@@ -199,7 +197,7 @@ int main()
         // Test searching all nodes created by constructTree
         for (query = 100; query < 800; query += 100)
         {
-            status = rbtGetNodeFromStart__(tree.head, (void*) &query, tree.compareFunction);
+            status = rbtGetNodeFromStart__(tree.root, (void*) &query, tree.compareFunction);
             if (status.status != SUCCESS)
             {
                 printf("rbtGetNodeFromStart__: Error, status returned with %s instead of SUCCESS, when query of %i should have been matched\n", rbtStatusAsText(status.status), query);
@@ -219,7 +217,7 @@ int main()
 
         // Test searching for a node that does not exist between 300 and 400
         query = 305;
-        status = rbtGetNodeFromStart__(tree.head, (void*) &query, tree.compareFunction);
+        status = rbtGetNodeFromStart__(tree.root, (void*) &query, tree.compareFunction);
         if (status.status != NOT_FOUND)
         {
             printf("rbtGetNodeFromStart__: Error, status returned with %s instead of NOT_FOUND, when query of %i should not have been matched\n", rbtStatusAsText(status.status), query);
@@ -230,7 +228,7 @@ int main()
             printf("rbtGetNodeFromStart__: Error, NULL returned when query of %i was not found on a non-empty list\n", query);
             return -1;
         }
-        if (status.node != tree.head->left->right)
+        if (status.node != tree.root->left->right)
         {
             printf("rbtGetNodeFromStart__: Error, incorrect node returned when query of %i was not found on a non-empty list\n", query);
             return -1;
@@ -238,7 +236,7 @@ int main()
 
         // Test searching for a node that does not exist beyond 700
         query = 800;
-        status = rbtGetNodeFromStart__(tree.head, (void*) &query, tree.compareFunction);
+        status = rbtGetNodeFromStart__(tree.root, (void*) &query, tree.compareFunction);
         if (status.status != NOT_FOUND)
         {
             printf("rbtGetNodeFromStart__: Error, status returned with %s instead of NOT_FOUND, when query of %i should not have been matched\n", rbtStatusAsText(status.status), query);
@@ -249,19 +247,19 @@ int main()
             printf("rbtGetNodeFromStart__: Error, NULL returned when query of %i was not found on a non-empty list\n", query);
             return -1;
         }
-        if (status.node != tree.head->right->right)
+        if (status.node != tree.root->right->right)
         {
             printf("rbtGetNodeFromStart__: Error, incorrect node returned when query of %i was not found on a non-empty list\n", query);
             return -1;
         }
 
         // Break tree by making 300 an empty node
-        void* content300 = tree.head->left->right->content;
-        tree.head->left->right->content = NULL;
+        void* content300 = tree.root->left->right->content;
+        tree.root->left->right->content = NULL;
 
         // Test EMPTY_NODE_ENCOUNTERED error
         query = 300;
-        status = rbtGetNodeFromStart__(tree.head, (void*) &query, tree.compareFunction);
+        status = rbtGetNodeFromStart__(tree.root, (void*) &query, tree.compareFunction);
         if (status.status != EMPTY_NODE_ENCOUNTERED)
         {
             printf("rbtGetNodeFromStart__: Error, status returned with %s instead of EMPTY_NODE_ENCOUNTERED, when the 300 node was set to have NULL content\n", rbtStatusAsText(status.status));
@@ -272,14 +270,14 @@ int main()
             printf("rbtGetNodeFromStart__: Error, NULL node returned when the 300 node was set to have NULL content\n");
             return -1;
         }
-        if (status.node != tree.head->left->right)
+        if (status.node != tree.root->left->right)
         {
             printf("rbtGetNodeFromStart__: Error, incorrect node returned when the 300 node was set to have NULL content\n");
             return -1;
         }
 
         // Fix tree
-        tree.head->left->right->content = content300;
+        tree.root->left->right->content = content300;
 
         rbtClear(&tree, testclear);
     }
@@ -372,8 +370,8 @@ int main()
         }
 
         // Break tree by making 300 an empty node
-        void* content300 = tree.head->left->right->content;
-        tree.head->left->right->content = NULL;
+        void* content300 = tree.root->left->right->content;
+        tree.root->left->right->content = NULL;
 
         // Test EMPTY_NODE_ENCOUNTERED error
         query = 300;
@@ -391,7 +389,7 @@ int main()
         }
 
         // Fix tree
-        tree.head->left->right->content = content300;
+        tree.root->left->right->content = content300;
 
         rbtClear(&tree, testclear);
     }
@@ -405,26 +403,26 @@ int main()
         RBTNode* node;
 
         // Test rotating left child
-        node = tree.head->left;
-        //printf("rbtRotateRight__: Tree before rotation on head's left\n");
+        node = tree.root->left;
+        //printf("rbtRotateRight__: Tree before rotation on root's left\n");
         //rbtPrint(tree, testitoa);
         rbtRotateRight__(&tree, node);
-        //printf("rbtRotateRight__: Tree after rotation on head's left\n");
+        //printf("rbtRotateRight__: Tree after rotation on root's left\n");
         //rbtPrint(tree, testitoa);
-        if (tree.head != node)
+        if (tree.root != node)
         {
-            printf("rbtRotateRight__: Head's former left child did not replace head of list\n");
+            printf("rbtRotateRight__: root's former left child did not replace root of list\n");
             return -1;
         }
         rbtClear(&tree, testclear);
         constructTree(&tree);
 
         // Test rotating left child's left child
-        node = tree.head->left->left;
-        //printf("rbtRotateRight__: Tree before rotation on head's left's left\n");
+        node = tree.root->left->left;
+        //printf("rbtRotateRight__: Tree before rotation on root's left's left\n");
         //rbtPrint(tree, testitoa);
         rbtRotateRight__(&tree, node);
-        //printf("rbtRotateRight__: Tree after rotation on head's left's left\n");
+        //printf("rbtRotateRight__: Tree after rotation on root's left's left\n");
         //rbtPrint(tree, testitoa);
 
         rbtClear(&tree, testclear);
@@ -439,26 +437,26 @@ int main()
         RBTNode* node;
 
         // Test rotating right child
-        node = tree.head->right;
-        //printf("rbtRotateLeft__: Tree before rotation on head's right\n");
+        node = tree.root->right;
+        //printf("rbtRotateLeft__: Tree before rotation on root's right\n");
         //rbtPrint(tree, testitoa);
         rbtRotateLeft__(&tree, node);
-        //printf("rbtRotateLeft__: Tree after rotation on head's right\n");
+        //printf("rbtRotateLeft__: Tree after rotation on root's right\n");
         //rbtPrint(tree, testitoa);
-        if (tree.head != node)
+        if (tree.root != node)
         {
-            printf("rbtRotateLeft__: Head's former right child did not replace head of list\n");
+            printf("rbtRotateLeft__: root's former right child did not replace root of list\n");
             return -1;
         }
         rbtClear(&tree, testclear);
         constructTree(&tree);
 
         // Test rotating right child's right child
-        node = tree.head->right->right;
-        //printf("rbtRotateLeft__: Tree before rotation on head's right's right\n");
+        node = tree.root->right->right;
+        //printf("rbtRotateLeft__: Tree before rotation on root's right's right\n");
         //rbtPrint(tree, testitoa);
         rbtRotateLeft__(&tree, node);
-        //printf("rbtRotateLeft__: Tree after rotation on head's right's right\n");
+        //printf("rbtRotateLeft__: Tree after rotation on root's right's right\n");
         //rbtPrint(tree, testitoa);
 
         rbtClear(&tree, testclear);
@@ -492,7 +490,7 @@ int main()
         }
 
         // Move to node 100
-        RBTNode* node = tree.head;
+        RBTNode* node = tree.root;
         while (node->right != NULL)
         {
             node = node->right;
@@ -574,14 +572,14 @@ int main()
             printf("rbtInsert: Error, tree is empty after attempted insert into empty tree\n");
             return -1;
         }
-        if (tree.head->isRed != 0)
+        if (tree.root->isRed != 0)
         {
             printf("rbtInsert: Error, new node is not black when added to an empty tree\n");
             return -1;
         }
-        if (*(int*) tree.head->content != 9000)
+        if (*(int*) tree.root->content != 9000)
         {
-            printf("rbtInsert: Error, int did not get added as head when inserted into an empty tree\n");
+            printf("rbtInsert: Error, int did not get added as root when inserted into an empty tree\n");
             return -1;
         }
 
@@ -596,7 +594,7 @@ int main()
             return -1;
         }
         *(int*) content = 501; // Should try to insert this along path 400->600->500
-        RBTNode* brokenNode = tree.head->right; // 660 node
+        RBTNode* brokenNode = tree.root->right; // 660 node
         void* brokenContent = brokenNode->content; // Break this node
         brokenNode->content = NULL;
         status = rbtInsert(&tree, content);
@@ -728,7 +726,7 @@ int main()
         // Test attempting to delete a node from a broken tree
         constructTree(&tree);
         query = 100; // rbtDelete will search along 400->200->100 path
-        RBTNode* brokenNode = tree.head->left; // 200 node
+        RBTNode* brokenNode = tree.root->left; // 200 node
         void* brokenContent = brokenNode->content;
         brokenNode->content = NULL;
         returnedContent = (void*) 833;
@@ -929,7 +927,7 @@ void constructTree(RBT* tree)
     // 400 Node (black)
     RBTNode* node400 = newIntNode(400);
     node400->isRed = 0;
-    tree->head = node400;
+    tree->root = node400;
 
     // 200 Node (black)
     RBTNode* node200 = newIntNode(200);
@@ -1003,7 +1001,7 @@ int checkBlackHeight(RBT tree)
     int blackHeight = 0;
     int firstBlackHeight = -1;
 
-    RBTNode* node = tree.head;
+    RBTNode* node = tree.root;
     if (node == NULL)
     {
         return 0;

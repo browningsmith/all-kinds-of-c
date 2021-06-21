@@ -19,11 +19,11 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
 
     DLL list;
     DLLIterator iter;
-    RBTNode* currentNode = tree.head;
+    RBTNode* currentNode = tree.root;
 
     dllInit(&list);
 
-    // Add head node line
+    // Add root node line
     PLine* line = rbtNewPLine__();
     if (line == NULL)
     {
@@ -170,7 +170,7 @@ int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
 
         if (state == 4)
         {
-            // If this is head of tree, we're done
+            // If this is root of tree, we're done
             if (currentNode->parent == NULL)
             {
                 break;

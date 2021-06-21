@@ -1,8 +1,6 @@
 #ifndef RBT_H
 #define RBT_H
 
-// TODO Create struct and methods for an iterator
-
 typedef enum {
 
     SUCCESS,
@@ -27,10 +25,17 @@ typedef struct RBTNode_struct {
 
 typedef struct {
 
-    RBTNode* head;
+    RBTNode* root;
     int (*compareFunction) (void*, void*);
 
 } RBT;
+
+typedef struct {
+
+    RBT* tree;
+    RBTNode* node;
+
+} RBTIterator;
 
 /***************************************************************
  * rbtStatusAsText
@@ -75,7 +80,7 @@ void rbtInit(RBT* tree, int (*compareFunction) (void* a, void* b));
  * Inputs: RBT tree
  * Returns: int
  * 
- * Returns 1 if the head of the given tree is NULL, otherwise
+ * Returns 1 if the root of the given tree is NULL, otherwise
  * returns 0
  ***************************************************************/
 int rbtIsEmpty(RBT tree);
@@ -162,7 +167,7 @@ RBTStatus rbtDelete(RBT* tree, void* query, void** returnedContent);
  * each node within the given tree. It erases the content of
  * the node using the given clearingFunction
  * 
- * Returns 0 on success, and sets the head of the tree to NULL
+ * Returns 0 on success, and sets the root of the tree to NULL
  * 
  * Returns -1 on failure to delete all nodes. Failure is caused
  * if the given clearingFunction returns a nonzero result, meaning
@@ -179,5 +184,21 @@ RBTStatus rbtDelete(RBT* tree, void* query, void** returnedContent);
  *   -return nonzero if content is not cleared successfully
  ***************************************************************/
 int rbtClear(RBT* tree, int (*clearingFunction) (void*));
+
+/*****************************************************************
+ * IMPORTANT
+ *
+ * RBTIterator methods
+ *
+ * All above methods affect elements on an RBT without considering
+ * that an RBTIterator may exist attached to the tree. If not
+ * careful, it is possible to remove a node that the RBTiterator
+ * is currently attached to.
+ *
+ * If an existing RBTIterator is used after one or more of the
+ * above methods are called, rbtToStart, rbtToTail or rbtToRoot
+ * should be called to place the iterator back onto a valid node
+ * of the tree
+ *****************************************************************/
 
 #endif /* RBT_H */

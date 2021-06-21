@@ -427,7 +427,7 @@ void constructTree(RBT* tree)
     // 400 Node (black)
     RBTNode* node400 = newIntNode(400);
     node400->isRed = 0;
-    tree->head = node400;
+    tree->root = node400;
 
     // 200 Node (black)
     RBTNode* node200 = newIntNode(200);
@@ -479,12 +479,12 @@ void constructTree(RBT* tree)
 
 void eraseTree(RBT* tree)
 {
-    if (tree->head == NULL)
+    if (tree->root == NULL)
     {
         return;
     }
 
-    RBTNode* currentNode = tree->head;
+    RBTNode* currentNode = tree->root;
     int state = -1; // -1 go left, 1 go right, 0 clear this
 
     while (1)
@@ -537,7 +537,7 @@ void eraseTree(RBT* tree)
         }
     }
 
-    tree->head = NULL;
+    tree->root = NULL;
 }
 
 int testitoa(char* buffer, void* content)
