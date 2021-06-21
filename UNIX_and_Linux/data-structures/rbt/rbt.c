@@ -471,6 +471,35 @@ int rbtToEnd(RBTIterator* iterator, RBT* tree)
     return 0;
 }
 
+int rbtToNode(RBTIterator* iterator, RBT* tree, void* query)
+{
+    if (tree->root == NULL)
+    {
+        return -1;
+    }
+
+    iterator->tree = tree;
+
+    // If NULL query is given, return with iterator attached to start
+    if (query == NULL)
+    {
+        rbtToStart(iterator, tree);
+        return -1;
+    }
+
+    RBTStatusStruct statusStruct = rbtGetNodeFromStart__(tree->root, query, tree->compareFunction);
+
+    if (statusStruct.status != SUCCESS)
+    {
+        iterator->node = statusStruct.node;
+        return -1;
+    }
+
+    iterator->node = statusStruct.node;
+
+    return 0;
+}
+
 // Implementation only definitions
 
 RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))

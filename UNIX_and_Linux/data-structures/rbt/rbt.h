@@ -253,4 +253,34 @@ int rbtToStart(RBTIterator* iterator, RBT* tree);
  ***************************************************************/
 int rbtToEnd(RBTIterator* iterator, RBT* tree);
 
+/***************************************************************
+ * rbtToNode
+ * 
+ * Inputs: RBTIterator* iterator, RBT* tree, void* query
+ * Returns: int
+ * 
+ * This method attempts to move the given RBTIterator onto
+ * a node with a value equal to the query object
+ * 
+ * Note: If a tree contains more than one node that are equivalent
+ * to the query, this method may not necessarily move the
+ * iterator to the first occurance of that value, in terms
+ * start to end traversal of the tree
+ * 
+ * Returns 0 on success
+ * 
+ * Returns -1 on failure. Failure can be caused if the tree is
+ * empty, in which case the iterator will not be associated with
+ * that tree.
+ * 
+ * Failure can also be caused if a node matching the query does
+ * not exist in the tree, in which case the iterator will be
+ * placed on to a node in the tree closest to that value
+ * 
+ * If an empty node was encountered in the tree along the query
+ * path, the iterator is placed on to the empty node that
+ * caused the problem
+ ***************************************************************/
+int rbtToNode(RBTIterator* iterator, RBT* tree, void* query);
+
 #endif /* RBT_H */
