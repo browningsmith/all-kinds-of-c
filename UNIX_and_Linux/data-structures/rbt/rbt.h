@@ -278,7 +278,7 @@ int rbtToEnd(RBTIterator* iterator, RBT* tree);
  * placed on to a node in the tree closest to that value
  * 
  * If an empty node was encountered in the tree along the query
- * path, the iterator is placed on to the empty node that
+ * path, the iterator is instead placed on to the empty node that
  * caused the problem
  ***************************************************************/
 int rbtToNode(RBTIterator* iterator, RBT* tree, void* query);

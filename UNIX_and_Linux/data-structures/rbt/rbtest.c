@@ -1079,6 +1079,126 @@ int main()
     }
     printf("Completed rbtToEnd\n");
 
+    // Test rbtToNode
+    printf("Testing rbtToNode\n");
+    {
+        RBTIterator iter;
+        int result;
+        int query;
+
+        rbtInit(&tree, compareInt);
+        
+        // Test on empty tree
+        iter.tree = (void*) 89;
+        iter.node = (void*) 77;
+        query = 45;
+        result = rbtToNode(&iter, &tree, (void*) &query);
+        if (result != -1)
+        {
+            printf("rbtToNode: Error, incorrect result %i returned when called on empty tree\n", result);
+            return -1;
+        }
+        if (iter.tree != (void*) 89)
+        {
+            printf("rbtToNode: Error, tree attribute of iterator was updated when called on empty tree\n");
+            return -1;
+        }
+        if (iter.node != (void*) 77)
+        {
+            printf("rbtToNode: Error, node attribute of iterator was updated when called on empty tree\n");
+            return -1;
+        }
+
+        // Test with NULL query
+        constructTree(&tree);
+        result = rbtToNode(&iter, &tree, NULL);
+        if (result != -1)
+        {
+            printf("rbtToNode: Error, incorrect result %i returned when called on tree with NULL query\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToNode: Error, tree attribute was not set to the tree when called with NULL query\n");
+            return -1;
+        }
+        if (iter.node != tree.root->left->left) // 100 node
+        {
+            printf("rbtToNode: Error, node attribute was not set to the start of the tree when called with NULL query\n");
+            return -1;
+        }
+
+        // Test with broken tree
+        iter.tree = (void*) 89;
+        iter.node = (void*) 77;
+        RBTNode* brokenNode = tree.root->right; // 600 node
+        void* brokenContent = brokenNode->content;
+        brokenNode->content = NULL; // Break the tree
+        query = 700; // will search along path 400->600->700
+        result = rbtToNode(&iter, &tree, (void*) &query);
+        if (result != -1)
+        {
+            printf("rbtToNode: Error, incorrect result %i returned when called on tree an empty node\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToNode: Error, tree attribute was not set to the tree when called on tree with empty node\n");
+            return -1;
+        }
+        if (iter.node != brokenNode)
+        {
+            printf("rbtToNode: Error, node attribute was not set to the empty node when called on tree with empty node\n");
+            return -1;
+        }
+        brokenNode->content = brokenContent; // Fix tree
+
+        // Test for node that does not exist in tree
+        iter.tree = (void*) 89;
+        iter.node = (void*) 77;
+        query = 305; // Will search along path 400->200->300
+        result = rbtToNode(&iter, &tree, (void*) &query);
+        if (result != -1)
+        {
+            printf("rbtToNode: Error, incorrect result %i returned when called with a query that does not exist in the tree\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToNode: Error, tree attribute was not set to the tree when called with a query that does not exist in the tree\n");
+            return -1;
+        }
+        if (iter.node != tree.root->left->right) // 300 node
+        {
+            printf("rbtToNode: Error, node attribute was not set to node at the end of the search path when called with a query that does not exist in the tree\n");
+            return -1;
+        }
+
+        // Test for node that exists in tree
+        iter.tree = (void*) 89;
+        iter.node = (void*) 77;
+        query = 200; // Will search along path 400->200
+        result = rbtToNode(&iter, &tree, (void*) &query);
+        if (result != 0)
+        {
+            printf("rbtToNode: Error, incorrect result %i returned when called with a query that exists in the tree\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToNode: Error, tree attribute was not set to the tree when called with a query exists in the tree\n");
+            return -1;
+        }
+        if (iter.node != tree.root->left) // 200 node
+        {
+            printf("rbtToNode: Error, node attribute was not set to the correct node when called with a query that exists in the tree\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtToNode\n");
+
     printf("Tests complete\n");
 
     return 0;
