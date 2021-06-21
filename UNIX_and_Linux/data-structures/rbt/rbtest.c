@@ -867,6 +867,52 @@ int main()
     }
     printf("Testing rbtDelete\n");
 
+    // Test rbtToRoot
+    printf("Testing rbtToRoot\n");
+    {
+        RBTIterator iter;
+        int result;
+
+        rbtInit(&tree, compareInt);
+
+        // Test on an empty tree
+        iter.tree = NULL;
+        iter.node = NULL;
+        result = rbtToRoot(&iter, &tree);
+        if (result != -1)
+        {
+            printf("rbtToRoot: Error, returned wrong result %i when called on empty tree\n", result);
+            return -1;
+        }
+        if (iter.node != NULL)
+        {
+            printf("rbtToRoot: Node of iterator was updated when called on empty tree\n");
+            return -1;
+        }
+
+        // Test on small tree
+        constructTree(&tree);
+        result = rbtToRoot(&iter, &tree);
+        if (result != 0)
+        {
+            printf("rbtToRoot: Error, returned wrong result %i when called on non empty tree\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToRoot: Error, tree attribute was not updated to the provided tree when called with non empty tree\n");
+            return -1;
+        }
+        if (iter.node != tree.root)
+        {
+            printf("rbtToRoot: Error, iterator was not attached to the root of the tree when called with non empty tree\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtToRoot\n");
+
     printf("Tests complete\n");
 
     return 0;

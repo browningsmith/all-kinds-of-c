@@ -200,4 +200,21 @@ int rbtClear(RBT* tree, int (*clearingFunction) (void*));
  * of the tree
  *****************************************************************/
 
+/***************************************************************
+ * rbtToRoot
+ * 
+ * Inputs: RBTIterator* iterator, RBT* tree
+ * Returns: int
+ * 
+ * This method moves the given RBTIterator on to the root of the
+ * given tree. Can also be used to attach a newly created
+ * RBTIterator to the root of a tree
+ * 
+ * Returns 0 on success
+ * 
+ * Returns -1 on failure, meaning the provided tree is empty,
+ * and does not associate the iterator with that tree
+ ***************************************************************/
+int rbtToRoot(RBTIterator* iterator, RBT* tree);
+
 #endif /* RBT_H */

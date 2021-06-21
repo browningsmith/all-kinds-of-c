@@ -418,6 +418,19 @@ RBTStatus rbtDelete(RBT* tree, void* query, void** returnedContent)
     return result.status;
 }
 
+int rbtToRoot(RBTIterator* iterator, RBT* tree)
+{
+    if (tree->root == NULL)
+    {
+        return -1;
+    }
+
+    iterator->tree = tree;
+    iterator->node = tree->root;
+
+    return 0;
+}
+
 // Implementation only definitions
 
 RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))
