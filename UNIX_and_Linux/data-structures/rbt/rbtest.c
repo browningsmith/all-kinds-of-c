@@ -917,6 +917,8 @@ int main()
     printf("Testing rbtToStart\n");
     {
         RBTIterator iter;
+        RBTStatus status;
+        void* returnedContent;
         int result;
 
         rbtInit(&tree, compareInt);
@@ -936,8 +938,43 @@ int main()
             return -1;
         }
 
+        // Test on tree with one node
+        int i = 37;
+        status = rbtInsert(&tree, (void*) &i);
+        if (status != SUCCESS)
+        {
+            printf("rbtToStart: Error, rbtInsert returned with %s when trying to insert a single node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+        result = rbtToStart(&iter, &tree);
+        if (result != 0)
+        {
+            printf("rbtToStart: Error, returned wrong result %i when called on tree with one node\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToStart: Error, tree attribute was not updated to the provided tree when called with tree with one node\n");
+            return -1;
+        }
+        if (iter.node != tree.root) // Node 400
+        {
+            printf("rbtToStart: Error, iterator was not attached to the head of the tree when called with tree with one node\n");
+            return -1;
+        }
+        result = rbtDelete(&tree, (void*) &i, &returnedContent);
+        if (result != SUCCESS)
+        {
+            printf("rbtToStart: Error, rbtDelete returned with %s when attempting to delete single node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+
         // Test on small tree
         constructTree(&tree);
+        iter.tree = NULL;
+        iter.node = NULL;
         result = rbtToStart(&iter, &tree);
         if (result != 0)
         {

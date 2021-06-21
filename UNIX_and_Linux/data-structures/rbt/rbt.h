@@ -195,7 +195,7 @@ int rbtClear(RBT* tree, int (*clearingFunction) (void*));
  * is currently attached to.
  *
  * If an existing RBTIterator is used after one or more of the
- * above methods are called, rbtToStart, rbtToTail or rbtToRoot
+ * above methods are called, rbtToStart, rbtToEnd or rbtToRoot
  * should be called to place the iterator back onto a valid node
  * of the tree
  *****************************************************************/
@@ -234,5 +234,23 @@ int rbtToRoot(RBTIterator* iterator, RBT* tree);
  * and does not associate the iterator with that tree
  ***************************************************************/
 int rbtToStart(RBTIterator* iterator, RBT* tree);
+
+/***************************************************************
+ * rbtToEnd
+ * 
+ * Inputs: RBTIterator* iterator, RBT* tree
+ * Returns: int
+ * 
+ * This method moves the given RBTIterator on to the end of the
+ * given tree, meaning the highest comparable value stored in the
+ * tree currently. Can also be used to attach a newly created
+ * RBTIterator to the end of a tree
+ * 
+ * Returns 0 on success
+ * 
+ * Returns -1 on failure, meaning the provided tree is empty,
+ * and does not associate the iterator with that tree
+ ***************************************************************/
+int rbtToEnd(RBTIterator* iterator, RBT* tree);
 
 #endif /* RBT_H */
