@@ -996,6 +996,89 @@ int main()
     }
     printf("Completed rbtToStart\n");
 
+    // Test rbtToEnd
+    printf("Testing rbtToEnd\n");
+    {
+        RBTIterator iter;
+        RBTStatus status;
+        void* returnedContent;
+        int result;
+
+        rbtInit(&tree, compareInt);
+
+        // Test on an empty tree
+        iter.tree = NULL;
+        iter.node = NULL;
+        result = rbtToEnd(&iter, &tree);
+        if (result != -1)
+        {
+            printf("rbtToEnd: Error, returned wrong result %i when called on empty tree\n", result);
+            return -1;
+        }
+        if (iter.node != NULL)
+        {
+            printf("rbtToEnd: Node of iterator was updated when called on empty tree\n");
+            return -1;
+        }
+
+        // Test on tree with one node
+        int i = 37;
+        status = rbtInsert(&tree, (void*) &i);
+        if (status != SUCCESS)
+        {
+            printf("rbtToEnd: Error, rbtInsert returned with %s when trying to insert a single node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+        result = rbtToEnd(&iter, &tree);
+        if (result != 0)
+        {
+            printf("rbtToEnd: Error, returned wrong result %i when called on tree with one node\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToEnd: Error, tree attribute was not updated to the provided tree when called with tree with one node\n");
+            return -1;
+        }
+        if (iter.node != tree.root) // Node 400
+        {
+            printf("rbtToEnd: Error, iterator was not attached to the head of the tree when called with tree with one node\n");
+            return -1;
+        }
+        result = rbtDelete(&tree, (void*) &i, &returnedContent);
+        if (result != SUCCESS)
+        {
+            printf("rbtToEnd: Error, rbtDelete returned with %s when attempting to delete single node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+
+        // Test on small tree
+        constructTree(&tree);
+        iter.tree = NULL;
+        iter.node = NULL;
+        result = rbtToEnd(&iter, &tree);
+        if (result != 0)
+        {
+            printf("rbtToEnd: Error, returned wrong result %i when called on non empty tree\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToEnd: Error, tree attribute was not updated to the provided tree when called with non empty tree\n");
+            return -1;
+        }
+        if (iter.node != tree.root->right->right) // Node 100
+        {
+            printf("rbtToEnd: Error, iterator was not attached to the end of the tree when called with non empty tree\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtToEnd\n");
+
     printf("Tests complete\n");
 
     return 0;
