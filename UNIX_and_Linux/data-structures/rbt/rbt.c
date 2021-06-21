@@ -943,3 +943,41 @@ RBTNode* rbtGetPrev__(RBTNode* node)
 
     return node;
 }
+
+RBTNode* rbtGetNext__(RBTNode* node)
+{
+    // If right child exists
+    if (node->right != NULL)
+    {
+        node = node->right;
+        while (node->left != NULL)
+        {
+            node = node->left;
+        }
+    }
+
+    // If right child does not exist
+    else
+    {
+        while (1)
+        {
+            // If node is the root, no predecessor, return NULL
+            if (node->parent == NULL)
+            {
+                return NULL;
+            }
+
+            // If node is right child
+            if (node == node->parent->right)
+            {
+                node = node->parent;
+                continue;
+            }
+
+            node = node->parent;
+            break;
+        }
+    }
+
+    return node;
+}

@@ -30,4 +30,6 @@ void rbtFixBlackViolations__(RBT* tree, RBTNode* node);
 
 RBTNode* rbtGetPrev__(RBTNode* node);
 
+RBTNode* rbtGetNext__(RBTNode* node);
+
 #endif /* RBTIMPL_H */

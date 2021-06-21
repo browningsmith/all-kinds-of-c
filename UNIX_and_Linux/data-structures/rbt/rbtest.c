@@ -530,6 +530,73 @@ int main()
     }
     printf("Completed rbtGetPrev__\n");
 
+    // Test rbtGetNext__
+    printf("Testing rbtGetNext__\n");
+    {
+        rbtInit(&tree, compareInt);
+
+        // Insert the numbers 1-100 into the tree
+        for (int i=1; i<101; i++)
+        {
+            void* content = malloc(sizeof(int));
+            if (content == NULL)
+            {
+                printf("rbtGetNext__: Error allocating space to store %i\n", i);
+                perror("");
+                return -1;
+            }
+            *(int*) content = i;
+
+            RBTStatus status = rbtInsert(&tree, content);
+            if (status != SUCCESS)
+            {
+                printf("rbtGetNext__: Error inserting %i. rbtInsert returned with %s\n", i, rbtStatusAsText(status));
+                perror("");
+                return -1;
+            }
+        }
+
+        // Move to node 1
+        RBTNode* node = tree.root;
+        while (node->left != NULL)
+        {
+            node = node->left;
+        }
+        if (*(int*) node->content != 1)
+        {
+            printf("rbtGetNext__: Attempt to get the node at the leftmost end of the tree failed, content is %i\n", *(int*) node->content);
+            return -1;
+        }
+
+        // For 2-100, check that successor matches that value
+        for (int i=2; i<101; i++)
+        {
+            node = rbtGetNext__(node);
+
+            if (node == NULL)
+            {
+                printf("rbtGetNext__: Returned NULL when it should have found the next node: %i\n", i);
+                return -1;
+            }
+            if (i != *(int*) node->content)
+            {
+                printf("rbtGetNext__: Next node %i does not match expected %i\n", *(int*) node->content, i);
+                return -1;
+            }
+        }
+
+        // Check that one more call to rbtGetNext__ returns NULL
+        node = rbtGetNext__(node);
+        if (node != NULL)
+        {
+            printf("rbtGetNext__: Error, did not return NULL even though there was no next node\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Testing rbtGetNext__\n");
+
     // Test rbtInsert
     printf("Testing rbtInsert\n");
     {
