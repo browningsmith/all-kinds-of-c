@@ -431,6 +431,26 @@ int rbtToRoot(RBTIterator* iterator, RBT* tree)
     return 0;
 }
 
+int rbtToStart(RBTIterator* iterator, RBT* tree)
+{
+    if (tree->root == NULL)
+    {
+        return -1;
+    }
+
+    iterator->tree = tree;
+
+    RBTNode* node = tree->root;
+    while (node->left != NULL)
+    {
+        node = node->left;
+    }
+
+    iterator->node = node;
+
+    return 0;
+}
+
 // Implementation only definitions
 
 RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))

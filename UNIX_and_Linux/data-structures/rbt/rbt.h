@@ -217,4 +217,22 @@ int rbtClear(RBT* tree, int (*clearingFunction) (void*));
  ***************************************************************/
 int rbtToRoot(RBTIterator* iterator, RBT* tree);
 
+/***************************************************************
+ * rbtToStart
+ * 
+ * Inputs: RBTIterator* iterator, RBT* tree
+ * Returns: int
+ * 
+ * This method moves the given RBTIterator on to the start of the
+ * given tree, meaning the lowest comparable value stored in the
+ * tree currently. Can also be used to attach a newly created
+ * RBTIterator to the start of a tree
+ * 
+ * Returns 0 on success
+ * 
+ * Returns -1 on failure, meaning the provided tree is empty,
+ * and does not associate the iterator with that tree
+ ***************************************************************/
+int rbtToStart(RBTIterator* iterator, RBT* tree);
+
 #endif /* RBT_H */
