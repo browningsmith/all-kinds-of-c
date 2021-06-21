@@ -93,8 +93,8 @@ int rbtIsEmpty(RBT tree);
  * 
  * Searches for a node within tree based on the given query object
  * 
- * If the search is successful, returns SUCCESS. Also sets
- * returnedContent equal to the content of the found node
+ * If the search is successful, returns SUCCESS. Also places the
+ * content of the found node into returnedContent
  * 
  * If the search fails due to the node not being found, returns
  * NOT_FOUND. Does not alter returnedContent
@@ -148,9 +148,8 @@ RBTStatus rbtInsert(RBT* tree, void* content);
  * NOT_FOUND. Does not alter returnedContent or delete any nodes
  * 
  * If the search fails due to an empty node being encountered in
- * the tree, returns EMPTY_NODE_ENCOUNTERED, and result.node being
- * set to the node. Does not alter returnedContent or delete any
- * nodes
+ * the tree, returns EMPTY_NODE_ENCOUNTERED Does not alter
+ * returnedContent or delete any nodes
  * 
  * If the user attempts to search using a query that is NULL, returns
  * NULL_CONTENT. Does not alter returnedContent or deleteany nodes
