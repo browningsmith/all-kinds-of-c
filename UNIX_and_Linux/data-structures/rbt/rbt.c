@@ -510,6 +510,34 @@ void* rbtGetThis(RBTIterator* iterator)
     return iterator->node->content;
 }
 
+void* rbtGetPrev(RBTIterator* iterator)
+{
+    RBTNode* prevNode = iterator->node; // Start whith this node
+
+    if (prevNode == NULL)
+    {
+        return NULL;
+    }
+
+    while (1)
+    {
+        prevNode = rbtGetPrev__(prevNode);
+
+        if (prevNode == NULL)
+        {
+            return NULL;
+        }
+
+        if (prevNode->content != NULL)
+        {
+            break;
+        }
+    }
+
+    iterator->node = prevNode;
+    return prevNode->content;
+}
+
 // Implementation only definitions
 
 RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))

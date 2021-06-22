@@ -297,4 +297,23 @@ int rbtToNode(RBTIterator* iterator, RBT* tree, void* query);
  ***************************************************************/
 void* rbtGetThis(RBTIterator* iterator);
 
+/***************************************************************
+ * rbtGetPrev
+ * 
+ * Inputs: RBTIterator* iterator
+ * Returns: void*
+ * 
+ * This method attempts to move the iterator on to the previous
+ * node in succession on the tree.
+ * 
+ * On success, moves the iterator to the previous node and returns
+ * the content of that node.
+ * 
+ * Returns NULL on failure, meaning there is no previous node
+ * 
+ * If the node attribute of the iterator is somehow NULL, also
+ * returns NULL
+ ***************************************************************/
+void* rbtGetPrev(RBTIterator* iterator);
+
 #endif /* RBT_H */
