@@ -1,12 +1,14 @@
-all: server
+all: webserver
 
-server: server.o
-	gcc -std=c99 -Wall -o server server.o
 
-server.o: server.h server.c
-	gcc -std=c99 -Wall -c -o server.o server.c
 
-clean: cleanserver
+webserver: webserver.o
+	gcc -Wall -o webserver webserver.o
 
-cleanserver:
-	-rm -rf server server.o
+webserver.o: webserver.c
+	gcc -Wall -c -o webserver.o webserver.c
+
+
+
+clean: cleanwebserver
+	-rm -rf webserver webserver.o
