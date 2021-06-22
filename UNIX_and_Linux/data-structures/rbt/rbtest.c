@@ -1324,6 +1324,97 @@ int main()
     }
     printf("Completed rbtGetPrev\n");
 
+    // Test rbtGetNext
+    printf("Testing rbtGetNext\n");
+    {
+        RBTIterator iter;
+        void* content;
+
+        rbtInit(&tree, compareInt);
+        
+        // Test when node attribute is NULL
+        iter.node = NULL;
+        content = (void*) 33;
+        content = rbtGetNext(&iter);
+        if (content != NULL)
+        {
+            printf("rbtGetNext: Error, did not return NULL when node attribute is NULL\n");
+            return -1;
+        }
+
+        // Test whether it skips over empty node
+        constructTree(&tree);
+        rbtToStart(&iter, &tree); // Should move to the 100 node
+        RBTNode* brokenNode = tree.root->left; // 200 node
+        void* brokenContent = brokenNode->content;
+        brokenNode->content = NULL; // empty the node
+        content = rbtGetNext(&iter);
+        if (content == NULL)
+        {
+            printf("rbtGetNext: Error, returned NULL when it should have skipped over the empty node\n");
+            return -1;
+        }
+        if (*(int*) content != 300)
+        {
+            printf("rbtGetNext: Error, returned incorrect content when it should have skipped over the empty node: %i\n", *(int*) content);
+            return -1;
+        }
+        if (iter.node != tree.root->left->right) // 300 node
+        {
+            printf("rbtGetNext: Error, iterator did not get placed on the correct node\n");
+            return -1;
+        }
+        brokenNode->content = brokenContent; // fix tree
+        rbtClear(&tree, testclear);
+
+        // Construct tree with nodes 1-100
+        for (int i=1; i<101; i++)
+        {
+            content = malloc(sizeof(int));
+            if (content == NULL)
+            {
+                perror("rbtGetNext: Error, unable to allocate space for a new int when constructing tree\n");
+                return -1;
+            }
+            *(int*) content = i;
+            RBTStatus status = rbtInsert(&tree, content);
+            if (status != SUCCESS)
+            {
+                printf("rbtGetNext: Error, rbtInsert returned with %s when inserting into tree\n", rbtStatusAsText(status));
+                perror("");
+                return -1;
+            }
+        }
+
+        // Test iterating through the whole tree
+        rbtToStart(&iter, &tree);
+        for (int i=2; i<101; i++)
+        {
+            content = rbtGetNext(&iter);
+            if (content == NULL)
+            {
+                printf("rbtGetNext: Error, returned NULL when iterating though a tree but has not reached the end yet\n");
+                return -1;
+            }
+            if (*(int*) content != i)
+            {
+                printf("rbtGetNext: Error, the content of the previous node %i does not match the expected %i\n", *(int*) content, i);
+                return -1;
+            }
+        }
+
+        // Test iterating once more to get NULL
+        content = rbtGetNext(&iter);
+        if (content != NULL)
+        {
+            printf("rbtGetNext: Error, did not return NULL even though the end of the tree should be at the end of the tree\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtGetNext\n");
+
     printf("Tests complete\n");
 
     return 0;
