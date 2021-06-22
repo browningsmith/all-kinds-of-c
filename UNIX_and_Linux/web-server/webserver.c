@@ -13,13 +13,43 @@
 #define BACKLOG 10
 #define ERROR_LIMIT 100
 
-void checkErrorLimit(int* errLimit);
+typedef struct {
+    
+    int fd;
+    char* name;
+    int exists;
+
+} SocketData;
+
+typedef struct {
+
+    int errLimit;
+    SocketData listenSocket, clientSocket;
+
+} GlobalData;
+
+void checkErrorLimit(GlobalData* globalData);
+int closeSocket(SocketData* s);
 
 int main()
 {
-    int errLimit = ERROR_LIMIT;
-    
-    int listenSocket, clientSocket;
+    GlobalData globalData = {
+
+        .errLimit = ERROR_LIMIT,
+
+        .listenSocket = {
+
+            .name = "listen",
+            .exists = 0,
+        },
+
+        .clientSocket = {
+
+            .name = "client",
+            .exists = 0,
+        }
+    };
+
     struct sockaddr_in serverAddress;
     struct sockaddr clientAddress;
     socklen_t clientAddressSize;
@@ -29,13 +59,14 @@ int main()
     printf("webserver startup\n");
     
     // Create socket
-    listenSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (listenSocket < 0)
+    globalData.listenSocket.fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (globalData.listenSocket.fd < 0)
     {
         perror("unable to create listen socket");
         return -1;
     }
     printf("created listen socket\n");
+    globalData.listenSocket.exists = 1;
 
     // Populate address info for the server
     serverAddress.sin_family = AF_INET;
@@ -43,7 +74,7 @@ int main()
     serverAddress.sin_port = htons(HTML_ALT_PORT);
 
     // Bind the listenSocket to the port
-    if (bind(listenSocket, (struct sockaddr*) &serverAddress, sizeof(serverAddress)) < 0)
+    if (bind(globalData.listenSocket.fd, (struct sockaddr*) &serverAddress, sizeof(serverAddress)) < 0)
     {
         perror("unable to bind the listen socket to port");
 
@@ -52,7 +83,7 @@ int main()
     printf("bound listen socket to port %i\n", HTML_ALT_PORT);
 
     // Set socket to listen
-    if (listen(listenSocket, BACKLOG) < -1)
+    if (listen(globalData.listenSocket.fd, BACKLOG) < -1)
     {
         perror("listen() failed on listen socket");
 
@@ -67,13 +98,14 @@ int main()
 
         printf("Waiting for new connection...\n");
 
-        clientSocket = accept(listenSocket, &clientAddress, &clientAddressSize);
-        if (clientSocket < 0)
+        globalData.clientSocket.fd = accept(globalData.listenSocket.fd, &clientAddress, &clientAddressSize);
+        if (globalData.clientSocket.fd < 0)
         {
             perror("Error on accept() call:");
-            checkErrorLimit(&errLimit);
+            checkErrorLimit(&globalData);
         }
         printf("webserver accepted new connection\n");
+        globalData.clientSocket.exists = 1;
 
         // Begin reading data from client
         while (1)
@@ -82,7 +114,7 @@ int main()
             bzero(buffer, BUFF_LEN);
             printf("Waiting for new message\n");
 
-            int receivedBytes = recv(clientSocket, buffer, BUFF_LEN, 0);
+            int receivedBytes = recv(globalData.clientSocket.fd, buffer, BUFF_LEN, 0);
             if (receivedBytes < 1) // Either controlled shutdown (0) or error (-1)
             {
                 if (receivedBytes == 0) // controlled shutdown
@@ -92,15 +124,13 @@ int main()
                 else //error
                 {
                     perror("webserver received error on call to recv()");
-                    checkErrorLimit(&errLimit);
+                    checkErrorLimit(&globalData);
                 }
 
-                if (close(clientSocket) < 0)
+                if (closeSocket(&globalData.clientSocket) < 0)
                 {
-                    perror("unable to properly close client socket");
-                    checkErrorLimit(&errLimit);
+                    checkErrorLimit(&globalData);
                 }
-                printf("Closed client socket\n");
 
                 break;
             }
@@ -116,44 +146,51 @@ int main()
                 fflush(stdout);
 
                 send(
-                    clientSocket,
-                    "HTTP/1.1 200 OK\r\n<html><head>Hello</head><body>hello</body></html>\r\n",
-                    strlen("HTTP/1.1 200 OK\r\n<html><head>Hello</head><body>hello</body></html>\r\n"),
+                    globalData.clientSocket.fd,
+                    "HTTP/1.1 418 I'm a teapot!\r\n",
+                    strlen("HTTP/1.1 418 I'm a teapot!\r\n"),
                     0
                 );
-
-                if (close(clientSocket) < 0)
-                {
-                    perror("unable to properly close client socket");
-                    checkErrorLimit(&errLimit);
-                }
-                printf("Closed client socket\n");
-
-                break;
             }
         }
     }
 
     // Close listen socket
-    if (close(listenSocket) < 0)
-    {
-        perror("unable to properly close listen socket");
-        // non fatal
-    }
-    printf("closed listen socket\n");
+    closeSocket(&globalData.listenSocket);
 
     return 0;
 }
 
-void checkErrorLimit(int* errLimit)
+void checkErrorLimit(GlobalData* globalData)
 {
-    (*errLimit)--;
+    (globalData->errLimit)--;
 
-    if (*errLimit < 1)
+    if (globalData->errLimit < 1)
     {
         printf("Error limit reached, exiting\n");
+        closeSocket(&globalData->clientSocket);
+        closeSocket(&globalData->listenSocket);
         exit(-1);
     }
 
     return;
+}
+
+int closeSocket(SocketData* s)
+{
+    if (s->exists != 0)
+    {
+        s->exists = 0;
+
+        if (close(s->fd) < 0)
+        {
+            printf("Unable to properly close socket: %s\n", s->name);
+            perror("");
+            return -1;
+        }
+
+        printf("Closed socket: %s\n", s->name);
+    }
+
+    return 0;
 }
