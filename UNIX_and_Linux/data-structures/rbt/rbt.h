@@ -283,4 +283,18 @@ int rbtToEnd(RBTIterator* iterator, RBT* tree);
  ***************************************************************/
 int rbtToNode(RBTIterator* iterator, RBT* tree, void* query);
 
+/***************************************************************
+ * rbtGetThis
+ * 
+ * Inputs: RBTIterator* iterator
+ * Returns: void*
+ * 
+ * This method returns a pointer to the content contained in the
+ * node that the iterator is currently sitting on
+ * 
+ * If the node attribute of the iterator is somehow NULL, or if
+ * the content of the node is NULL, returns NULL
+ ***************************************************************/
+void* rbtGetThis(RBTIterator* iterator);
+
 #endif /* RBT_H */

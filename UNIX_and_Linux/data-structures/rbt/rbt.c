@@ -500,6 +500,16 @@ int rbtToNode(RBTIterator* iterator, RBT* tree, void* query)
     return 0;
 }
 
+void* rbtGetThis(RBTIterator* iterator)
+{
+    if (iterator->node == NULL)
+    {
+        return NULL;
+    }
+
+    return iterator->node->content;
+}
+
 // Implementation only definitions
 
 RBTStatusStruct rbtGetNodeFromStart__(RBTNode* start, void* query, int (*compareFunction) (void* a, void* b))

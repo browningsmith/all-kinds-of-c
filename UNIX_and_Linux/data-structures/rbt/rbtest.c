@@ -1199,6 +1199,40 @@ int main()
     }
     printf("Completed rbtToNode\n");
 
+    // Test rbtGetThis
+    printf("Testing rbtGetThis\n");
+    {
+        RBTIterator iter;
+        void* content;
+        int query;
+        
+        // Test calling if node attribute is NULL
+        iter.node = NULL;
+        content = (void*) 33;
+        content = rbtGetThis(&iter);
+        if (content != NULL)
+        {
+            printf("rbtGetThis: Error, NULL was not returned when called while iter.node was NULL\n");
+            return -1;
+        }
+
+        // Test calling on a node of a tree
+        iter.node = NULL;
+        iter.tree = NULL;
+        constructTree(&tree);
+        query = 300;
+        rbtToNode(&iter, &tree, (void*) &query);
+        content = rbtGetThis(&iter);
+        if (*(int*) content != query)
+        {
+            printf("rbtGetThis: Error, incorrect content was returned when called on what should have been a valid node\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtGetThis\n");
+
     printf("Tests complete\n");
 
     return 0;
