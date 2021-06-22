@@ -1,28 +1,34 @@
 #include "rbt.h"
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
+#include <sys/time.h>
 
 #include "include/cooltools.h"
 #include "rbtimpl.h"
 #include "rbtprint.h"
 
-// TODO: Finish testing rbtInsert
-// TODO: Finish testing rbtDelete
-
-int compareInt(void* a, void* b);
-RBTNode* newIntNode(int num);
-void displayNode(RBTNode node);
-void constructTree(RBT* tree);
-int testitoa(char* buffer, void* content);
-int testclear(void* content);
-int badclear(void* content);
+int compareInt(void* a, void* b); // Custom function for RBT to compare two ints
+RBTNode* newIntNode(int num); // Creates a new RBT node containing an int in early tests
+void displayNode(RBTNode node); // Displays the contents of a node
+void constructTree(RBT* tree); // Constructs a small, valid, and balanced RBT without using RBTInsert
+int testitoa(char* buffer, void* content); // Custom function used by rbtPrint to display the tree to the console
+int testclear(void* content); // Custom function used by rbtClear to clear the contents of a node
+int badclear(void* content); // Custom function that does nothing other than return nonzero, simulating if rbtClear received a clearing function that potentially could not clear a node's contents
+int checkBlackHeight(RBT tree); // Helper function to test that the black height of the given tree is uniform throughout
 
 int main()
 {
     RBT tree;
+
+    // Seed the random number generator with current system microseconds
+    {
+        struct timeval seed;
+        gettimeofday(&seed, NULL);
+        srand(seed.tv_usec);
+    }
     
     printf("Running tests on rbt\n");
     printf("Sizeof int: %lu\n", sizeof(int));
@@ -68,19 +74,19 @@ int main()
     // Test rbtInit
     printf("Testing rbtInit\n");
     {
-        tree.head = (RBTNode*) 17;
+        tree.root = (RBTNode*) 17;
         tree.compareFunction = NULL;
 
         rbtInit(&tree, compareInt);
 
-        if (tree.head != NULL)
+        if (tree.root != NULL)
         {
-            printf("rbtInit: Error, tree.head not set to NULL\n");
+            printf("rbtInit: Error, tree.root not set to NULL\n");
             return -1;
         }
         if (tree.compareFunction != compareInt)
         {
-            printf("rbtInit: Error, tree.head not set given compareFunction\n");
+            printf("rbtInit: Error, tree.root not set given compareFunction\n");
             return -1;
         }
     }
@@ -91,10 +97,10 @@ int main()
     {
         // Test if tree is not empty
         RBTNode node;
-        tree.head = &node;
+        tree.root = &node;
         if (rbtIsEmpty(tree) != 0)
         {
-            printf("rbtIsEmpty: Error, tree returned as empty when the head definitely points to a node\n");
+            printf("rbtIsEmpty: Error, tree returned as empty when the root definitely points to a node\n");
             return -1;
         }
 
@@ -119,9 +125,9 @@ int main()
             printf("rbtClear: Returned with incorrect result on test 1: %i\n", result);
             return -1;
         }
-        if (tree.head != NULL)
+        if (tree.root != NULL)
         {
-            printf("rbtClear: Head of tree is not NULL on test 1\n");
+            printf("rbtClear: root of tree is not NULL on test 1\n");
             return -1;
         }
 
@@ -132,9 +138,9 @@ int main()
         {
             printf("rbtClear: Returned with incorrect result on test 2: %i\n", result);
         }
-        if (tree.head != NULL)
+        if (tree.root != NULL)
         {
-            printf("rbtClear: Head of tree is not NULL on test 2\n");
+            printf("rbtClear: root of tree is not NULL on test 2\n");
             return -1;
         }
 
@@ -160,7 +166,7 @@ int main()
         }
         else
         {
-            if (tree.head == NULL)
+            if (tree.root == NULL)
             {
                 printf("rbtClear: Tree returned as empty even on status code -1, on test 3\n");
                 return -1;
@@ -173,9 +179,9 @@ int main()
         {
             printf("rbtClear: Returned with incorrect result on test 4: %i\n", result);
         }
-        if (tree.head != NULL)
+        if (tree.root != NULL)
         {
-            printf("rbtClear: Head of tree is not NULL on test 4\n");
+            printf("rbtClear: root of tree is not NULL on test 4\n");
             return -1;
         }
     }
@@ -191,7 +197,7 @@ int main()
         // Test searching all nodes created by constructTree
         for (query = 100; query < 800; query += 100)
         {
-            status = rbtGetNodeFromStart__(tree.head, (void*) &query, tree.compareFunction);
+            status = rbtGetNodeFromStart__(tree.root, (void*) &query, tree.compareFunction);
             if (status.status != SUCCESS)
             {
                 printf("rbtGetNodeFromStart__: Error, status returned with %s instead of SUCCESS, when query of %i should have been matched\n", rbtStatusAsText(status.status), query);
@@ -211,7 +217,7 @@ int main()
 
         // Test searching for a node that does not exist between 300 and 400
         query = 305;
-        status = rbtGetNodeFromStart__(tree.head, (void*) &query, tree.compareFunction);
+        status = rbtGetNodeFromStart__(tree.root, (void*) &query, tree.compareFunction);
         if (status.status != NOT_FOUND)
         {
             printf("rbtGetNodeFromStart__: Error, status returned with %s instead of NOT_FOUND, when query of %i should not have been matched\n", rbtStatusAsText(status.status), query);
@@ -222,7 +228,7 @@ int main()
             printf("rbtGetNodeFromStart__: Error, NULL returned when query of %i was not found on a non-empty list\n", query);
             return -1;
         }
-        if (status.node != tree.head->left->right)
+        if (status.node != tree.root->left->right)
         {
             printf("rbtGetNodeFromStart__: Error, incorrect node returned when query of %i was not found on a non-empty list\n", query);
             return -1;
@@ -230,7 +236,7 @@ int main()
 
         // Test searching for a node that does not exist beyond 700
         query = 800;
-        status = rbtGetNodeFromStart__(tree.head, (void*) &query, tree.compareFunction);
+        status = rbtGetNodeFromStart__(tree.root, (void*) &query, tree.compareFunction);
         if (status.status != NOT_FOUND)
         {
             printf("rbtGetNodeFromStart__: Error, status returned with %s instead of NOT_FOUND, when query of %i should not have been matched\n", rbtStatusAsText(status.status), query);
@@ -241,19 +247,19 @@ int main()
             printf("rbtGetNodeFromStart__: Error, NULL returned when query of %i was not found on a non-empty list\n", query);
             return -1;
         }
-        if (status.node != tree.head->right->right)
+        if (status.node != tree.root->right->right)
         {
             printf("rbtGetNodeFromStart__: Error, incorrect node returned when query of %i was not found on a non-empty list\n", query);
             return -1;
         }
 
         // Break tree by making 300 an empty node
-        void* content300 = tree.head->left->right->content;
-        tree.head->left->right->content = NULL;
+        void* content300 = tree.root->left->right->content;
+        tree.root->left->right->content = NULL;
 
         // Test EMPTY_NODE_ENCOUNTERED error
         query = 300;
-        status = rbtGetNodeFromStart__(tree.head, (void*) &query, tree.compareFunction);
+        status = rbtGetNodeFromStart__(tree.root, (void*) &query, tree.compareFunction);
         if (status.status != EMPTY_NODE_ENCOUNTERED)
         {
             printf("rbtGetNodeFromStart__: Error, status returned with %s instead of EMPTY_NODE_ENCOUNTERED, when the 300 node was set to have NULL content\n", rbtStatusAsText(status.status));
@@ -264,14 +270,14 @@ int main()
             printf("rbtGetNodeFromStart__: Error, NULL node returned when the 300 node was set to have NULL content\n");
             return -1;
         }
-        if (status.node != tree.head->left->right)
+        if (status.node != tree.root->left->right)
         {
             printf("rbtGetNodeFromStart__: Error, incorrect node returned when the 300 node was set to have NULL content\n");
             return -1;
         }
 
         // Fix tree
-        tree.head->left->right->content = content300;
+        tree.root->left->right->content = content300;
 
         rbtClear(&tree, testclear);
     }
@@ -364,8 +370,8 @@ int main()
         }
 
         // Break tree by making 300 an empty node
-        void* content300 = tree.head->left->right->content;
-        tree.head->left->right->content = NULL;
+        void* content300 = tree.root->left->right->content;
+        tree.root->left->right->content = NULL;
 
         // Test EMPTY_NODE_ENCOUNTERED error
         query = 300;
@@ -383,7 +389,7 @@ int main()
         }
 
         // Fix tree
-        tree.head->left->right->content = content300;
+        tree.root->left->right->content = content300;
 
         rbtClear(&tree, testclear);
     }
@@ -397,26 +403,26 @@ int main()
         RBTNode* node;
 
         // Test rotating left child
-        node = tree.head->left;
-        //printf("rbtRotateRight__: Tree before rotation on head's left\n");
+        node = tree.root->left;
+        //printf("rbtRotateRight__: Tree before rotation on root's left\n");
         //rbtPrint(tree, testitoa);
         rbtRotateRight__(&tree, node);
-        //printf("rbtRotateRight__: Tree after rotation on head's left\n");
+        //printf("rbtRotateRight__: Tree after rotation on root's left\n");
         //rbtPrint(tree, testitoa);
-        if (tree.head != node)
+        if (tree.root != node)
         {
-            printf("rbtRotateRight__: Head's former left child did not replace head of list\n");
+            printf("rbtRotateRight__: root's former left child did not replace root of list\n");
             return -1;
         }
         rbtClear(&tree, testclear);
         constructTree(&tree);
 
         // Test rotating left child's left child
-        node = tree.head->left->left;
-        //printf("rbtRotateRight__: Tree before rotation on head's left's left\n");
+        node = tree.root->left->left;
+        //printf("rbtRotateRight__: Tree before rotation on root's left's left\n");
         //rbtPrint(tree, testitoa);
         rbtRotateRight__(&tree, node);
-        //printf("rbtRotateRight__: Tree after rotation on head's left's left\n");
+        //printf("rbtRotateRight__: Tree after rotation on root's left's left\n");
         //rbtPrint(tree, testitoa);
 
         rbtClear(&tree, testclear);
@@ -431,26 +437,26 @@ int main()
         RBTNode* node;
 
         // Test rotating right child
-        node = tree.head->right;
-        //printf("rbtRotateLeft__: Tree before rotation on head's right\n");
+        node = tree.root->right;
+        //printf("rbtRotateLeft__: Tree before rotation on root's right\n");
         //rbtPrint(tree, testitoa);
         rbtRotateLeft__(&tree, node);
-        //printf("rbtRotateLeft__: Tree after rotation on head's right\n");
+        //printf("rbtRotateLeft__: Tree after rotation on root's right\n");
         //rbtPrint(tree, testitoa);
-        if (tree.head != node)
+        if (tree.root != node)
         {
-            printf("rbtRotateLeft__: Head's former right child did not replace head of list\n");
+            printf("rbtRotateLeft__: root's former right child did not replace root of list\n");
             return -1;
         }
         rbtClear(&tree, testclear);
         constructTree(&tree);
 
         // Test rotating right child's right child
-        node = tree.head->right->right;
-        //printf("rbtRotateLeft__: Tree before rotation on head's right's right\n");
+        node = tree.root->right->right;
+        //printf("rbtRotateLeft__: Tree before rotation on root's right's right\n");
         //rbtPrint(tree, testitoa);
         rbtRotateLeft__(&tree, node);
-        //printf("rbtRotateLeft__: Tree after rotation on head's right's right\n");
+        //printf("rbtRotateLeft__: Tree after rotation on root's right's right\n");
         //rbtPrint(tree, testitoa);
 
         rbtClear(&tree, testclear);
@@ -484,7 +490,7 @@ int main()
         }
 
         // Move to node 100
-        RBTNode* node = tree.head;
+        RBTNode* node = tree.root;
         while (node->right != NULL)
         {
             node = node->right;
@@ -523,6 +529,73 @@ int main()
         rbtClear(&tree, testclear);
     }
     printf("Completed rbtGetPrev__\n");
+
+    // Test rbtGetNext__
+    printf("Testing rbtGetNext__\n");
+    {
+        rbtInit(&tree, compareInt);
+
+        // Insert the numbers 1-100 into the tree
+        for (int i=1; i<101; i++)
+        {
+            void* content = malloc(sizeof(int));
+            if (content == NULL)
+            {
+                printf("rbtGetNext__: Error allocating space to store %i\n", i);
+                perror("");
+                return -1;
+            }
+            *(int*) content = i;
+
+            RBTStatus status = rbtInsert(&tree, content);
+            if (status != SUCCESS)
+            {
+                printf("rbtGetNext__: Error inserting %i. rbtInsert returned with %s\n", i, rbtStatusAsText(status));
+                perror("");
+                return -1;
+            }
+        }
+
+        // Move to node 1
+        RBTNode* node = tree.root;
+        while (node->left != NULL)
+        {
+            node = node->left;
+        }
+        if (*(int*) node->content != 1)
+        {
+            printf("rbtGetNext__: Attempt to get the node at the leftmost end of the tree failed, content is %i\n", *(int*) node->content);
+            return -1;
+        }
+
+        // For 2-100, check that successor matches that value
+        for (int i=2; i<101; i++)
+        {
+            node = rbtGetNext__(node);
+
+            if (node == NULL)
+            {
+                printf("rbtGetNext__: Returned NULL when it should have found the next node: %i\n", i);
+                return -1;
+            }
+            if (i != *(int*) node->content)
+            {
+                printf("rbtGetNext__: Next node %i does not match expected %i\n", *(int*) node->content, i);
+                return -1;
+            }
+        }
+
+        // Check that one more call to rbtGetNext__ returns NULL
+        node = rbtGetNext__(node);
+        if (node != NULL)
+        {
+            printf("rbtGetNext__: Error, did not return NULL even though there was no next node\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Testing rbtGetNext__\n");
 
     // Test rbtInsert
     printf("Testing rbtInsert\n");
@@ -566,22 +639,781 @@ int main()
             printf("rbtInsert: Error, tree is empty after attempted insert into empty tree\n");
             return -1;
         }
-        if (tree.head->isRed != 0)
+        if (tree.root->isRed != 0)
         {
             printf("rbtInsert: Error, new node is not black when added to an empty tree\n");
             return -1;
         }
-        if (*(int*) tree.head->content != 9000)
+        if (*(int*) tree.root->content != 9000)
         {
-            printf("rbtInsert: Error, int did not get added as head when inserted into an empty tree\n");
+            printf("rbtInsert: Error, int did not get added as root when inserted into an empty tree\n");
             return -1;
         }
 
-        // Test attempting to insert 
+        // Test attempting to insert into a broken tree
+        rbtClear(&tree, testclear);
+        constructTree(&tree);
+
+        content = malloc(sizeof(int)); // Allocate space for new int
+        if (content == NULL)
+        {
+            perror("rbtInsert: Unable to allocate space for new int on inserting into a broken tree test\n");
+            return -1;
+        }
+        *(int*) content = 501; // Should try to insert this along path 400->600->500
+        RBTNode* brokenNode = tree.root->right; // 660 node
+        void* brokenContent = brokenNode->content; // Break this node
+        brokenNode->content = NULL;
+        status = rbtInsert(&tree, content);
+        if (status != EMPTY_NODE_ENCOUNTERED)
+        {
+            printf("rbtInsert: Error, returned with %s when attempting to insert along a path that contained a NULL content node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+
+        free(content);
+        brokenNode->content = brokenContent; // Fix tree
+        rbtClear(&tree, testclear);
+
+        // Test that black height is uniform on a tree generated by random numbers
+        for (int i=0; i<200000; i++)
+        {
+            int newInt = rand();
+
+            content = malloc(sizeof(int));
+            if (content == NULL)
+            {
+                perror("rbtInsert: Error, unable to allocate space for new int when testing randomly generated tree\n");
+            }
+            *(int*) content = newInt;
+            status = rbtInsert(&tree, content);
+            if (status != SUCCESS)
+            {
+                printf("rbtInsert: Error, rbtInsert returned with status %s when inserting %i\n", rbtStatusAsText(status), newInt);
+                return -1;
+            }
+            content = NULL;
+            status = rbtFind(tree, (void*) &newInt, &content);
+            if (status != SUCCESS)
+            {
+                printf("rbtInsert: Error, rbtFind was unable to find the newly inserted integer %i\n", newInt);
+                return -1;
+            }
+        }
+        int height = checkBlackHeight(tree);
+        if (height < 0)
+        {
+            printf("rbtInsert: Error, black height of the randomly constructed tree is not uniform across the tree\n");
+            return -1;
+        }
+        
+        printf("Black height: %i\n", height);
 
         rbtClear(&tree, testclear);
     }
     printf("Completed rbtInsert\n");
+
+    // Test rbtDelete
+    printf("Testing rbtDelete\n");
+    {
+        RBTStatus status;
+        void* content;
+        int query;
+        void* returnedContent;
+
+        rbtInit(&tree, compareInt);
+        
+        // Test trying to delete with a NULL query
+        returnedContent = (void*) 92;
+        status = rbtDelete(&tree, NULL, &returnedContent);
+        if (status != NULL_CONTENT)
+        {
+            printf("rbtDelete: Error, returned with %s when attempting to delete with a NULL query\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+        if (returnedContent != (void*) 92)
+        {
+            printf("rbtDelete: returnedContent argument was altered when attempting to delete with a NULL query\n");
+            return -1;
+        }
+
+        // Test trying to delete from an empty tree
+        query = 45000;
+        returnedContent = (void*) 66;
+        status = rbtDelete(&tree, (void*) &query, &returnedContent);
+        if (status != NOT_FOUND)
+        {
+            printf("rbtDelete: Error, returned with %s when attempting to delete from an empty tree\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+        if (returnedContent != (void*) 66)
+        {
+            printf("rbtDelete: returnedContent argument was altered when attempting to delete from an empty tree\n");
+            return -1;
+        }
+
+        // Test deleting one node from the tree
+        query = 9876;
+        content = malloc(sizeof(int));
+        if (content == NULL)
+        {
+            perror("rbtDelete: Unable to allocate space for new int when testing the deletion in a tree with one node\n");
+            return -1;
+        }
+        *(int*) content = query;
+        status = rbtInsert(&tree, content);
+        if (status != SUCCESS)
+        {
+            printf("rbtDelete: rbtInsert returned with %s when attempting to insert, while testing the deletion in a tree with only one node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+        status = rbtDelete(&tree, (void*) &query, &returnedContent);
+        if (status != SUCCESS)
+        {
+            printf("rbtDelete: Error, returned with %s even though node to delete was queried correctly, when testing the deletion in a tree with only one node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+        if (rbtIsEmpty(tree) == 0)
+        {
+            printf("rbtDelete: Tree is not registering as empty even though the only node in the tree should have been deleted\n");
+            return -1;
+        }
+        if (query != *(int*) returnedContent)
+        {
+            printf("rbtDelete: Returned content does not match the query, when testing the deletion in a tree with only one node\n");
+            return -1;
+        }
+        free(returnedContent);
+
+        // Test attempting to delete a node from a broken tree
+        constructTree(&tree);
+        query = 100; // rbtDelete will search along 400->200->100 path
+        RBTNode* brokenNode = tree.root->left; // 200 node
+        void* brokenContent = brokenNode->content;
+        brokenNode->content = NULL;
+        returnedContent = (void*) 833;
+        status = rbtDelete(&tree, (void*) &query, &returnedContent);
+        if (status != EMPTY_NODE_ENCOUNTERED)
+        {
+            printf("rbtDelete: Returned with %s when attempting to delete a node along a path containing an empty node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+        if (returnedContent != (void*) 833)
+        {
+            printf("rbtDelete: returnedContent argument was altered when attempting to delete a node along a path containing an empty node\n");
+            return -1;
+        }
+        brokenNode->content = brokenContent;
+        rbtClear(&tree, testclear);
+
+        // Test inserting and deleting random numbers between 0 and 999
+        // Since this will run for 200,000 iterations it ensures some numbers will be successfully inserted then deleted
+        for (int i=0; i<200000; i++)
+        {
+            query = rand() % 1000;
+
+            // Attempt to delete the number from the tree
+            status = rbtDelete(&tree, (void*) &query, &returnedContent);
+            if (status == SUCCESS)
+            {
+                if (*(int*) returnedContent != query)
+                {
+                    printf("rbtDelete: Returned content %i does not match the query %i when testing the insertion and deletion of random integers\n", *(int*) returnedContent, query);
+                    return -1;
+                }
+                free(returnedContent);
+            }
+            // If number was not already in the tree, insert it
+            else if (status == NOT_FOUND)
+            {
+                content = malloc(sizeof(int));
+                if (content == NULL)
+                {
+                    perror("rbtDelete: Unable to allocate space for a new int while testing the insertion and deletion of random integers\n");
+                    return -1;
+                }
+                *(int*) content = query;
+                int status = rbtInsert(&tree, content);
+                if (status != SUCCESS)
+                {
+                    printf("rbtDelete: rbtInsert returned with %s when attempting to insert a random int into the tree\n", rbtStatusAsText(status));
+                    perror("");
+                    return -1;
+                }
+            }
+            else
+            {
+                printf("rbtDelete: Returned with %s when attempting to delete a random integer from a tree\n", rbtStatusAsText(status));
+                perror("");
+                return -1;
+            }
+        }
+        int height = checkBlackHeight(tree);
+        if (height < 0)
+        {
+            printf("rbtDelete: Error, black height of the randomly constructed tree is not uniform across the tree\n");
+            return -1;
+        }
+        
+        printf("Black height: %i\n", height);
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Testing rbtDelete\n");
+
+    // Test rbtToRoot
+    printf("Testing rbtToRoot\n");
+    {
+        RBTIterator iter;
+        int result;
+
+        rbtInit(&tree, compareInt);
+
+        // Test on an empty tree
+        iter.tree = NULL;
+        iter.node = NULL;
+        result = rbtToRoot(&iter, &tree);
+        if (result != -1)
+        {
+            printf("rbtToRoot: Error, returned wrong result %i when called on empty tree\n", result);
+            return -1;
+        }
+        if (iter.node != NULL)
+        {
+            printf("rbtToRoot: Node of iterator was updated when called on empty tree\n");
+            return -1;
+        }
+
+        // Test on small tree
+        constructTree(&tree);
+        result = rbtToRoot(&iter, &tree);
+        if (result != 0)
+        {
+            printf("rbtToRoot: Error, returned wrong result %i when called on non empty tree\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToRoot: Error, tree attribute was not updated to the provided tree when called with non empty tree\n");
+            return -1;
+        }
+        if (iter.node != tree.root)
+        {
+            printf("rbtToRoot: Error, iterator was not attached to the root of the tree when called with non empty tree\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtToRoot\n");
+
+    // Test rbtToStart
+    printf("Testing rbtToStart\n");
+    {
+        RBTIterator iter;
+        RBTStatus status;
+        void* returnedContent;
+        int result;
+
+        rbtInit(&tree, compareInt);
+
+        // Test on an empty tree
+        iter.tree = NULL;
+        iter.node = NULL;
+        result = rbtToStart(&iter, &tree);
+        if (result != -1)
+        {
+            printf("rbtToStart: Error, returned wrong result %i when called on empty tree\n", result);
+            return -1;
+        }
+        if (iter.node != NULL)
+        {
+            printf("rbtToStart: Node of iterator was updated when called on empty tree\n");
+            return -1;
+        }
+
+        // Test on tree with one node
+        int i = 37;
+        status = rbtInsert(&tree, (void*) &i);
+        if (status != SUCCESS)
+        {
+            printf("rbtToStart: Error, rbtInsert returned with %s when trying to insert a single node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+        result = rbtToStart(&iter, &tree);
+        if (result != 0)
+        {
+            printf("rbtToStart: Error, returned wrong result %i when called on tree with one node\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToStart: Error, tree attribute was not updated to the provided tree when called with tree with one node\n");
+            return -1;
+        }
+        if (iter.node != tree.root) // Node 400
+        {
+            printf("rbtToStart: Error, iterator was not attached to the head of the tree when called with tree with one node\n");
+            return -1;
+        }
+        result = rbtDelete(&tree, (void*) &i, &returnedContent);
+        if (result != SUCCESS)
+        {
+            printf("rbtToStart: Error, rbtDelete returned with %s when attempting to delete single node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+
+        // Test on small tree
+        constructTree(&tree);
+        iter.tree = NULL;
+        iter.node = NULL;
+        result = rbtToStart(&iter, &tree);
+        if (result != 0)
+        {
+            printf("rbtToStart: Error, returned wrong result %i when called on non empty tree\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToStart: Error, tree attribute was not updated to the provided tree when called with non empty tree\n");
+            return -1;
+        }
+        if (iter.node != tree.root->left->left) // Node 100
+        {
+            printf("rbtToStart: Error, iterator was not attached to the start of the tree when called with non empty tree\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtToStart\n");
+
+    // Test rbtToEnd
+    printf("Testing rbtToEnd\n");
+    {
+        RBTIterator iter;
+        RBTStatus status;
+        void* returnedContent;
+        int result;
+
+        rbtInit(&tree, compareInt);
+
+        // Test on an empty tree
+        iter.tree = NULL;
+        iter.node = NULL;
+        result = rbtToEnd(&iter, &tree);
+        if (result != -1)
+        {
+            printf("rbtToEnd: Error, returned wrong result %i when called on empty tree\n", result);
+            return -1;
+        }
+        if (iter.node != NULL)
+        {
+            printf("rbtToEnd: Node of iterator was updated when called on empty tree\n");
+            return -1;
+        }
+
+        // Test on tree with one node
+        int i = 37;
+        status = rbtInsert(&tree, (void*) &i);
+        if (status != SUCCESS)
+        {
+            printf("rbtToEnd: Error, rbtInsert returned with %s when trying to insert a single node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+        result = rbtToEnd(&iter, &tree);
+        if (result != 0)
+        {
+            printf("rbtToEnd: Error, returned wrong result %i when called on tree with one node\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToEnd: Error, tree attribute was not updated to the provided tree when called with tree with one node\n");
+            return -1;
+        }
+        if (iter.node != tree.root) // Node 400
+        {
+            printf("rbtToEnd: Error, iterator was not attached to the head of the tree when called with tree with one node\n");
+            return -1;
+        }
+        result = rbtDelete(&tree, (void*) &i, &returnedContent);
+        if (result != SUCCESS)
+        {
+            printf("rbtToEnd: Error, rbtDelete returned with %s when attempting to delete single node\n", rbtStatusAsText(status));
+            perror("");
+            return -1;
+        }
+
+        // Test on small tree
+        constructTree(&tree);
+        iter.tree = NULL;
+        iter.node = NULL;
+        result = rbtToEnd(&iter, &tree);
+        if (result != 0)
+        {
+            printf("rbtToEnd: Error, returned wrong result %i when called on non empty tree\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToEnd: Error, tree attribute was not updated to the provided tree when called with non empty tree\n");
+            return -1;
+        }
+        if (iter.node != tree.root->right->right) // Node 100
+        {
+            printf("rbtToEnd: Error, iterator was not attached to the end of the tree when called with non empty tree\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtToEnd\n");
+
+    // Test rbtToNode
+    printf("Testing rbtToNode\n");
+    {
+        RBTIterator iter;
+        int result;
+        int query;
+
+        rbtInit(&tree, compareInt);
+        
+        // Test on empty tree
+        iter.tree = (void*) 89;
+        iter.node = (void*) 77;
+        query = 45;
+        result = rbtToNode(&iter, &tree, (void*) &query);
+        if (result != -1)
+        {
+            printf("rbtToNode: Error, incorrect result %i returned when called on empty tree\n", result);
+            return -1;
+        }
+        if (iter.tree != (void*) 89)
+        {
+            printf("rbtToNode: Error, tree attribute of iterator was updated when called on empty tree\n");
+            return -1;
+        }
+        if (iter.node != (void*) 77)
+        {
+            printf("rbtToNode: Error, node attribute of iterator was updated when called on empty tree\n");
+            return -1;
+        }
+
+        // Test with NULL query
+        constructTree(&tree);
+        result = rbtToNode(&iter, &tree, NULL);
+        if (result != -1)
+        {
+            printf("rbtToNode: Error, incorrect result %i returned when called on tree with NULL query\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToNode: Error, tree attribute was not set to the tree when called with NULL query\n");
+            return -1;
+        }
+        if (iter.node != tree.root->left->left) // 100 node
+        {
+            printf("rbtToNode: Error, node attribute was not set to the start of the tree when called with NULL query\n");
+            return -1;
+        }
+
+        // Test with broken tree
+        iter.tree = (void*) 89;
+        iter.node = (void*) 77;
+        RBTNode* brokenNode = tree.root->right; // 600 node
+        void* brokenContent = brokenNode->content;
+        brokenNode->content = NULL; // Break the tree
+        query = 700; // will search along path 400->600->700
+        result = rbtToNode(&iter, &tree, (void*) &query);
+        if (result != -1)
+        {
+            printf("rbtToNode: Error, incorrect result %i returned when called on tree an empty node\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToNode: Error, tree attribute was not set to the tree when called on tree with empty node\n");
+            return -1;
+        }
+        if (iter.node != brokenNode)
+        {
+            printf("rbtToNode: Error, node attribute was not set to the empty node when called on tree with empty node\n");
+            return -1;
+        }
+        brokenNode->content = brokenContent; // Fix tree
+
+        // Test for node that does not exist in tree
+        iter.tree = (void*) 89;
+        iter.node = (void*) 77;
+        query = 305; // Will search along path 400->200->300
+        result = rbtToNode(&iter, &tree, (void*) &query);
+        if (result != -1)
+        {
+            printf("rbtToNode: Error, incorrect result %i returned when called with a query that does not exist in the tree\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToNode: Error, tree attribute was not set to the tree when called with a query that does not exist in the tree\n");
+            return -1;
+        }
+        if (iter.node != tree.root->left->right) // 300 node
+        {
+            printf("rbtToNode: Error, node attribute was not set to node at the end of the search path when called with a query that does not exist in the tree\n");
+            return -1;
+        }
+
+        // Test for node that exists in tree
+        iter.tree = (void*) 89;
+        iter.node = (void*) 77;
+        query = 200; // Will search along path 400->200
+        result = rbtToNode(&iter, &tree, (void*) &query);
+        if (result != 0)
+        {
+            printf("rbtToNode: Error, incorrect result %i returned when called with a query that exists in the tree\n", result);
+            return -1;
+        }
+        if (iter.tree != &tree)
+        {
+            printf("rbtToNode: Error, tree attribute was not set to the tree when called with a query exists in the tree\n");
+            return -1;
+        }
+        if (iter.node != tree.root->left) // 200 node
+        {
+            printf("rbtToNode: Error, node attribute was not set to the correct node when called with a query that exists in the tree\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtToNode\n");
+
+    // Test rbtGetThis
+    printf("Testing rbtGetThis\n");
+    {
+        RBTIterator iter;
+        void* content;
+        int query;
+        
+        // Test calling if node attribute is NULL
+        iter.node = NULL;
+        content = (void*) 33;
+        content = rbtGetThis(&iter);
+        if (content != NULL)
+        {
+            printf("rbtGetThis: Error, NULL was not returned when called while iter.node was NULL\n");
+            return -1;
+        }
+
+        // Test calling on a node of a tree
+        iter.node = NULL;
+        iter.tree = NULL;
+        constructTree(&tree);
+        query = 300;
+        rbtToNode(&iter, &tree, (void*) &query);
+        content = rbtGetThis(&iter);
+        if (*(int*) content != query)
+        {
+            printf("rbtGetThis: Error, incorrect content was returned when called on what should have been a valid node\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtGetThis\n");
+
+    // Test rbtGetPrev
+    printf("Testing rbtGetPrev\n");
+    {
+        RBTIterator iter;
+        void* content;
+
+        rbtInit(&tree, compareInt);
+        
+        // Test when node attribute is NULL
+        iter.node = NULL;
+        content = (void*) 33;
+        content = rbtGetPrev(&iter);
+        if (content != NULL)
+        {
+            printf("rbtGetPrev: Error, did not return NULL when node attribute is NULL\n");
+            return -1;
+        }
+
+        // Test whether it skips over empty node
+        constructTree(&tree);
+        rbtToEnd(&iter, &tree); // Should move to the 700 node
+        RBTNode* brokenNode = tree.root->right; // 600 node
+        void* brokenContent = brokenNode->content;
+        brokenNode->content = NULL; // empty the node
+        content = rbtGetPrev(&iter);
+        if (content == NULL)
+        {
+            printf("rbtGetPrev: Error, returned NULL when it should have skipped over the empty node\n");
+            return -1;
+        }
+        if (*(int*) content != 500)
+        {
+            printf("rbtGetPrev: Error, returned incorrect content when it should have skipped over the empty node: %i\n", *(int*) content);
+            return -1;
+        }
+        if (iter.node != tree.root->right->left) // 500 node
+        {
+            printf("rbtGetPrev: Error, iterator did not get placed on the correct node\n");
+            return -1;
+        }
+        brokenNode->content = brokenContent; // fix tree
+        rbtClear(&tree, testclear);
+
+        // Construct tree with nodes 1-100
+        for (int i=1; i<101; i++)
+        {
+            content = malloc(sizeof(int));
+            if (content == NULL)
+            {
+                perror("rbtGetPrev: Error, unable to allocate space for a new int when constructing tree\n");
+                return -1;
+            }
+            *(int*) content = i;
+            RBTStatus status = rbtInsert(&tree, content);
+            if (status != SUCCESS)
+            {
+                printf("rbtGetPrev: Error, rbtInsert returned with %s when inserting into tree\n", rbtStatusAsText(status));
+                perror("");
+                return -1;
+            }
+        }
+
+        // Test iterating through the whole tree
+        rbtToEnd(&iter, &tree);
+        for (int i=99; i>0; i--)
+        {
+            content = rbtGetPrev(&iter);
+            if (content == NULL)
+            {
+                printf("rbtGetPrev: Error, returned NULL when iterating though a tree but has not reached the end yet\n");
+                return -1;
+            }
+            if (*(int*) content != i)
+            {
+                printf("rbtGetPrev: Error, the content of the previous node %i does not match the expected %i\n", *(int*) content, i);
+                return -1;
+            }
+        }
+
+        // Test iterating once more to get NULL
+        content = rbtGetPrev(&iter);
+        if (content != NULL)
+        {
+            printf("rbtGetPrev: Error, did not return NULL even though the end of the tree should be at the end of the tree\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtGetPrev\n");
+
+    // Test rbtGetNext
+    printf("Testing rbtGetNext\n");
+    {
+        RBTIterator iter;
+        void* content;
+
+        rbtInit(&tree, compareInt);
+        
+        // Test when node attribute is NULL
+        iter.node = NULL;
+        content = (void*) 33;
+        content = rbtGetNext(&iter);
+        if (content != NULL)
+        {
+            printf("rbtGetNext: Error, did not return NULL when node attribute is NULL\n");
+            return -1;
+        }
+
+        // Test whether it skips over empty node
+        constructTree(&tree);
+        rbtToStart(&iter, &tree); // Should move to the 100 node
+        RBTNode* brokenNode = tree.root->left; // 200 node
+        void* brokenContent = brokenNode->content;
+        brokenNode->content = NULL; // empty the node
+        content = rbtGetNext(&iter);
+        if (content == NULL)
+        {
+            printf("rbtGetNext: Error, returned NULL when it should have skipped over the empty node\n");
+            return -1;
+        }
+        if (*(int*) content != 300)
+        {
+            printf("rbtGetNext: Error, returned incorrect content when it should have skipped over the empty node: %i\n", *(int*) content);
+            return -1;
+        }
+        if (iter.node != tree.root->left->right) // 300 node
+        {
+            printf("rbtGetNext: Error, iterator did not get placed on the correct node\n");
+            return -1;
+        }
+        brokenNode->content = brokenContent; // fix tree
+        rbtClear(&tree, testclear);
+
+        // Construct tree with nodes 1-100
+        for (int i=1; i<101; i++)
+        {
+            content = malloc(sizeof(int));
+            if (content == NULL)
+            {
+                perror("rbtGetNext: Error, unable to allocate space for a new int when constructing tree\n");
+                return -1;
+            }
+            *(int*) content = i;
+            RBTStatus status = rbtInsert(&tree, content);
+            if (status != SUCCESS)
+            {
+                printf("rbtGetNext: Error, rbtInsert returned with %s when inserting into tree\n", rbtStatusAsText(status));
+                perror("");
+                return -1;
+            }
+        }
+
+        // Test iterating through the whole tree
+        rbtToStart(&iter, &tree);
+        for (int i=2; i<101; i++)
+        {
+            content = rbtGetNext(&iter);
+            if (content == NULL)
+            {
+                printf("rbtGetNext: Error, returned NULL when iterating though a tree but has not reached the end yet\n");
+                return -1;
+            }
+            if (*(int*) content != i)
+            {
+                printf("rbtGetNext: Error, the content of the previous node %i does not match the expected %i\n", *(int*) content, i);
+                return -1;
+            }
+        }
+
+        // Test iterating once more to get NULL
+        content = rbtGetNext(&iter);
+        if (content != NULL)
+        {
+            printf("rbtGetNext: Error, did not return NULL even though the end of the tree should be at the end of the tree\n");
+            return -1;
+        }
+
+        rbtClear(&tree, testclear);
+    }
+    printf("Completed rbtGetNext\n");
 
     printf("Tests complete\n");
 
@@ -710,7 +1542,7 @@ void constructTree(RBT* tree)
     // 400 Node (black)
     RBTNode* node400 = newIntNode(400);
     node400->isRed = 0;
-    tree->head = node400;
+    tree->root = node400;
 
     // 200 Node (black)
     RBTNode* node200 = newIntNode(200);
@@ -777,4 +1609,120 @@ int testclear(void* content)
 int badclear(void* content)
 {
     return 1;
+}
+
+int checkBlackHeight(RBT tree)
+{
+    int blackHeight = 0;
+    int firstBlackHeight = -1;
+
+    RBTNode* node = tree.root;
+    if (node == NULL)
+    {
+        return 0;
+    }
+
+    int state = 1;
+    // 1 = examine this node and recurse left
+    // 2 = recurse right
+    // 3 = return up
+
+    while (1)
+    {
+        if (state == 1)
+        {
+            // If node is black, increment black height
+            if (node->isRed == 0)
+            {
+                blackHeight++;
+            }
+
+            // If left node is NULL, record final black height
+            if (node->left == NULL)
+            {
+                blackHeight++;
+
+                if (blackHeight != firstBlackHeight)
+                {
+                    if (firstBlackHeight < 0)
+                    {
+                        firstBlackHeight = blackHeight;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+
+                blackHeight--;
+                state = 2;
+                continue;
+            }
+            else
+            {
+                node = node->left;
+                // state remains at 1
+                continue;
+            }
+        }
+
+        if (state == 2)
+        {
+            // If right node is NULL, record final black height
+            if (node->right == NULL)
+            {
+                blackHeight++;
+
+                if (blackHeight != firstBlackHeight)
+                {
+                    if (firstBlackHeight < 0)
+                    {
+                        firstBlackHeight = blackHeight;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+
+                blackHeight--;
+                state = 3;
+                continue;
+            }
+            else
+            {
+                node = node->right;
+                state = 1;
+                continue;
+            }
+        }
+
+        if (state == 3)
+        {
+            if (node->isRed == 0)
+            {
+                blackHeight--;
+            }
+
+            if (node->parent == NULL)
+            {
+                break;
+            }
+
+            // If we are a left child, set state to 2
+            if (node == node->parent->left)
+            {
+                state = 2;
+            }
+            else
+            {
+                state = 3;
+            }
+
+            node = node->parent;
+            continue;
+        }
+    }
+
+    return firstBlackHeight;
 }
