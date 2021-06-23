@@ -147,10 +147,29 @@ int main()
 
                 send(
                     globalData.clientSocket.fd,
-                    "HTTP/1.1 418 I'm a teapot!\r\n",
-                    strlen("HTTP/1.1 418 I'm a teapot!\r\n"),
+                    "HTTP/1.1 200 OK\r\n"
+                    "Content-Length: 38\r\n"
+                    "Content-Type: text/html\r\n"
+                    "Connection: close\r\n"
+                    "\r\n"
+                    "<html><body>Hello Bitch!</body></html>",
+                    strlen(
+                        "HTTP/1.1 200 OK\r\n"
+                        "Content-Length: 38\r\n"
+                        "Content-Type: text/html\r\n"
+                        "Connection: close\r\n"
+                        "\r\n"
+                        "<html><body>Hello Bitch!</body></html>"
+                    ),
                     0
                 );
+
+                if (closeSocket(&globalData.clientSocket) < 0)
+                {
+                    checkErrorLimit(&globalData);
+                }
+
+                break;
             }
         }
     }
