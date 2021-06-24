@@ -15,9 +15,9 @@
 
 typedef struct {
     
+    int exists;
     int fd;
     char* name;
-    int exists;
 
 } SocketData;
 
@@ -148,28 +148,23 @@ int main()
                 send(
                     globalData.clientSocket.fd,
                     "HTTP/1.1 200 OK\r\n"
-                    "Content-Length: 38\r\n"
+                    "Content-Length: 60\r\n"
                     "Content-Type: text/html\r\n"
-                    "Connection: close\r\n"
+                    "Connection: keep-alive\r\n"
                     "\r\n"
-                    "<html><body>Hello Bitch!</body></html>",
+                    "<html>\n    <body>\n        Hello, There!\n    </body>\n</html>\n",
                     strlen(
                         "HTTP/1.1 200 OK\r\n"
-                        "Content-Length: 38\r\n"
+                        "Content-Length: 60\r\n"
                         "Content-Type: text/html\r\n"
-                        "Connection: close\r\n"
+                        "Connection: keep-alive\r\n"
                         "\r\n"
-                        "<html><body>Hello Bitch!</body></html>"
+                        "<html>\n    <body>\n        Hello, There!\n    </body>\n</html>\n"
                     ),
                     0
                 );
 
-                if (closeSocket(&globalData.clientSocket) < 0)
-                {
-                    checkErrorLimit(&globalData);
-                }
-
-                break;
+                continue;
             }
         }
     }
