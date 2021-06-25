@@ -5,20 +5,22 @@ all: rbt.o rbtprint.o rbtest rbtestprint rbtplayer
 
 
 
-./include/cooltools.h: ../../cooltools/cooltools.h
-	-mkdir include
+./include:
+	mkdir include
+
+./lib:
+	mkdir lib
+
+./include/cooltools.h: ../../cooltools/cooltools.h | ./include
 	cp ../../cooltools/cooltools.h include/
 
-./include/doublell.h: ../doublell/doublell.h
-	-mkdir include
+./include/doublell.h: ../doublell/doublell.h | ./include
 	cp ../doublell/doublell.h include/
 
-./lib/doublell.o: ../doublell/doublell.o
-	-mkdir lib
+./lib/doublell.o: ../doublell/doublell.o | ./lib
 	cp ../doublell/doublell.o lib/
 
-./lib/itoa.o: ../../cooltools/itoa.o
-	-mkdir lib
+./lib/itoa.o: ../../cooltools/itoa.o | ./lib
 	cp ../../cooltools/itoa.o lib/
 
 rbt.c: rbt.h rbtimpl.h
