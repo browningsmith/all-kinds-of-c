@@ -1,5 +1,8 @@
 CC := gcc
 CFLAGS := -Wall
+DOUBLELLDIR := ../doublell
+COOLTOOLSDIR := ../../cooltools
+PRINTOBJS := ./lib/doublell.o ./lib/itoa.o rbtprint.o
 
 all: rbt.o rbtprint.o rbtest rbtestprint rbtplayer
 
@@ -11,17 +14,17 @@ all: rbt.o rbtprint.o rbtest rbtestprint rbtplayer
 ./lib:
 	mkdir lib
 
-./include/cooltools.h: ../../cooltools/cooltools.h | ./include
-	cp ../../cooltools/cooltools.h include/
+./include/cooltools.h: $(COOLTOOLSDIR)/cooltools.h | ./include
+	cp $(COOLTOOLSDIR)/cooltools.h include/
 
-./include/doublell.h: ../doublell/doublell.h | ./include
-	cp ../doublell/doublell.h include/
+./include/doublell.h: $(DOUBLELLDIR)/doublell.h | ./include
+	cp $(DOUBLELLDIR)/doublell.h include/
 
-./lib/doublell.o: ../doublell/doublell.o | ./lib
-	cp ../doublell/doublell.o lib/
+./lib/doublell.o: $(DOUBLELLDIR)/doublell.o | ./lib
+	cp $(DOUBLELLDIR)/doublell.o lib/
 
-./lib/itoa.o: ../../cooltools/itoa.o | ./lib
-	cp ../../cooltools/itoa.o lib/
+./lib/itoa.o: $(COOLTOOLSDIR)/itoa.o | ./lib
+	cp $(COOLTOOLSDIR)/itoa.o lib/
 
 rbt.c: rbt.h rbtimpl.h
 	touch rbt.c
@@ -29,8 +32,8 @@ rbt.c: rbt.h rbtimpl.h
 rbt.o: rbt.c
 	$(CC) $(CFLAGS) -c -o rbt.o rbt.c
 
-rbtest: rbt.o rbtest.o ./lib/doublell.o ./lib/itoa.o rbtprint.o
-	$(CC) $(CFLAGS) -o rbtest rbt.o rbtest.o lib/doublell.o lib/itoa.o rbtprint.o
+rbtest: rbt.o rbtest.o $(PRINTOBJS)
+	$(CC) $(CFLAGS) -o rbtest rbt.o rbtest.o $(PRINTOBJS)
 
 rbtest.c: rbt.h rbtimpl.h rbtprint.h ./include/cooltools.h
 	touch rbtest.c
@@ -38,8 +41,8 @@ rbtest.c: rbt.h rbtimpl.h rbtprint.h ./include/cooltools.h
 rbtest.o: rbtest.c
 	$(CC) $(CFLAGS) -c -o rbtest.o rbtest.c
 
-rbtestprint: rbt.o ./lib/doublell.o ./lib/itoa.o rbtprint.o rbtestprint.o
-	$(CC) $(CFLAGS) -o rbtestprint rbt.o lib/doublell.o lib/itoa.o rbtprint.o rbtestprint.o
+rbtestprint: rbt.o $(PRINTOBJS) rbtestprint.o
+	$(CC) $(CFLAGS) -o rbtestprint rbt.o $(PRINTOBJS) rbtestprint.o
 
 rbtestprint.c: rbt.h rbtprint.h rbtprintimpl.h ./include/cooltools.h
 	touch rbtestprint.c
@@ -50,8 +53,8 @@ rbtestprint.o: rbtestprint.c
 rbtimpl.h: rbt.h
 	touch rbtimpl.h
 
-rbtplayer: rbt.o ./lib/doublell.o ./lib/itoa.o rbtprint.o rbtplayer.o
-	$(CC) $(CFLAGS) -o rbtplayer rbt.o lib/doublell.o lib/itoa.o rbtprint.o rbtplayer.o
+rbtplayer: rbt.o $(PRINTOBJS) rbtplayer.o
+	$(CC) $(CFLAGS) -o rbtplayer rbt.o $(PRINTOBJS) rbtplayer.o
 
 rbtplayer.o: rbtplayer.c
 	$(CC) $(CFLAGS) -c -o rbtplayer.o rbtplayer.c
