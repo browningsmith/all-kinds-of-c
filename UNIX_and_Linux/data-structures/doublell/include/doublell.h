@@ -1,6 +1,8 @@
 #ifndef DOUBLELL_H
 #define DOUBLELL_H
 
+#define GORBUGO
+
 typedef struct DLLNode_struct {
 
     struct DLLNode_struct* prev;

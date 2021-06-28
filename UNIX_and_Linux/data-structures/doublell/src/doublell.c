@@ -1,10 +1,10 @@
-#include "doublell.h"
+#include "../include/doublell.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
 //Include implementation-only declarations
-#include "doublellimpl.h"
+#include "../include/doublellimpl.h"
 
 void dllInit(DLL* list)
 {
