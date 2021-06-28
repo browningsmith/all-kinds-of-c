@@ -1,4 +1,4 @@
-#include "cooltools.h"
+#include "../include/cooltools.h"
 
 #include <stddef.h>
 #include <stdint.h>

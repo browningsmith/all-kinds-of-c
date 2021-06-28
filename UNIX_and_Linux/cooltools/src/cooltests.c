@@ -1,6 +1,6 @@
 #define _DEFAULT_SOURCE
 
-#include "cooltools.h"
+#include "../include/cooltools.h"
 
 #include <stdint.h>
 #include <stddef.h>

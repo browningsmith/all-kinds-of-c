@@ -1,27 +1,32 @@
-all: itoa.o cooltests
+CC = gcc
+CFLAGS = -Wall
+OBJS = ./lib/itoa.o
 
-
-cooltests: itoa.o cooltests.o
-	gcc -Wall -o cooltests itoa.o cooltests.o
-
-cooltests.c: cooltools.h
-	touch cooltests.c
-
-cooltests.o: cooltests.c
-	gcc -Wall -c -o cooltests.o cooltests.c
-
-itoa.c: cooltools.h
-	touch itoa.c
-
-itoa.o: itoa.c
-	gcc -Wall -c -o itoa.o itoa.c
+all: ./bin/cooltests $(OBJS)
 
 
 
-clean: cleancooltests cleanitoa
+./bin:
+	mkdir bin
 
-cleancooltests:
-	-rm -rf cooltests cooltests.o
+./bin/cooltests: ./lib/cooltests.o ./lib/itoa.o | ./bin
+	$(CC) $(CFLAGS) -o $@ $< ./lib/itoa.o
 
-cleanitoa:
-	-rm -rf itoa.o
+./lib:
+	mkdir lib
+
+./lib/cooltests.o: ./src/cooltests.c | ./lib
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+./lib/itoa.o: ./src/itoa.c | ./lib
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+./src/cooltests.c: ./include/cooltools.h
+	touch $@
+
+./src/itoa.c: ./include/cooltools.h
+	touch $@
+
+
+clean:
+	rm lib/* bin/*
