@@ -1,13 +1,13 @@
-#include "rbtprint.h"
+#include "../include/rbtprint.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
 
-#include "include/doublell.h"
-#include "rbt.h"
-#include "rbtprintimpl.h"
+#include "../include/include/doublell.h"
+#include "../include/rbt.h"
+#include "../include/rbtprintimpl.h"
 
 int rbtPrint(RBT tree, int (*textFunction) (char* buffer, void* content))
 {

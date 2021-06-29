@@ -2,5 +2,5 @@
 *.vscode/*
 
 *.o
-cooltests
+bin/cooltests
 

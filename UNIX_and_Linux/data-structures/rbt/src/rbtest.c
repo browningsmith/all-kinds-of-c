@@ -1,4 +1,4 @@
-#include "rbt.h"
+#include "../include/rbt.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -6,9 +6,9 @@
 #include <string.h>
 #include <sys/time.h>
 
-#include "include/cooltools.h"
-#include "rbtimpl.h"
-#include "rbtprint.h"
+#include "../include/cooltools.h"
+#include "../include/rbtimpl.h"
+#include "../include/rbtprint.h"
 
 int compareInt(void* a, void* b); // Custom function for RBT to compare two ints
 RBTNode* newIntNode(int num); // Creates a new RBT node containing an int in early tests

@@ -1,13 +1,13 @@
-#include "rbtprint.h"
+#include "../include/rbtprint.h"
 
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/cooltools.h"
-#include "rbt.h"
-#include "rbtprintimpl.h"
+#include "../include/cooltools.h"
+#include "../include/rbt.h"
+#include "../include/rbtprintimpl.h"
 
 int compareInt(void* a, void* b);
 RBTNode* newIntNode(int num);

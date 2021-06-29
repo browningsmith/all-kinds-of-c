@@ -3,6 +3,4 @@
 *.o
 include/*
 lib/*
-rbtest
-rbtestprint
-rbtplayer
+bin/*
