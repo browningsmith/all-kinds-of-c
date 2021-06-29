@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -Wall
+OBJS = ./lib/rbt.o ./lib/rbtprint.o ./lib/doublell.o ./lib/itoa.o
 
 
 all: ./lib/rbt.o ./lib/rbtprint.o ./bin/rbtest ./bin/rbtestprint ./bin/rbtplayer
@@ -9,14 +10,8 @@ all: ./lib/rbt.o ./lib/rbtprint.o ./bin/rbtest ./bin/rbtestprint ./bin/rbtplayer
 ./bin:
 	mkdir bin
 
-./bin/rbtest: ./lib/rbtest.o ./lib/rbt.o ./lib/itoa.o ./lib/rbtprint.o ./lib/doublell.o | ./bin
-	$(CC) $(CFLAGS) -o $@ ./lib/rbtest.o ./lib/rbt.o ./lib/itoa.o ./lib/rbtprint.o ./lib/doublell.o
-
-./bin/rbtestprint: ./lib/rbtestprint.o ./lib/rbtprint.o ./lib/doublell.o ./lib/itoa.o ./lib/rbt.o | ./bin
-	$(CC) $(CFLAGS) -o $@ ./lib/rbtestprint.o ./lib/rbtprint.o ./lib/doublell.o ./lib/itoa.o ./lib/rbt.o
-
-./bin/rbtplayer: ./lib/rbtplayer.o ./lib/itoa.o ./lib/rbt.o ./lib/rbtprint.o ./lib/doublell.o | ./bin
-	$(CC) $(CFLAGS) -o $@ ./lib/rbtplayer.o ./lib/itoa.o ./lib/rbt.o ./lib/rbtprint.o ./lib/doublell.o
+./bin/%: ./lib/%.o $(OBJS) | ./bin
+	$(CC) $(CFLAGS) -o $@ $< $(OBJS)
 
 ./include/cooltools.h: ../../cooltools/include/cooltools.h
 	cp $< include/
@@ -42,19 +37,7 @@ all: ./lib/rbt.o ./lib/rbtprint.o ./bin/rbtest ./bin/rbtestprint ./bin/rbtplayer
 ./lib/itoa.o: ../../cooltools/src/itoa.c | ./lib
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-./lib/rbt.o: ./src/rbt.c | ./lib
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-./lib/rbtest.o: ./src/rbtest.c | ./lib
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-./lib/rbtestprint.o: ./src/rbtestprint.c | ./lib
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-./lib/rbtplayer.o: ./src/rbtplayer.c | ./lib
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-./lib/rbtprint.o: ./src/rbtprint.c | ./lib
+./lib/%.o: ./src/%.c | ./lib
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 ./src/rbt.c: ./include/rbt.h ./include/rbtimpl.h
