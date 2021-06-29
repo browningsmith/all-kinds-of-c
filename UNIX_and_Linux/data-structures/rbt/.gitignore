@@ -1,6 +1,7 @@
 .vscode*
 
 *.o
-include/*
 lib/*
 bin/*
+include/cooltools.h
+include/doublell.h
