@@ -1,92 +1,70 @@
-all: rbt.o rbtprint.o rbtest rbtestprint rbtplayer
+CC = gcc
+CFLAGS = -Wall
+OBJS = ./lib/rbt.o ./lib/rbtprint.o ./lib/doublell.o ./lib/itoa.o
+
+
+all: ./lib/rbt.o ./lib/rbtprint.o ./bin/rbtest ./bin/rbtestprint ./bin/rbtplayer
 
 
 
-./include/cooltools.h: ../../cooltools/cooltools.h
-	-mkdir include
-	cp ../../cooltools/cooltools.h include/
+./bin:
+	mkdir bin
 
-./include/doublell.h: ../doublell/doublell.h
-	-mkdir include
-	cp ../doublell/doublell.h include/
+./bin/%: ./lib/%.o $(OBJS) | ./bin
+	$(CC) $(CFLAGS) -o $@ $< $(OBJS)
 
-./lib/doublell.o: ../doublell/doublell.o
-	-mkdir lib
-	cp ../doublell/doublell.o lib/
+./include/cooltools.h: ../../cooltools/include/cooltools.h
+	cp $< include/
 
-./lib/itoa.o: ../../cooltools/itoa.o
-	-mkdir lib
-	cp ../../cooltools/itoa.o lib/
+./include/doublell.h: ../doublell/include/doublell.h
+	cp $< include/
 
-rbt.c: rbt.h rbtimpl.h
-	touch rbt.c
+./include/rbtimpl.h: ./include/rbt.h
+	touch $@
 
-rbt.o: rbt.c
-	gcc -Wall -c -o rbt.o rbt.c
+./include/rbtprint.h: ./include/rbt.h
+	touch $@
 
-rbtest: rbt.o rbtest.o ./lib/doublell.o ./lib/itoa.o rbtprint.o
-	gcc -Wall -o rbtest rbt.o rbtest.o lib/doublell.o lib/itoa.o rbtprint.o
+./include/rbtprintimpl.h: ./include/rbtprint.h ../doublell/include/doublell.h
+	touch $@
 
-rbtest.c: rbt.h rbtimpl.h rbtprint.h ./include/cooltools.h
-	touch rbtest.c
+./lib:
+	mkdir lib
 
-rbtest.o: rbtest.c
-	gcc -Wall -c -o rbtest.o rbtest.c
+./lib/doublell.o: ../doublell/src/doublell.c | ./lib
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-rbtestprint: rbt.o ./lib/doublell.o ./lib/itoa.o rbtprint.o rbtestprint.o
-	gcc -Wall -o rbtestprint rbt.o lib/doublell.o lib/itoa.o rbtprint.o rbtestprint.o
+./lib/itoa.o: ../../cooltools/src/itoa.c | ./lib
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-rbtestprint.c: rbt.h rbtprint.h rbtprintimpl.h ./include/cooltools.h
-	touch rbtestprint.c
+./lib/%.o: ./src/%.c | ./lib
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-rbtestprint.o: rbtestprint.c
-	gcc -Wall -c -o rbtestprint.o rbtestprint.c
+./src/rbt.c: ./include/rbt.h ./include/rbtimpl.h
+	touch $@
 
-rbtimpl.h: rbt.h
-	touch rbtimpl.h
+./src/rbtest.c: ./include/rbt.h ./include/cooltools.h ../../cooltools/include/cooltools.h ./include/rbtimpl.h ./include/rbtprint.h
+	touch $@
 
-rbtplayer: rbt.o ./lib/doublell.o ./lib/itoa.o rbtprint.o rbtplayer.o
-	gcc -Wall -o rbtplayer rbt.o lib/doublell.o lib/itoa.o rbtprint.o rbtplayer.o
+./src/rbtestprint.c: ./include/rbtprint.h ./include/cooltools.h ../../cooltools/include/cooltools.h ./include/rbt.h ./include/rbtprintimpl.h
+	touch $@
 
-rbtplayer.o: rbtplayer.c
-	gcc -Wall -c -o rbtplayer.o rbtplayer.c
+./src/rbtplayer.c: ./include/cooltools.h ../../cooltools/include/cooltools.h ./include/rbt.h ./include/rbtprint.h
+	touch $@
 
-rbtplayer.c: ./include/cooltools.h rbt.h rbtprint.h
-	touch rbtplayer.c
+./src/rbtprint.c: ./include/rbtprint.h ./include/doublell.h ../doublell/include/doublell.h ./include/rbt.h ./include/rbtprintimpl.h
+	touch $@
 
-rbtprint.c: rbt.h rbtprint.h rbtprintimpl.h ./include/doublell.h
-	touch rbtprint.c
+../doublell/include/doublellimpl.h: ../doublell/include/doublell.h
+	touch $@
 
-rbtprint.h: rbt.h
-	touch rbtprint.h
+../doublell/src/doublell.c: ../doublell/include/doublell.h ../doublell/include/doublellimpl.h
+	touch $@
 
-rbtprint.o: rbtprint.c
-	gcc -Wall -c -o rbtprint.o rbtprint.c
-
-rbtprintimpl.h: rbtprint.h ./include/doublell.h
-	touch rbtprintimpl.h
+../../cooltools/src/itoa.c: ../../cooltools/include/cooltools.h
+	touch $@
 
 
 
-clean: cleanrbt cleanrbtprint cleanrbtest cleanrbtestprint cleanrbtplayer
-
-cleandoublell:
-	-rm -rf lib/doublell.o
-
-cleanitoa:
-	-rm -rf lib/itoa.o
-
-cleanrbt:
-	-rm -rf rbt.o
-
-cleanrbtest:
-	-rm -rf rbtest rbtest.o
-
-cleanrbtestprint:
-	-rm -rf rbtestprint rbtestprint.o
-
-cleanrbtprint:
-	-rm -rf rbtprint.o
-
-cleanrbtplayer:
-	-rm -rf rbtplayer rbtplayer.o
+clean:
+	rm -f bin/* lib/*

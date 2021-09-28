@@ -1,31 +1,34 @@
-all: doublell.o dlltest
+CC = gcc
+CFLAGS = -Wall
+
+all: ./lib/doublell.o ./bin/dlltest
 
 
 
-dlltest: doublell.o dlltest.o
-	gcc -Wall -o dlltest doublell.o dlltest.o
+./bin:
+	mkdir bin
 
-dlltest.c: doublell.h doublellimpl.h
-	touch dlltest.c
+./bin/dlltest: ./lib/doublell.o ./lib/dlltest.o | ./bin
+	$(CC) $(CFLAGS) -o $@ $< ./lib/dlltest.o
 
-dlltest.o: dlltest.c
-	gcc -Wall -c -o dlltest.o dlltest.c
+./include/doublellimpl.h: ./include/doublell.h
+	touch $@
 
-doublell.c: doublell.h doublellimpl.h
-	touch doublell.c
+./lib:
+	mkdir lib
 
-doublell.o: doublell.c
-	gcc -Wall -c -o doublell.o doublell.c
+./lib/dlltest.o: ./src/dlltest.c | ./lib
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-doublellimpl.h: doublell.h
-	touch doublellimpl.h
+./lib/doublell.o: ./src/doublell.c | ./lib
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+./src/dlltest.c: ./include/doublell.h ./include/doublellimpl.h
+	touch $@
+
+./src/doublell.c: ./include/doublell.h ./include/doublellimpl.h
+	touch $@
 
 
-
-clean: cleandoublell cleandlltest
-
-cleandlltest:
-	-rm -rf dlltest.o dlltest
-
-cleandoublell:
-	-rm -rf doublell.o
+clean:
+	rm ./bin/* ./lib/*

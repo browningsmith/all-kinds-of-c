@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "doublell.h"
-#include "doublellimpl.h"
+#include "../include/doublell.h"
+#include "../include/doublellimpl.h"
 
 void makeList(DLL* list);
 int clearInt(void* number);

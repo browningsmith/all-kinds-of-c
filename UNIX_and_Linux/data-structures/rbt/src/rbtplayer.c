@@ -4,9 +4,9 @@
 #include <string.h>
 #include <strings.h>
 
-#include "include/cooltools.h"
-#include "rbt.h"
-#include "rbtprint.h"
+#include "../include/cooltools.h"
+#include "../include/rbt.h"
+#include "../include/rbtprint.h"
 
 int compareInt(void* a, void* b);
 int testitoa(char* buffer, void* content);

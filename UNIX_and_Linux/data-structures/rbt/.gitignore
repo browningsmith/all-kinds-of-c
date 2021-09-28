@@ -1,8 +1,7 @@
 .vscode*
 
 *.o
-include/*
 lib/*
-rbtest
-rbtestprint
-rbtplayer
+bin/*
+include/cooltools.h
+include/doublell.h

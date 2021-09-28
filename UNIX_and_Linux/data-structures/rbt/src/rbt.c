@@ -1,9 +1,9 @@
-#include "rbt.h"
+#include "../include/rbt.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "rbtimpl.h"
+#include "../include/rbtimpl.h"
 
 const char* rbtStatusAsText(RBTStatus status)
 {
