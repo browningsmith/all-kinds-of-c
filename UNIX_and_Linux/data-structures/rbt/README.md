@@ -17,7 +17,7 @@ The methods in the API will use each tree's compare function to find, insert and
 
 The methods are also designed to use iterative loops, rather than recursive calls, to traverse the tree structure. This avoids the possible issue of a stack overflow altogether.
 
-Compilation
+Compiled Files
 ===========
 
 If the user has GNU make installed, using the make command within this directory will create the C library files rbt.o and rbtprint.o within a local lib/ directory. This will also create a few executables within a local bin/ directory, which I used for unit testing on the API.
