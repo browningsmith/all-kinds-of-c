@@ -11,9 +11,9 @@ The API implemented here is designed to work within C programs compiled on Unix/
 
 It is designed to be polymorphic, meaning that the tree can consist of nodes containing both built in C constructs, as well as custom user defined constructs. All that is required is that the user write a "compare function" for each new tree, that takes two void* data types as input, and returns an int type. The "compare function" must behave in the following way:
 
-If the first void* object is "greater than" the second void* object, function must return a positive int
-If the first object is "less than" the second, function must return a negative int
-If the objects are "equal" function must return 0
+- If the first void* object is **"greater than"** the second void* object, function must return a **positive int**
+- If the first object is **"less than"** the second, function must return a **negative int**
+- If the objects are **"equal"** function must return **0**
 
 The methods in the API will use each tree's compare function to find, insert and delete nodes to maintain a proper RBT.
 
