@@ -22,11 +22,13 @@ Compiled Files
 
 If the user has GNU make installed, using the make command within this directory will create the C library files rbt.o and rbtprint.o within a local lib/ directory. This will also create a few executables within a local bin/ directory, which I used for unit testing on the API.
 
-Library files:
-rbt.o: Contains methods to create and perform operations on a Red Black Tree
-rbtprint.o: Contains a method rbtPrint that prints a text representation of an RBT to the console, to help visualize it
+**Library files:**
 
-Executables:
-rbtest: Performs unit tests on the methods in rbt.o
-rbtestprint: Performs unit tests on the method in rbtprint.o
-rbtplayer: A program that allows the user to visualize the RBT by inserting and deleting integers
+- **rbt.o:** Contains methods to create and perform operations on a Red Black Tree
+- **rbtprint.o:** Contains a method rbtPrint that prints a text representation of an RBT to the console, to help visualize it
+
+**Executables:**
+
+- **rbtest:** Performs unit tests on the methods in rbt.o
+- **rbtestprint:** Performs unit tests on the method in rbtprint.o
+- **rbtplayer:** A program that allows the user to visualize the RBT by inserting and deleting integers
