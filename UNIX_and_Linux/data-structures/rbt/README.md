@@ -34,3 +34,19 @@ If the user has GNU make installed, using the make command within this directory
 - **rbtest:** Performs unit tests on the methods in rbt.o
 - **rbtestprint:** Performs unit tests on the method in rbtprint.o
 - **rbtplayer:** A program that allows the user to visualize the RBT by inserting and deleting integers
+
+Usage in Programs
+=======
+
+- Any source file that uses the Red Black Tree API must include the rbt.h header.
+
+   ```
+   #include "rbt.h"
+   ```
+
+- The final compiled program must be linked with rbt.o
+
+    ```
+    gcc -c -o example.o example.c
+    gcc -o example example.o rbt.o
+    ```
