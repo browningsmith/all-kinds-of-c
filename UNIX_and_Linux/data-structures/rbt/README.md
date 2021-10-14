@@ -24,6 +24,8 @@ Compiled Files
 
 If the user has GNU make installed, using the make command within this directory will create the C library files rbt.o and rbtprint.o within a local lib/ directory. This will also create a few executables within a local bin/ directory, which I used for unit testing on the API.
 
+[Makefile](https://github.com/browningsmith/all-kinds-of-c/blob/main/UNIX_and_Linux/data-structures/rbt/Makefile)
+
 **Library files:**
 
 - **rbt.o:** Contains methods to create and perform operations on a Red Black Tree
@@ -38,7 +40,7 @@ If the user has GNU make installed, using the make command within this directory
 Usage in Programs
 =======
 
-- Any source file that uses the Red Black Tree API must include the rbt.h header.
+- Any source file that uses the Red Black Tree API must include the [rbt.h](https://github.com/browningsmith/all-kinds-of-c/blob/main/UNIX_and_Linux/data-structures/rbt/include/rbt.h) header.
 
    ```
    #include "rbt.h"
