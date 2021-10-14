@@ -15,6 +15,8 @@ If the objects are "equal" function must return 0
 
 The methods in the API will use each tree's compare function to find, insert and delete nodes to maintain a proper RBT.
 
+The methods are also designed to use iterative loops, rather than recursive calls, to traverse the tree structure. This avoids the possible issue of a stack overflow altogether.
+
 Compilation
 ===========
 
